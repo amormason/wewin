@@ -19,7 +19,9 @@
     </el-breadcrumb>
     <div class="title">
       <h2>{{ title }}</h2>
-      <div class="second-title" v-if="secondTitle">{{ secondTitle }}</div>
+      <div class="second-title" v-if="secondTitle">
+        <i>{{ secondTitle }}</i>
+      </div>
     </div>
   </div>
 </template>
@@ -98,6 +100,7 @@ export default {
     padding: 10px 0;
     border-bottom: 1px solid #e4e7ed82;
     .second-title {
+      font-size: 80%;
       color: $gray-text;
     }
   }

@@ -6,12 +6,6 @@
       secondTitle="配置PLC的相关信息，配置完成后，模块不会重启，但是业务系统会进行重启，5s内请暂时不要操任何。"
     />
     <div class="data-table">
-      <el-row>
-        <el-col :span="24">
-          <h3>HSMS</h3>
-        </el-col>
-      </el-row>
-
       <el-row :gutter="20">
         <el-col :span="4" class="label">PLC IP: </el-col>
         <el-col :span="12">
@@ -37,7 +31,7 @@
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="6">
+        <!-- <el-col :span="6">
           <el-select
             v-model="hsms.active"
             clearable
@@ -51,27 +45,50 @@
             >
             </el-option>
           </el-select>
-        </el-col>
-      </el-row>
-
-      <el-row :gutter="20">
-        <el-col :span="4" class="label">ComID: </el-col>
-        <el-col :span="12">
-          <el-input placeholder="Eq1001" v-model="hsms.ip" clearable>
-          </el-input>
-        </el-col>
-        <el-col :span="8"> </el-col>
+        </el-col> -->
       </el-row>
 
       <el-row class="operation">
         <el-col :span="24">
-          <el-button type="primary" size="small" icon="el-icon-check"
+          <el-button
+            type="primary"
+            size="small"
+            icon="el-icon-check"
+            :disabled="loading"
+            :loading="loading"
+            :closable="true"
             >提交</el-button
           >
-          <el-button type="info" size="small" icon="el-icon-s-claim"
+          <el-button
+            type="warning"
+            size="small"
+            icon="el-icon-s-claim"
+            @click="handldTest()"
+            :disabled="loading"
+            :loading="loading"
             >测试</el-button
           >
         </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="24">
+          <el-alert
+            v-if="res.success === true"
+            title="成功提示的文案"
+            type="success"
+            effect="dark"
+          >
+          </el-alert>
+        </el-col>
+
+        <el-alert
+          v-if="res.success === false"
+          title="测试失败"
+          type="error"
+          effect="dark"
+        >
+        </el-alert>
       </el-row>
     </div>
   </div>
@@ -84,6 +101,7 @@ export default {
   name: 'DownloadConfiguration',
   data() {
     return {
+      loading: false,
       hsms: {
         ip: '',
         hsms: '',
@@ -97,6 +115,7 @@ export default {
         t7: '',
         t8: '',
       },
+      res: {},
       activeOptions: [
         {
           value: '1',
@@ -138,19 +157,15 @@ export default {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
-    handleClear() {
-      this.obj1 = {
-        ip: '',
-        subnetMask: '',
-        gateway: '',
-        dns: '',
-      };
-      this.obj2 = {
-        ip: '',
-        subnetMask: '',
-        gateway: '',
-        dns: '',
-      };
+    handldTest() {
+      this.loading = true;
+      this.res.success = undefined;
+      setTimeout(() => {
+        this.loading = false;
+        this.res = {
+          success: Math.random() > 0.5,
+        };
+      }, 1000);
     },
   },
 };

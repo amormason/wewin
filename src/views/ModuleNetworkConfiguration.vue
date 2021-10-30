@@ -78,9 +78,18 @@
       </el-row>
       <el-row class="operation">
         <el-col :span="24">
-          <el-button type="primary" icon="el-icon-check">提交</el-button>
-          <el-button icon="el-icon-close" v-on:click="handleClear()"
-            >取消</el-button
+          <el-button
+            type="primary"
+            icon="el-icon-check"
+            size="small"
+            v-on:click="handleSubmit()"
+            >提交</el-button
+          >
+          <el-button
+            icon="el-icon-close"
+            size="small"
+            v-on:click="handleClear()"
+            >重置</el-button
           >
         </el-col>
       </el-row>
@@ -90,6 +99,7 @@
 
 <script>
 import Header from './common/Header.vue';
+import { submitModuleNetworkConfiguration } from '../api/request';
 
 export default {
   name: 'ModuleNetworkConfiguration',
@@ -98,13 +108,13 @@ export default {
       obj1: {
         ip: '',
         subnetMask: '',
-        gateway: '',
+        gateway: '255.255.0.0',
         dns: '',
       },
       obj2: {
         ip: '',
         subnetMask: '',
-        gateway: '',
+        gateway: '255.255.0.0',
         dns: '',
       },
     };
@@ -113,8 +123,21 @@ export default {
     Header,
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+    checkData() {
+      if (!this.obj1.ip || !this.obj2.ip) {
+        this.$message.error('IPv4地址1或者IPv4地址2不能为空');
+        return false;
+      }
+      if (this.obj1.ip === this.obj2.ip) {
+        this.$message.error('IPv4地址1和IPv4地址2不能相同');
+        return false;
+      }
+      return true;
+    },
+    handleSubmit() {
+      if (this.checkData()) {
+        submitModuleNetworkConfiguration();
+      }
     },
     handleClear() {
       this.obj1 = {
