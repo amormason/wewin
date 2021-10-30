@@ -6,7 +6,7 @@
       secondTitle="配置HOST的相关信息，配置完成后，模块不会重启，但是业务系统会进行重启，5s内请暂时不要操任何。"
     />
     <div class="data-table">
-      <el-row :gutter="200">
+      <el-row :gutter="100">
         <el-col :span="12">
           <el-row>
             <el-col :span="24">
@@ -67,7 +67,7 @@
               <el-input placeholder="Eq1001" v-model="hsms.deviceID" clearable>
               </el-input>
             </el-col>
-            <el-col :span="9">9</el-col>
+            <el-col :span="9"></el-col>
           </el-row>
 
           <el-row class="operation">

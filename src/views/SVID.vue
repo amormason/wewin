@@ -4,52 +4,24 @@
     <el-row :gutter="10" class="form">
       <el-col :span="2" class="label"> VID/NAME: </el-col>
       <el-col :span="6">
-        <el-input
-          placeholder="请输入"
-          suffix-icon="el-icon-date"
-          v-model="req.keyWord"
-        >
-        </el-input>
+        <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
       </el-col>
 
       <el-col :span="2" class="label"> 备注: </el-col>
       <el-col :span="6">
-        <el-select v-model="req.status" clearable placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </el-col>
-
-      <el-col :span="8">
-        <el-button type="primary" icon="el-icon-search">查询</el-button>
-        <el-button icon="el-icon-refresh-left">重置</el-button>
+        <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
       </el-col>
     </el-row>
-
-    <el-row class="buttons-container">
-      <el-col :span="24">
-        <el-button type="primary" size="small" icon="el-icon-plus"
-          >新建</el-button
-        >
-        <el-button type="warning" icon="el-icon-s-operation" size="small"
-          >批量编辑</el-button
-        >
-        <el-button type="danger" icon="el-icon-s-operation" size="small"
-          >批量删除</el-button
-        >
-        <!-- <el-button size="small">...</el-button> -->
-      </el-col>
-    </el-row>
-
+    <TableOperationButtons
+      :loading="loading"
+      :newButton="newButton"
+      :deleteButton="deleteButton"
+    ></TableOperationButtons>
     <el-alert :title="alertTitle" type="info" show-icon> </el-alert>
 
     <el-table
       ref="multipleTable"
+      v-loading="loading"
       :data="tableData"
       highlight-current-row
       stripe
@@ -90,12 +62,23 @@
 
 <script>
 import Header from './common/Header.vue';
+import TableOperationButtons from './common/TableOperationButtons.vue';
 
 export default {
   name: 'SVID',
   data() {
     return {
+      loading: false,
       multipleSelection: [],
+      deleteButton: {
+        event: this.deleteButtonEvent,
+        length: 0,
+      },
+      newButton: {
+        event: this.newButtonEvent,
+      },
+
+      value1: false,
       alertTitle: '',
       req: {
         keyWord: '',
@@ -223,8 +206,21 @@ export default {
   },
   components: {
     Header,
+    TableOperationButtons,
   },
   methods: {
+    newButtonEvent() {
+      console.log('add');
+    },
+    deleteButtonEvent() {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+        this.handleSelectionChange([]);
+        this.$refs.multipleTable.clearSelection();
+      }, 1500);
+    },
+
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
@@ -234,7 +230,7 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
       this.alertTitle = `已经选择 ${val.length} 了项`;
-      console.log(this.multipleSelection);
+      this.deleteButton.length = val.length;
     },
   },
 };
@@ -243,8 +239,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .dictionary-information-container {
-  width: 1500px;
-
   .form {
     margin-top: 20px;
     .el-input,
