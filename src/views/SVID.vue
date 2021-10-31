@@ -1,62 +1,93 @@
 <template>
   <div class="dictionary-information-container">
     <Header breadcrumb="SVID" title="SVID" />
+
     <el-row :gutter="10" class="form">
       <el-col :span="2" class="label"> VID/NAME: </el-col>
       <el-col :span="6">
         <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
       </el-col>
-
       <el-col :span="2" class="label"> 备注: </el-col>
       <el-col :span="6">
         <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
       </el-col>
     </el-row>
-    <TableOperationButtons
-      :loading="loading"
-      :newButton="newButton"
-      :deleteButton="deleteButton"
-    ></TableOperationButtons>
-    <el-alert :title="alertTitle" type="info" show-icon> </el-alert>
 
-    <el-table
-      ref="multipleTable"
-      v-loading="loading"
-      :data="tableData"
-      highlight-current-row
-      stripe
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="vid" label="VID" sortable width="100">
-      </el-table-column>
-      <el-table-column prop="name" label="NAME" sortable width="100">
-      </el-table-column>
-      <el-table-column prop="type" label="类型" sortable> </el-table-column>
-      <el-table-column prop="len" label="LEN" sortable> </el-table-column>
-      <el-table-column prop="UNITS" label="UNITS" sortable> </el-table-column>
-      <el-table-column prop="DEF" label="DEF" sortable> </el-table-column>
-      <el-table-column prop="MIN" label="MIN" sortable> </el-table-column>
-      <el-table-column prop="MAX" label="MAX" sortable> </el-table-column>
-      <el-table-column fixed="right" label="操作" width="100">
-        <template slot-scope="scope">
-          <el-link type="danger" @click="handleClick(scope.row)">删除</el-link>
-          <el-link type="primary" @click="handleClick(scope.row)">编辑</el-link>
+    <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton"></TableOperationButtons>
+
+    <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
+    </el-alert>
+
+    <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" @edit-closed="editClosedEvent" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+        trigger: 'dblclick',
+        mode: 'cell',
+        showStatus: true,
+        icon: 'el-icon-s-tools',
+      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
+      <vxe-column type="checkbox" width="60"></vxe-column>
+      <vxe-column sortable field="SVID" title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="NAME" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="FORMAT" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="LEN" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="UNITS" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="DEF" title="DEF" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="MIN" title="MIN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="MAX" title="MAX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="PLC_TYPE" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+
+      <vxe-column width="150" field="PLC_Address" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        <!--使用#edit自定义编辑-->
+        <template #edit="{ row }">
+          <el-row>
+            <el-col :span="12">
+              <el-select v-model="row.p1" size="small" @change="editRowEvent(row)">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="12">
+              <input type="text" v-model="row.p2" class="vxe-default-input" size="small" @change="editRowEvent(row)" />
+            </el-col>
+          </el-row>
         </template>
-      </el-table-column>
-    </el-table>
+      </vxe-column>
 
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage4"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
-    >
-    </el-pagination>
+      <vxe-column field="REMARK" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+
+      <vxe-column title="操作" width="50">
+        <template #default="{ row }">
+          <el-popover placement="top" width="180" v-model="row.visible">
+            <p>确定要删除这一行({{ row.SVID }})吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="deleteButtonEvent(row.SVID);row.visible = false;">确定</el-button>
+            </div>
+            <el-link slot="reference" type="danger">删除</el-link>
+          </el-popover>
+        </template>
+      </vxe-column>
+
+      <vxe-column field="CURRENTVALUE" title="当前值"></vxe-column>
+    </vxe-table>
+
+    <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
+        'PrevJump',
+        'PrevPage',
+        'JumpNumber',
+        'NextPage',
+        'NextJump',
+        'Sizes',
+        'FullJump',
+        'Total',
+      ]">
+    </vxe-pager>
+
+    <el-dialog title="新增" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      这里是新增的表单
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+        <el-button type="success" size="small" @click="dialogVisible = false">新增</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -68,7 +99,55 @@ export default {
   name: 'SVID',
   data() {
     return {
+      page: {
+        currentPage: 1,
+        pageSize: 20,
+        totalResult: 124,
+      },
+      tableData: [
+        {
+          p1: 'D',
+          p2: '1001',
+          SVID: 1001,
+          NAME: '这里是值',
+          FORMAT: 'l1',
+          LEN: 20,
+          UNITS: 'A',
+          DEF: 1,
+          MIN: 1,
+          MAX: 1,
+          PLC_TYPE: 'uint16',
+          PLC_Address: 'D1001',
+          REMARK: '一些内容说明',
+          CURRENTVALUE: '222',
+        },
+        {
+          p1: 'C',
+          p2: '2009',
+          SVID: 1002,
+          NAME: '这里是值',
+          FORMAT: 'l1',
+          LEN: 20,
+          UNITS: 'A',
+          DEF: 1,
+          MIN: 1,
+          MAX: 1,
+          PLC_TYPE: 'uint16',
+          PLC_Address: 'C2009',
+          REMARK: '一些内容说明',
+          CURRENTVALUE: '222',
+        },
+      ],
+      options: [
+        { label: 'D', value: 'D' },
+        { label: 'E', value: 'E' },
+        { label: 'C', value: 'C' },
+        { label: 'B', value: 'B' },
+        { label: 'A', value: 'A' },
+      ],
       loading: false,
+      visible: false,
+      dialogVisible: false,
       multipleSelection: [],
       deleteButton: {
         event: this.deleteButtonEvent,
@@ -87,140 +166,80 @@ export default {
         dns: '',
       },
       currentPage4: 2,
-      tableData: [
-        {
-          vid: '1001',
-          name: '这里是值',
-          type: 'I1',
-          len: '20',
-          UNITS: 'A',
-          DEF: '1',
-          MIN: '1',
-          MAX: '8',
-          PLC_TYPE: 'uint16',
-          PLC_Address: '1001',
-          remark: '一些内容说明',
-        },
-        {
-          vid: '1001',
-          name: '这里是值',
-          type: 'I1',
-          len: '20',
-          UNITS: 'A',
-          DEF: '1',
-          MIN: '1',
-          MAX: '8',
-          PLC_TYPE: 'uint16',
-          PLC_Address: '1001',
-          remark: '一些内容说明',
-        },
-        {
-          vid: '1001',
-          name: '这里是值',
-          type: 'I1',
-          len: '20',
-          UNITS: 'A',
-          DEF: '1',
-          MIN: '1',
-          MAX: '8',
-          PLC_TYPE: 'uint16',
-          PLC_Address: '1001',
-          remark: '一些内容说明',
-        },
-        {
-          vid: '1001',
-          name: '这里是值',
-          type: 'I1',
-          len: '20',
-          UNITS: 'A',
-          DEF: '1',
-          MIN: '1',
-          MAX: '8',
-          PLC_TYPE: 'uint16',
-          PLC_Address: '1001',
-          remark: '一些内容说明',
-        },
-        {
-          vid: '1001',
-          name: '这里是值',
-          type: 'I1',
-          len: '20',
-          UNITS: 'A',
-          DEF: '1',
-          MIN: '1',
-          MAX: '8',
-          PLC_TYPE: 'uint16',
-          PLC_Address: '1001',
-          remark: '一些内容说明',
-        },
-        {
-          vid: '1001',
-          name: '这里是值',
-          type: 'I1',
-          len: '20',
-          UNITS: 'A',
-          DEF: '1',
-          MIN: '1',
-          MAX: '8',
-          PLC_TYPE: 'uint16',
-          PLC_Address: '1001',
-          remark: '一些内容说明',
-        },
-        {
-          vid: '1001',
-          name: '这里是值',
-          type: 'I1',
-          len: '20',
-          UNITS: 'A',
-          DEF: '1',
-          MIN: '1',
-          MAX: '8',
-          PLC_TYPE: 'uint16',
-          PLC_Address: '1001',
-          remark: '一些内容说明',
-        },
-      ],
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕',
-        },
-        {
-          value: '选项2',
-          label: '双皮奶',
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎',
-        },
-        {
-          value: '选项4',
-          label: '龙须面',
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭',
-        },
-      ],
     };
   },
   components: {
     Header,
     TableOperationButtons,
   },
+  mounted() {
+    // console.log(this.$store.state);
+  },
   methods: {
-    newButtonEvent() {
-      console.log('add');
+    handleClick() {
+      console.log('handleClick');
     },
-    deleteButtonEvent() {
+    handleClose() {
+      console.log('handleClose');
+    },
+    newButtonEvent() {
+      this.dialogVisible = true;
+    },
+
+    // 删除表格数据
+    deleteButtonEvent(list) {
+      console.log(list);
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
         this.handleSelectionChange([]);
-        this.$refs.multipleTable.clearSelection();
+        this.$refs.xTable1.clearCheckboxRow();
       }, 1500);
     },
+    // 分页参数改变
+    handlePageChange(page) {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+      }, 1000);
+      console.log(page);
+    },
 
+    editClosedEvent({ row, column }) {
+      const $table = this.$refs.xTable1;
+      const field = column.property;
+      const cellValue = row[field];
+      // 判断单元格值是否被修改
+      if ($table.isUpdateByRow(row, field)) {
+        this.loading = true;
+        setTimeout(() => {
+          this.$message({
+            message: `局部保存成功！ ${field}=${cellValue}`,
+            type: 'success',
+          });
+          this.loading = false;
+        }, 300);
+      }
+    },
+
+    // 表格编辑
+    editRowEvent(row) {
+      console.log(row);
+      const $grid = this.$refs.xTable1;
+      $grid.setActiveRow(null);
+      this.tableData[0].PLC_Address = row.p1 + row.p2;
+    },
+
+    selectAllEvent({ records }) {
+      this.multipleSelection = records;
+      this.deleteButton.length = records.length;
+      this.alertTitle = `已经选择 ${records.length} 了项`;
+    },
+    selectChangeEvent({ records }) {
+      this.multipleSelection = records;
+      this.deleteButton.length = records.length;
+      this.alertTitle = `已经选择 ${records.length} 了项`;
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
@@ -252,6 +271,12 @@ export default {
   }
   .buttons-container {
     margin: 20px 20px;
+  }
+  .vxe-table {
+    margin: 20px 0;
+    input {
+      height: 32px;
+    }
   }
   .el-table {
     margin: 20px 0;
