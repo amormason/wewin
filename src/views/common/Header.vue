@@ -7,7 +7,7 @@
       <el-button type="danger" class="breathe danger-breathe" size="mini"
         >数据状态异常</el-button
       >
-      <el-button type="text">
+      <el-button type="text" @click="singOut">
         <el-link type="primary" icon="el-icon-user">{{ user.name }}</el-link>
       </el-button>
       <div class="user-name"></div>
@@ -38,6 +38,17 @@ export default {
   computed: {
     user() {
       return this.$store.state.user;
+    },
+  },
+  methods: {
+    singOut() {
+      this.$store.commit('setToken', null);
+      this.$store.commit('setUser', {});
+      this.$router.push('/login');
+      this.$message({
+        message: '您已退出登录',
+        type: 'success',
+      });
     },
   },
 };

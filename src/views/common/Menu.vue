@@ -19,7 +19,7 @@
           <i class="el-icon-location"></i>
           <span>基础页面</span>
         </template>
-        <el-menu-item index="login">登录</el-menu-item>
+        <!-- <el-menu-item index="login">登录</el-menu-item> -->
         <el-menu-item index="deviceStatus">设备状态</el-menu-item>
         <!-- <el-menu-item index="1-3">草稿</el-menu-item> -->
       </el-submenu>

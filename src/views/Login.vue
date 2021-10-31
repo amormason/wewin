@@ -33,7 +33,7 @@
         </div> -->
         <!-- {{ loginInfo }} -->
         <div>
-          <el-button type="primary" class="login-button" @click="login"
+          <el-button type="primary" :loading="loading" class="login-button" @click="login"
             >登录</el-button
           >
         </div>
@@ -49,22 +49,32 @@ export default {
   name: 'Login',
   data() {
     return {
+      loading: false,
       user: {
-        name: 'admin',
-        password: 'password',
+        name: 'administrator',
+        password: '1111',
       },
     };
   },
   methods: {
     login() {
-      this.$store.commit('setToken', Math.random());
-      this.$store.commit('setUser', this.user);
-      this.$router.push('/deviceStatus');
-      this.$message({
-        message: '登录成功',
-        type: 'success',
-      });
-      // login(this.loginInfo);
+      if (!this.user.name || !this.user.password) {
+        this.$message.error('请输入用户名和密码后登录');
+        return;
+      }
+      this.loading = true;
+      setTimeout(() => {
+        this.$store.commit('setToken', Math.random());
+        this.$store.commit('setUser', this.user);
+        this.loading = false;
+        sessionStorage.removeItem('loginBack');
+        this.$message({
+          message: '登录成功',
+          type: 'success',
+        });
+        this.$router.push(sessionStorage.getItem('loginBack') || '/deviceStatus');
+        // login(this.loginInfo);
+      }, 1500);
     },
   },
 };

@@ -6,12 +6,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: localStorage.getItem('token'),
+    token: '',
     user: {},
     authenticated: false,
   },
   mutations: {
-    // 修改token，并将token存入localStorage
+    // 修改token，并将token存入sessionStorage
     setToken(state, token) {
       state.token = token;
       storage.set('token', token);
