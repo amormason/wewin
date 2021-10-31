@@ -18,9 +18,10 @@ export default new Vuex.Store({
     },
     delToken(state) {
       state.token = '';
-      state.user = null;
+      state.user = '';
       storage.remove('token');
       storage.remove('user');
+      storage.remove('state');
     },
     // 可选
     setUser(state, user) {

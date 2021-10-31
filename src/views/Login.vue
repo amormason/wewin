@@ -67,12 +67,11 @@ export default {
         this.$store.commit('setToken', Math.random());
         this.$store.commit('setUser', this.user);
         this.loading = false;
-        sessionStorage.removeItem('loginBack');
         this.$message({
           message: '登录成功',
           type: 'success',
         });
-        this.$router.push(sessionStorage.getItem('loginBack') || '/deviceStatus');
+        this.$router.push(this.$route.query.redirect || '/deviceStatus');
         // login(this.loginInfo);
       }, 1500);
     },

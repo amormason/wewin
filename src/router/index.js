@@ -85,10 +85,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((r) => r.meta.requireAuth)) {
+    console.log(store.state.token || sessionStorage.getItem('token'));
     if (store.state.token || sessionStorage.getItem('token')) {
       next(); // 有token,进行request请求，后台还会验证token
     } else {
-      sessionStorage.setItem('loginBack', to.path);
       next({
         path: '/login',
         // 将刚刚要去的路由path（却无权限）作为参数，方便登录成功后直接跳转到该路由，这要进一步在登陆页面判断

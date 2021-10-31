@@ -42,8 +42,7 @@ export default {
   },
   methods: {
     singOut() {
-      this.$store.commit('setToken', null);
-      this.$store.commit('setUser', {});
+      this.$store.commit('delToken');
       this.$router.push('/login');
       this.$message({
         message: '您已退出登录',
