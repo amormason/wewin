@@ -26,7 +26,7 @@
         <el-button slot="reference" type="primary" icon="el-icon-paperclip" size="small" :loading="loading">导出</el-button>
       </el-popover>
 
-      <el-button icon="el-icon-s-operation" :type="testBtn.clicked ? 'success':''" size="small" :loading="loading" @click="testButton.event">测试当前页</el-button>
+      <el-button v-if="testButton" icon="el-icon-s-operation" :type="testBtn.clicked ? 'success':''" size="small" :loading="loading" @click="testButton.event">测试当前页</el-button>
     </el-col>
   </el-row>
 </template>

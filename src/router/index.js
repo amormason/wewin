@@ -9,72 +9,103 @@ VueRouter.prototype.push = function push(location) {
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    redirect: '/login',
-    // 某些页面规定必须登录后才能查看 ，可以在router中配置meta，将需要登录的requireAuth设为true，
-    meta: {
-      requireAuth: true,
-    },
+const routes = [{
+  path: '/',
+  name: 'Home',
+  redirect: '/login',
+  // 某些页面规定必须登录后才能查看 ，可以在router中配置meta，将需要登录的requireAuth设为true，
+  meta: {
+    requireAuth: true,
   },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('../views/Login.vue'),
-    meta: {
-      requireAuth: false,
-    },
+},
+{
+  path: '/login',
+  name: 'Login',
+  component: () => import('../views/Login.vue'),
+  meta: {
+    requireAuth: false,
   },
-  {
-    path: '/deviceStatus',
-    name: 'DeviceStatus',
-    component: () => import('../views/DeviceStatus.vue'),
-    meta: {
-      requireAuth: true,
-    },
+},
+{
+  path: '/deviceStatus',
+  name: 'DeviceStatus',
+  component: () => import('../views/DeviceStatus.vue'),
+  meta: {
+    requireAuth: true,
   },
-  {
-    path: '/moduleNetworkConfiguration',
-    name: 'ModuleNetworkConfiguration',
-    component: () => import('../views/ModuleNetworkConfiguration.vue'),
-    meta: {
-      requireAuth: true,
-    },
+},
+{
+  path: '/moduleNetworkConfiguration',
+  name: 'ModuleNetworkConfiguration',
+  component: () => import('../views/ModuleNetworkConfiguration.vue'),
+  meta: {
+    requireAuth: true,
   },
-  {
-    path: '/uploadConfiguration',
-    name: 'UploadConfiguration',
-    component: () => import('../views/UploadConfiguration.vue'),
-    meta: {
-      requireAuth: true,
-    },
+},
+{
+  path: '/uploadConfiguration',
+  name: 'UploadConfiguration',
+  component: () => import('../views/UploadConfiguration.vue'),
+  meta: {
+    requireAuth: true,
   },
-  {
-    path: '/dictionaryInformation',
-    name: 'DictionaryInformation',
-    component: () => import('../views/DictionaryInformation.vue'),
-    meta: {
-      requireAuth: true,
-    },
+},
+{
+  path: '/dictionaryInformation',
+  name: 'DictionaryInformation',
+  component: () => import('../views/DictionaryInformation.vue'),
+  meta: {
+    requireAuth: true,
   },
-  {
-    path: '/downloadConfiguration',
-    name: 'DownloadConfiguration',
-    component: () => import('../views/DownloadConfiguration.vue'),
-    meta: {
-      requireAuth: true,
-    },
+},
+{
+  path: '/downloadConfiguration',
+  name: 'DownloadConfiguration',
+  component: () => import('../views/DownloadConfiguration.vue'),
+  meta: {
+    requireAuth: true,
   },
-  {
-    path: '/SVID',
-    name: 'SVID',
-    component: () => import('../views/SVID.vue'),
-    meta: {
-      requireAuth: true,
-    },
+},
+{
+  path: '/SVID',
+  name: 'SVID',
+  component: () => import('../views/SVID.vue'),
+  meta: {
+    requireAuth: true,
   },
+},
+{
+  path: '/ECID',
+  name: 'ECID',
+  component: () => import('../views/ECID.vue'),
+  meta: {
+    requireAuth: true,
+  },
+},
+{
+  path: '/CEID',
+  name: 'CEID',
+  component: () => import('../views/CEID.vue'),
+  meta: {
+    requireAuth: true,
+  },
+},
+{
+  path: '/RPTID',
+  name: 'RPTID',
+  component: () => import('../views/RPTID.vue'),
+  meta: {
+    requireAuth: true,
+  },
+},
+{
+  path: '/ALID',
+  name: 'ALID',
+  component: () => import('../views/ALID.vue'),
+  meta: {
+    requireAuth: true,
+  },
+},
 ];
 
 const router = new VueRouter({
@@ -92,7 +123,9 @@ router.beforeEach((to, from, next) => {
       next({
         path: '/login',
         // 将刚刚要去的路由path（却无权限）作为参数，方便登录成功后直接跳转到该路由，这要进一步在登陆页面判断
-        query: { redirect: to.fullPath },
+        query: {
+          redirect: to.fullPath,
+        },
       });
     }
   } else {

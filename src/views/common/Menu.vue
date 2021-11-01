@@ -49,11 +49,11 @@
         <el-menu-item index="uploadConfiguration">上行配置</el-menu-item>
         <el-menu-item index="downloadConfiguration">下行配置</el-menu-item>
         <el-menu-item index="dictionaryInformation">字典信息</el-menu-item>
-        <el-menu-item index="4-3">ECID</el-menu-item>
+        <el-menu-item index="ECID">ECID</el-menu-item>
         <el-menu-item index="SVID">SVID</el-menu-item>
-        <el-menu-item index="4-3">CEID</el-menu-item>
-        <el-menu-item index="4-3">RPTID</el-menu-item>
-        <el-menu-item index="4-3">ALID</el-menu-item>
+        <el-menu-item index="CEID">CEID</el-menu-item>
+        <el-menu-item index="RPTID">RPTID</el-menu-item>
+        <el-menu-item index="ALID">ALID</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>

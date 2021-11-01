@@ -6,6 +6,7 @@
       <el-input class="keyword" placeholder="请输入" clearable v-model="req.keyWord">
       </el-input>
     </div>
+    <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton"></TableOperationButtons>
 
     <!-- <el-row class="buttons-container">
       <el-col :span="24">
@@ -30,11 +31,11 @@
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
       <vxe-column type="checkbox" width="60"></vxe-column>
-      <vxe-column sortable field="name" title="Name" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column sortable field="name" title="Name"></vxe-column>
       <vxe-column field="format" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-      <vxe-column field="length" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-      <vxe-column field="remark" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-      <vxe-column field="date" title="创建时间"></vxe-column>
+      <vxe-column field="length" title="LEN"></vxe-column>
+      <vxe-column field="remark" title="备注"></vxe-column>
+      <vxe-column sortable field="date" title="创建时间"></vxe-column>
     </vxe-table>
 
     <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
@@ -52,8 +53,6 @@
 </template>
 
 <script>
-import Header from './common/Header.vue';
-
 export default {
   name: 'ModuleNetworkConfiguration',
   data() {
@@ -70,7 +69,13 @@ export default {
         gateway: '',
         dns: '',
       },
-      currentPage4: 2,
+      deleteButton: {
+        event: this.deleteButtonEvent,
+        length: 0,
+      },
+      newButton: {
+        event: this.newButtonEvent,
+      },
       tableData: [
         {
           id: '',
@@ -137,9 +142,6 @@ export default {
       ],
     };
   },
-  components: {
-    Header,
-  },
   methods: {
     selectAllEvent() {
       console.log('selectAllEvent');
@@ -150,6 +152,35 @@ export default {
     // 翻页
     handlePageChange() {
       console.log('handlePageChange');
+    },
+    //  新建的操作
+    newButtonEvent() {
+      this.tableData.unshift({
+        p1: '',
+        p2: '',
+        SVID: '',
+        NAME: '',
+        FORMAT: '',
+        LEN: 0,
+        UNITS: '0',
+        DEF: 0,
+        MIN: 0,
+        MAX: 0,
+        PLC_TYPE: '',
+        PLC_Address: '',
+        REMARK: '',
+        CURRENTVALUE: '',
+      });
+    },
+    // 删除表格数据
+    deleteButtonEvent(list) {
+      console.log(list);
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+        this.handleSelectionChange([]);
+        this.$refs.xTable1.clearCheckboxRow();
+      }, 1500);
     },
   },
 };
