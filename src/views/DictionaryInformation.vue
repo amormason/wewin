@@ -1,37 +1,13 @@
 <template>
   <div class="dictionary-information-container">
     <Header breadcrumb="字典信息" title="字典信息" />
-    <el-row :gutter="10" class="form">
-      <el-col :span="2" class="label"> Key: </el-col>
-      <el-col :span="6">
-        <el-input
-          placeholder="请输入"
-          suffix-icon="el-icon-date"
-          v-model="req.keyWord"
-        >
-        </el-input>
-      </el-col>
+    <div class="form">
+      NAME:
+      <el-input class="keyword" placeholder="请输入" clearable v-model="req.keyWord">
+      </el-input>
+    </div>
 
-      <el-col :span="2" class="label"> 状态: </el-col>
-      <el-col :span="6">
-        <el-select v-model="req.status" clearable placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </el-col>
-
-      <el-col :span="8">
-        <el-button type="primary" icon="el-icon-search">查询</el-button>
-        <el-button icon="el-icon-refresh-left">重置</el-button>
-      </el-col>
-    </el-row>
-
-    <el-row class="buttons-container">
+    <!-- <el-row class="buttons-container">
       <el-col :span="24">
         <el-button type="primary" size="small" icon="el-icon-plus"
           >新建</el-button
@@ -42,44 +18,36 @@
         <el-button type="danger" icon="el-icon-s-operation" size="small"
           >批量删除</el-button
         >
-        <!-- <el-button size="small">...</el-button> -->
       </el-col>
-    </el-row>
+    </el-row> -->
 
-    <el-alert title="成功提示的文案" type="success" effect="dark"> </el-alert>
+    <!-- <el-alert title="成功提示的文案" type="success" effect="dark"> </el-alert> -->
 
-    <el-table
-      :data="tableData"
-      highlight-current-row
-      stripe
-      style="width: 100%"
-    >
-      <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="date" label="Key" sortable width="100">
-      </el-table-column>
-      <el-table-column prop="name" label="Value" sortable width="100">
-      </el-table-column>
-      <el-table-column prop="address" label="类型" sortable> </el-table-column>
-      <el-table-column prop="address" label="备注" sortable> </el-table-column>
-      <el-table-column prop="date" label="创建时间" sortable> </el-table-column>
-      <el-table-column fixed="right" label="操作" width="100">
-        <template slot-scope="scope">
-          <el-link type="danger" @click="handleClick(scope.row)">删除</el-link>
-          <el-link type="primary" @click="handleClick(scope.row)">编辑</el-link>
-        </template>
-      </el-table-column>
-    </el-table>
+    <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+        trigger: 'dblclick',
+        mode: 'cell',
+        showStatus: true,
+        icon: 'el-icon-s-tools',
+      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
+      <vxe-column type="checkbox" width="60"></vxe-column>
+      <vxe-column sortable field="name" title="Name" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="format" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="length" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="remark" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+      <vxe-column field="date" title="创建时间"></vxe-column>
+    </vxe-table>
 
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage4"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
-    >
-    </el-pagination>
+    <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
+        'PrevJump',
+        'PrevPage',
+        'JumpNumber',
+        'NextPage',
+        'NextJump',
+        'Sizes',
+        'FullJump',
+        'Total',
+      ]">
+    </vxe-pager>
   </div>
 </template>
 
@@ -90,6 +58,12 @@ export default {
   name: 'ModuleNetworkConfiguration',
   data() {
     return {
+      loading: false,
+      page: {
+        currentPage: 1,
+        pageSize: 20,
+        totalResult: 124,
+      },
       req: {
         keyWord: '',
         status: '',
@@ -99,24 +73,44 @@ export default {
       currentPage4: 2,
       tableData: [
         {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
+          id: '',
+          name: 'MDNL',
+          date: '2016-05-02 05:50:54',
+          format: 'ASCII',
+          length: '22',
+          remark: '这里是一些备注信息',
         },
         {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
+          id: '',
+          name: 'MDNL',
+          date: '2016-05-02 05:50:54',
+          format: 'ASCII',
+          length: '22',
+          remark: '这里是一些备注信息',
         },
         {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
+          id: '',
+          name: 'MDNL',
+          date: '2016-05-02 05:50:54',
+          format: 'ASCII',
+          length: '22',
+          remark: '这里是一些备注信息',
         },
         {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄',
+          id: '',
+          name: 'MDNL',
+          date: '2016-05-02 05:50:54',
+          format: 'ASCII',
+          length: '22',
+          remark: '这里是一些备注信息',
+        },
+        {
+          id: '',
+          name: 'MDNL',
+          date: '2016-05-02 05:50:54',
+          format: 'ASCII',
+          length: '22',
+          remark: '这里是一些备注信息',
         },
       ],
       options: [
@@ -147,11 +141,15 @@ export default {
     Header,
   },
   methods: {
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    selectAllEvent() {
+      console.log('selectAllEvent');
     },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+    selectChangeEvent() {
+      console.log('selectChangeEvent');
+    },
+    // 翻页
+    handlePageChange() {
+      console.log('handlePageChange');
     },
   },
 };
@@ -160,26 +158,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .dictionary-information-container {
-  width: 1500px;
   .form {
+    .keyword {
+      display: inline-block;
+      width: 200px;
+      margin-left: 1rem;
+    }
+  }
+  .vxe-table {
     margin-top: 20px;
-    .el-input,
-    .el-select {
-      width: 100%;
-    }
-    .label {
-      line-height: 40px;
-      text-align: center;
-    }
-  }
-  .buttons-container {
-    margin: 20px 20px;
-  }
-  .el-table {
-    margin: 20px 0;
-    .el-link {
-      margin: 0 5px;
-    }
   }
 }
 </style>

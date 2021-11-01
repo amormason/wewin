@@ -82,6 +82,7 @@ export default {
 }
 
 .header-container {
+  margin-bottom: 2rem;
   .user-container {
     margin-bottom: 20px;
     display: flex;

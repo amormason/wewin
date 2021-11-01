@@ -2,23 +2,23 @@
   <div class="dictionary-information-container">
     <Header breadcrumb="SVID" title="SVID" />
 
-    <el-row :gutter="10" class="form">
-      <el-col :span="2" class="label"> VID/NAME: </el-col>
-      <el-col :span="6">
+    <el-row :gutter="0" class="form">
+      <el-col :span="5">
+        VID/NAME:
         <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
       </el-col>
-      <el-col :span="2" class="label"> 备注: </el-col>
       <el-col :span="6">
+        备注:
         <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
       </el-col>
     </el-row>
 
-    <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton"></TableOperationButtons>
+    <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton"></TableOperationButtons>
 
     <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
     </el-alert>
 
-    <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" @edit-closed="editClosedEvent" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+    <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" @edit-closed="editClosedEvent" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
         trigger: 'dblclick',
         mode: 'cell',
         showStatus: true,
@@ -55,18 +55,19 @@
 
       <vxe-column title="操作" width="50">
         <template #default="{ row }">
+          <el-link type="success" v-if="!row.id">保存</el-link>
           <el-popover placement="top" width="180" v-model="row.visible">
             <p>确定要删除这一行({{ row.SVID }})吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
               <el-button type="primary" size="mini" @click="deleteButtonEvent(row.SVID);row.visible = false;">确定</el-button>
             </div>
-            <el-link slot="reference" type="danger">删除</el-link>
+            <el-link slot="reference" type="danger" v-if="row.id">删除</el-link>
           </el-popover>
         </template>
       </vxe-column>
 
-      <vxe-column field="CURRENTVALUE" title="当前值"></vxe-column>
+      <vxe-column type="html" :formatter="formatRole" field="CURRENTVALUE" title="当前值"></vxe-column>
     </vxe-table>
 
     <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
@@ -106,6 +107,7 @@ export default {
       },
       tableData: [
         {
+          id: 1,
           p1: 'D',
           p2: '1001',
           SVID: 1001,
@@ -122,6 +124,24 @@ export default {
           CURRENTVALUE: '222',
         },
         {
+          id: 2,
+          p1: 'B',
+          p2: '2001',
+          SVID: 1002,
+          NAME: '这里是值',
+          FORMAT: 'l1',
+          LEN: 10,
+          UNITS: 'A',
+          DEF: 1,
+          MIN: 1,
+          MAX: 1,
+          PLC_TYPE: 'uint32',
+          PLC_Address: 'B2001',
+          REMARK: '一些内容说明',
+          CURRENTVALUE: '',
+        },
+        {
+          id: 3,
           p1: 'C',
           p2: '2009',
           SVID: 1002,
@@ -156,7 +176,10 @@ export default {
       newButton: {
         event: this.newButtonEvent,
       },
-
+      testButton: {
+        event: this.testButtonEvent,
+        clicked: false,
+      },
       value1: false,
       alertTitle: '',
       req: {
@@ -182,8 +205,31 @@ export default {
     handleClose() {
       console.log('handleClose');
     },
+
+    //  新建的操作
     newButtonEvent() {
-      this.dialogVisible = true;
+      this.tableData.unshift({
+        p1: '',
+        p2: '',
+        SVID: '',
+        NAME: '',
+        FORMAT: '',
+        LEN: 0,
+        UNITS: '0',
+        DEF: 0,
+        MIN: 0,
+        MAX: 0,
+        PLC_TYPE: '',
+        PLC_Address: '',
+        REMARK: '',
+        CURRENTVALUE: '',
+      });
+      // this.dialogVisible = true;
+    },
+
+    // 测试当前页
+    testButtonEvent() {
+      this.testButton.clicked = !this.testButton.clicked;
     },
 
     // 删除表格数据
@@ -196,6 +242,7 @@ export default {
         this.$refs.xTable1.clearCheckboxRow();
       }, 1500);
     },
+
     // 分页参数改变
     handlePageChange(page) {
       this.loading = true;
@@ -251,6 +298,15 @@ export default {
       this.alertTitle = `已经选择 ${val.length} 了项`;
       this.deleteButton.length = val.length;
     },
+    // 格式化输出表格值
+    formatRole({ cellValue }) {
+      if (this.testButton.clicked) {
+        return cellValue
+          ? `<el-link type="success">${cellValue}</el-link>`
+          : '<el-link type="danger">测试失败</el-link>';
+      }
+      return '';
+    },
   },
 };
 </script>
@@ -259,10 +315,11 @@ export default {
 <style lang="scss" scoped>
 .dictionary-information-container {
   .form {
-    margin-top: 20px;
     .el-input,
     .el-select {
-      width: 100%;
+      width: 200px;
+      display: inline-block;
+      margin-left: 0.5rem;
     }
     .label {
       line-height: 40px;
