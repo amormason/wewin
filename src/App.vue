@@ -50,7 +50,7 @@ body {
     display: flex;
     .view-container {
       flex: 1;
-      padding: 10px;
+      padding: 0 10px 10px;
       max-width: 1720px;
       overflow-x: hidden;
     }
