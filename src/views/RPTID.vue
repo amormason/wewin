@@ -1,51 +1,51 @@
 <template>
-  <div class="dictionary-information-container">
+  <div>
     <Header breadcrumb="RPTID" title="RPTID" />
+    <div class="dictionary-information-container">
+      <el-row :gutter="0" class="form">
+        <el-col :span="5">
+          RPTID/NAME:
+          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
+        </el-col>
+        <el-col :span="6">
+          备注:
+          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
+        </el-col>
+      </el-row>
 
-    <el-row :gutter="0" class="form">
-      <el-col :span="5">
-        RPTID/NAME:
-        <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
-      </el-col>
-      <el-col :span="6">
-        备注:
-        <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
-      </el-col>
-    </el-row>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton"></TableOperationButtons>
 
-    <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton"></TableOperationButtons>
+      <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
+      </el-alert>
 
-    <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
-    </el-alert>
-
-    <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" @edit-closed="editClosedEvent" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" @edit-closed="editClosedEvent" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
         trigger: 'dblclick',
         mode: 'cell',
         showStatus: true,
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
-      <vxe-column type="checkbox" width="60"></vxe-column>
-      <vxe-column sortable field="RPTID" title="RPTID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-      <vxe-column field="VID" title="VID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-      <vxe-column field="REMARK" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column type="checkbox" width="60"></vxe-column>
+        <vxe-column sortable field="RPTID" title="RPTID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="VID" title="VID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="REMARK" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
-      <vxe-column title="操作" width="50">
-        <template #default="{ row }">
-          <el-link type="success" v-if="!row.id">保存</el-link>
-          <el-popover placement="top" width="180" v-model="row.visible">
-            <p>确定要删除这一行({{ row.RPTID }})吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="deleteButtonEvent(row.RPTID);row.visible = false;">确定</el-button>
-            </div>
-            <el-link slot="reference" type="danger" v-if="row.id">删除</el-link>
-          </el-popover>
-        </template>
-      </vxe-column>
+        <vxe-column title="操作" width="50">
+          <template #default="{ row }">
+            <el-link type="success" v-if="!row.id">保存</el-link>
+            <el-popover placement="top" width="180" v-model="row.visible">
+              <p>确定要删除这一行({{ row.RPTID }})吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="deleteButtonEvent(row.RPTID);row.visible = false;">确定</el-button>
+              </div>
+              <el-link slot="reference" type="danger" v-if="row.id">删除</el-link>
+            </el-popover>
+          </template>
+        </vxe-column>
 
-    </vxe-table>
+      </vxe-table>
 
-    <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
+      <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
         'PrevJump',
         'PrevPage',
         'JumpNumber',
@@ -55,15 +55,16 @@
         'FullJump',
         'Total',
       ]">
-    </vxe-pager>
+      </vxe-pager>
 
-    <el-dialog title="新增" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-      这里是新增的表单
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-        <el-button type="success" size="small" @click="dialogVisible = false">新增</el-button>
-      </span>
-    </el-dialog>
+      <el-dialog title="新增" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+        这里是新增的表单
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+          <el-button type="success" size="small" @click="dialogVisible = false">新增</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -286,6 +287,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .dictionary-information-container {
+  margin: 1rem;
   .form {
     .el-input,
     .el-select {

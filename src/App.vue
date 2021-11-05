@@ -50,10 +50,12 @@ body {
     display: flex;
     .view-container {
       flex: 1;
-      padding: 0 10px 10px;
-      max-width: 1720px;
+      max-width: 1664px;
       overflow-x: hidden;
     }
+  }
+  .data-table {
+    margin: 1rem;
   }
 }
 </style>

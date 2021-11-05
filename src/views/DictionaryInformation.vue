@@ -1,14 +1,15 @@
 <template>
-  <div class="dictionary-information-container">
+  <div>
     <Header breadcrumb="字典信息" title="字典信息" />
-    <div class="form">
-      NAME:
-      <el-input class="keyword" placeholder="请输入" clearable v-model="req.keyWord">
-      </el-input>
-    </div>
-    <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton"></TableOperationButtons>
+    <div class="dictionary-information-container">
+      <div class="form">
+        NAME:
+        <el-input class="keyword" placeholder="请输入" clearable v-model="req.keyWord">
+        </el-input>
+      </div>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton"></TableOperationButtons>
 
-    <!-- <el-row class="buttons-container">
+      <!-- <el-row class="buttons-container">
       <el-col :span="24">
         <el-button type="primary" size="small" icon="el-icon-plus"
           >新建</el-button
@@ -22,23 +23,23 @@
       </el-col>
     </el-row> -->
 
-    <!-- <el-alert title="成功提示的文案" type="success" effect="dark"> </el-alert> -->
+      <!-- <el-alert title="成功提示的文案" type="success" effect="dark"> </el-alert> -->
 
-    <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
         trigger: 'dblclick',
         mode: 'cell',
         showStatus: true,
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
-      <vxe-column type="checkbox" width="60"></vxe-column>
-      <vxe-column sortable field="name" title="Name"></vxe-column>
-      <vxe-column field="format" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-      <vxe-column field="length" title="LEN"></vxe-column>
-      <vxe-column field="remark" title="备注"></vxe-column>
-      <vxe-column sortable field="date" title="创建时间"></vxe-column>
-    </vxe-table>
+        <vxe-column type="checkbox" width="60"></vxe-column>
+        <vxe-column sortable field="name" title="Name"></vxe-column>
+        <vxe-column field="format" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="length" title="LEN"></vxe-column>
+        <vxe-column field="remark" title="备注"></vxe-column>
+        <vxe-column sortable field="date" title="创建时间"></vxe-column>
+      </vxe-table>
 
-    <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
+      <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
         'PrevJump',
         'PrevPage',
         'JumpNumber',
@@ -48,7 +49,8 @@
         'FullJump',
         'Total',
       ]">
-    </vxe-pager>
+      </vxe-pager>
+    </div>
   </div>
 </template>
 
@@ -189,6 +191,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .dictionary-information-container {
+  padding: 1rem;
   .form {
     .keyword {
       display: inline-block;
