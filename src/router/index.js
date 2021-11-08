@@ -115,7 +115,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((r) => r.meta.requireAuth)) {
-    console.log(store.state.token || sessionStorage.getItem('token'));
     if (store.state.token || sessionStorage.getItem('token')) {
       next(); // 有token,进行request请求，后台还会验证token
     } else {

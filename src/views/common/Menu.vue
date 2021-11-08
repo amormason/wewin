@@ -67,7 +67,7 @@ export default {
     },
   },
   mounted() {
-    console.log(`/${window.location.href.split('/')[4]}`);
+    // console.log(`/${window.location.href.split('/')[4]}`);
     this.defaultActive = `/${window.location.href.split('/')[4]}`;
   },
 };

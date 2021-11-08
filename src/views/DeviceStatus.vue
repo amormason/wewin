@@ -6,8 +6,7 @@
         <el-col :span="8" class="label-container">连接模式:</el-col>
         <el-col :span="16" class="value-container">
           {{ info.mode }}
-          <el-link type="danger" icon="el-icon-error" v-if="!info.mode"
-            >获取连接模式失败
+          <el-link type="danger" icon="el-icon-error" v-if="!info.mode">获取连接模式失败
           </el-link>
           <!-- <el-button-group>
             <el-button
@@ -27,8 +26,7 @@
         <el-col :span="8" class="label-container">Active状态:</el-col>
         <el-col :span="16" class="value-container">
           {{ info.active }}
-          <el-link type="danger" icon="el-icon-error" v-if="!info.active"
-            >获取Active状态失败
+          <el-link type="danger" icon="el-icon-error" v-if="!info.active">获取Active状态失败
           </el-link>
         </el-col>
       </el-row>
@@ -36,8 +34,7 @@
         <el-col :span="8" class="label-container">业务状态:</el-col>
         <el-col :span="16" class="value-container">
           {{ info.business }}
-          <el-link type="danger" icon="el-icon-error" v-if="!info.business"
-            >获取业务状态失败
+          <el-link type="danger" icon="el-icon-error" v-if="!info.business">获取业务状态失败
           </el-link>
         </el-col>
       </el-row>
@@ -45,8 +42,7 @@
         <el-col :span="8" class="label-container">PLC状态:</el-col>
         <el-col :span="16" class="value-container">
           {{ info.plc }}
-          <el-link type="danger" icon="el-icon-error" v-if="!info.plc"
-            >获取PLC状态失败
+          <el-link type="danger" icon="el-icon-error" v-if="!info.plc">获取PLC状态失败
           </el-link>
         </el-col>
       </el-row>
@@ -55,8 +51,7 @@
         <el-col :span="16" class="value-container">
           <!-- <i class="el-icon-loading"></i> -->
           {{ info.data }}
-          <el-link type="danger" icon="el-icon-error" v-if="!info.data"
-            >获取数据状态失败
+          <el-link type="danger" icon="el-icon-error" v-if="!info.data">获取数据状态失败
           </el-link>
         </el-col>
       </el-row>
@@ -66,7 +61,7 @@
 
 <script>
 import Header from './common/Header.vue';
-// import { getDeviceStatus } from '@/api/request';
+import { getDeviceStatus } from '@/api/request';
 
 export default {
   name: 'DeviceStatus',
@@ -86,13 +81,14 @@ export default {
   },
   methods: {},
   mounted() {
-    // getDeviceStatus()
-    //   .then((res) => {
-    //     this.info = res;
-    //   })
-    //   .catch(() => {
-    //     this.info = {};
-    //   });
+    getDeviceStatus();
+    // .then((res) => {
+    //   console.log(res);
+    //   this.info = res;
+    // })
+    // .catch(() => {
+    //   this.info = {};
+    // });
   },
 };
 </script>

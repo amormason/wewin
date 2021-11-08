@@ -18,7 +18,7 @@ export default new Vuex.Store({
     },
     delToken(state) {
       state.token = '';
-      state.user = '';
+      state.user = {};
       storage.remove('token');
       storage.remove('user');
       storage.remove('state');

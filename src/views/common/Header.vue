@@ -85,7 +85,7 @@
         <i class="el-icon-bell"></i>
         <div @click="singOut" class="username">
           <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-          {{ user.name }}
+          {{ user.mobile }}
         </div>
       </div>
     </div>
@@ -107,10 +107,15 @@
 </template>
 
 <script>
+import { login } from '@/api/request';
+
 export default {
   name: 'Header',
   data() {
     return {
+      user: {
+        mobile: '',
+      },
       status1: false,
       status2: true,
       status3: false,
@@ -127,18 +132,27 @@ export default {
     secondTitle: String,
   },
   components: {},
-  computed: {
-    user() {
-      return this.$store.state.user;
-    },
+  computed: {},
+  mounted() {
+    this.user = this.$store.state.user;
   },
   methods: {
     singOut() {
-      this.$store.commit('delToken');
-      this.$router.push('/login');
-      this.$message({
-        message: '您已退出登录',
-        type: 'success',
+      login().then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          this.$store.commit('delToken');
+          this.$router.push('/login');
+          this.$message({
+            message: '您已退出登录',
+            type: 'success',
+          });
+        } else {
+          this.$message({
+            message: '登出系统失败',
+            type: 'error',
+          });
+        }
       });
     },
   },

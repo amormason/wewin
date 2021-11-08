@@ -6,17 +6,12 @@
         <div class="title">最强SECS转换器模块</div>
         <div class="placeholder">请你输入登录信息</div>
         <div>
-          <el-input placeholder="账号" v-model="user.name" clearable></el-input>
+          <el-input placeholder="账号" v-model="user.mobile" clearable></el-input>
         </div>
         <div>
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-input
-                type="password"
-                placeholder="密码"
-                v-model="user.password"
-                clearable
-              ></el-input>
+              <el-input type="password" placeholder="密码" v-model="user.vcode" clearable></el-input>
             </el-col>
           </el-row>
         </div>
@@ -33,9 +28,7 @@
         </div> -->
         <!-- {{ loginInfo }} -->
         <div>
-          <el-button type="primary" :loading="loading" class="login-button" @click="login"
-            >登录</el-button
-          >
+          <el-button type="primary" :loading="loading" class="login-button" @click="login">登录</el-button>
         </div>
       </el-col>
     </el-row>
@@ -43,7 +36,7 @@
 </template>
 
 <script>
-// import { login } from '@/api/request';
+import { login } from '@/api/request';
 
 export default {
   name: 'Login',
@@ -51,29 +44,51 @@ export default {
     return {
       loading: false,
       user: {
-        name: 'administrator',
-        password: '1111',
+        mobile: 'admin',
+        vcode: 'admin',
       },
     };
   },
   methods: {
     login() {
-      if (!this.user.name || !this.user.password) {
+      if (!this.user.mobile || !this.user.vcode) {
         this.$message.error('请输入用户名和密码后登录');
         return;
       }
       this.loading = true;
-      setTimeout(() => {
-        this.$store.commit('setToken', Math.random());
-        this.$store.commit('setUser', this.user);
-        this.loading = false;
-        this.$message({
-          message: '登录成功',
-          type: 'success',
+      login(this.user)
+        .then((res) => {
+          if (res && res.data && res.data.jwtToken) {
+            this.$store.commit('setToken', res.data.jwtToken);
+            this.$store.commit('setUser', this.user);
+            this.$message({
+              message: '登录成功',
+              type: 'success',
+            });
+
+            setTimeout(() => {
+              // getCurrentUserInfo().then((userInfo) => {
+              //   console.log(userInfo);
+              // });
+              this.$router.push(this.$route.query.redirect || '/deviceStatus');
+            }, 500);
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+          // 返回状态为(resolved 或 rejected)
         });
-        this.$router.push(this.$route.query.redirect || '/deviceStatus');
-        // login(this.loginInfo);
-      }, 1500);
+      // setTimeout(() => {
+      //   this.$store.commit('setToken', Math.random());
+      //   this.$store.commit('setUser', this.user);
+      //   this.loading = false;
+      //   this.$message({
+      //     message: '登录成功',
+      //     type: 'success',
+      //   });
+      //   this.$router.push(this.$route.query.redirect || '/deviceStatus');
+      //   // login(this.loginInfo);
+      // }, 1500);
     },
   },
 };

@@ -1,20 +1,25 @@
 import axios from 'axios';
-import qs from 'qs';
-import { MessageBox, Message } from 'element-ui';
+import {
+  Message,
+} from 'element-ui';
 import store from '@/store';
-
 // 创建一个 axios 实例
-const instance = axios.create({
-  baseURL: '/api', // url = base url + request url
+const service = axios.create({
+  baseURL: '/api/', // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
-  timeout: 1000, // request timeout
+  timeout: 10000, // request timeout
+  headers: {
+    // 'Content-Type': 'application/x-www-form-urlencoded',
+    // 'Content-Type': 'application/json',
+    'Content-Type': 'application/json;charset=UTF-8',
+  },
 });
 
 // 请求拦截器
-instance.interceptors.request.use(
+service.interceptors.request.use(
   (configP) => {
     const config = configP;
-    config.headers.Authorization = store.getters.get_token;
+    config.headers.Authorization = store.state.token;
     return config;
   },
   (error) => {
@@ -24,50 +29,38 @@ instance.interceptors.request.use(
   },
 );
 
-// 响应拦截器
-instance.interceptors.response.use(
-  (response) => {
-    const res = response.data;
-    if (res.code !== 200) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000,
-      });
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning',
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            window.location.reload();
-          });
-        });
-      }
-      return Promise.reject(new Error(res.message || 'Error'));
-    }
+// 返回拦截
+service.interceptors.response.use((response) => {
+  // 获取接口返回结果
+  const res = response.data;
+  // code为0，直接把结果返回回去，这样前端代码就不用在获取一次data.
+  if (res.code === 0) {
     return res;
-  },
-  (error) => {
-    console.log(`err${error}`);// for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000,
-    });
-    return Promise.reject(error);
-  },
-);
+  }
+  if (res.code === 10000) {
+    // 10000假设是未登录状态码
+    Message.warning(res.message);
+    // 也可使用router进行跳转
+    window.location.href = '/#/login';
+    return res;
+  }
+  // 错误显示可在service中控制，因为某些场景我们不想要展示错误
+  // Message.error(res.message);
+  return res;
+}, (error) => {
+  console.log(error.msg);
+  Message.error('网络请求异常，请稍后重试!');
+});
 
 // 按照请求类型对axios进行封装
 const http = {
   get(url, data) {
-    return instance.get(url, { params: data });
+    return service.get(url, {
+      params: data,
+    });
   },
   post(url, data) {
-    return instance.post(url, qs.stringify(data));
+    return service.post(url, data);
   },
 };
 

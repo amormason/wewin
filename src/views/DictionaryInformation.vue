@@ -3,11 +3,10 @@
     <Header breadcrumb="字典信息" title="字典信息" />
     <div class="dictionary-information-container">
       <div class="form">
-        NAME:
-        <el-input class="keyword" placeholder="请输入" clearable v-model="req.keyWord">
+        Name:
+        <el-input class="keyword" placeholder="请输入" clearable v-model="req.name">
         </el-input>
       </div>
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton"></TableOperationButtons>
 
       <!-- <el-row class="buttons-container">
       <el-col :span="24">
@@ -31,12 +30,12 @@
         showStatus: true,
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
-        <vxe-column type="checkbox" width="60"></vxe-column>
+         <!-- <vxe-column type="seq" width="60"></vxe-column> -->
         <vxe-column sortable field="name" title="Name"></vxe-column>
-        <vxe-column field="format" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="length" title="LEN"></vxe-column>
-        <vxe-column field="remark" title="备注"></vxe-column>
-        <vxe-column sortable field="date" title="创建时间"></vxe-column>
+        <vxe-column field="format" title="FORMAT"></vxe-column>
+        <vxe-column field="len" title="LEN"></vxe-column>
+        <vxe-column field="comment" title="备注"></vxe-column>
+        <!-- <vxe-column sortable field="date" title="创建时间"></vxe-column> -->
       </vxe-table>
 
       <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
@@ -55,6 +54,9 @@
 </template>
 
 <script>
+import Header from './common/Header.vue';
+import { findDidByName } from '@/api/request';
+
 export default {
   name: 'ModuleNetworkConfiguration',
   data() {
@@ -66,10 +68,7 @@ export default {
         totalResult: 124,
       },
       req: {
-        keyWord: '',
-        status: '',
-        gateway: '',
-        dns: '',
+        name: '',
       },
       deleteButton: {
         event: this.deleteButtonEvent,
@@ -78,73 +77,20 @@ export default {
       newButton: {
         event: this.newButtonEvent,
       },
-      tableData: [
-        {
-          id: '',
-          name: 'MDNL',
-          date: '2016-05-02 05:50:54',
-          format: 'ASCII',
-          length: '22',
-          remark: '这里是一些备注信息',
-        },
-        {
-          id: '',
-          name: 'MDNL',
-          date: '2016-05-02 05:50:54',
-          format: 'ASCII',
-          length: '22',
-          remark: '这里是一些备注信息',
-        },
-        {
-          id: '',
-          name: 'MDNL',
-          date: '2016-05-02 05:50:54',
-          format: 'ASCII',
-          length: '22',
-          remark: '这里是一些备注信息',
-        },
-        {
-          id: '',
-          name: 'MDNL',
-          date: '2016-05-02 05:50:54',
-          format: 'ASCII',
-          length: '22',
-          remark: '这里是一些备注信息',
-        },
-        {
-          id: '',
-          name: 'MDNL',
-          date: '2016-05-02 05:50:54',
-          format: 'ASCII',
-          length: '22',
-          remark: '这里是一些备注信息',
-        },
-      ],
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕',
-        },
-        {
-          value: '选项2',
-          label: '双皮奶',
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎',
-        },
-        {
-          value: '选项4',
-          label: '龙须面',
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭',
-        },
-      ],
+      tableData: [],
     };
   },
   methods: {
+    getData() {
+      this.loading = true;
+      findDidByName(this.req)
+        .then((res) => {
+          this.tableData = res.data || [];
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     selectAllEvent() {
       console.log('selectAllEvent');
     },
@@ -184,6 +130,26 @@ export default {
         this.$refs.xTable1.clearCheckboxRow();
       }, 1500);
     },
+  },
+
+  mounted() {
+    this.getData();
+  },
+  watch: {
+    'req.name': {
+      handler() {
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+        this.timer = setTimeout(() => {
+          this.getData();
+        }, 1000);
+      },
+      deep: true,
+    },
+  },
+  components: {
+    Header,
   },
 };
 </script>

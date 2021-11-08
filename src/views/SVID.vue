@@ -3,14 +3,14 @@
     <Header breadcrumb="SVID" title="SVID" />
     <div class="dictionary-information-container">
       <el-row :gutter="0" class="form">
-        <el-col :span="5">
-          VID/NAME:
-          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
+        <el-col :span="7">
+          VID/NAME备注:
+          <el-input placeholder="请输入" v-model="req.name"> </el-input>
         </el-col>
-        <el-col :span="6">
+        <!-- <el-col :span="6">
           备注:
           <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
-        </el-col>
+        </el-col> -->
       </el-row>
 
       <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton"></TableOperationButtons>
@@ -25,15 +25,15 @@
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
         <vxe-column type="checkbox" width="60"></vxe-column>
-        <vxe-column sortable field="SVID" title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="NAME" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="FORMAT" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="LEN" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="UNITS" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="DEF" title="DEF" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="MIN" title="MIN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="MAX" title="MAX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="PLC_TYPE" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column sortable field="id" title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="len" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="units" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="def" title="DEF" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="min" title="MIN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="max" title="MAX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="plcType" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
         <vxe-column width="150" field="PLC_Address" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
           <!--使用#edit自定义编辑-->
@@ -51,7 +51,7 @@
           </template>
         </vxe-column>
 
-        <vxe-column field="REMARK" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="comment" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
         <vxe-column title="操作" width="50">
           <template #default="{ row }">
@@ -67,7 +67,8 @@
           </template>
         </vxe-column>
 
-        <vxe-column type="html" :formatter="formatRole" field="CURRENTVALUE" title="当前值"></vxe-column>
+        <!-- <vxe-column type="html" :formatter="formatRole" field="CURRENTVALUE" title="当前值"></vxe-column> -->
+         <vxe-column field="value" title="当前值"></vxe-column>
       </vxe-table>
 
       <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
@@ -96,6 +97,7 @@
 <script>
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
+import { findSvidByName } from '@/api/request';
 
 export default {
   name: 'SVID',
@@ -106,59 +108,7 @@ export default {
         pageSize: 20,
         totalResult: 124,
       },
-      tableData: [
-        {
-          id: 1,
-          p1: 'D',
-          p2: '1001',
-          SVID: 1001,
-          NAME: '这里是值',
-          FORMAT: 'l1',
-          LEN: 20,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          MAX: 1,
-          PLC_TYPE: 'uint16',
-          PLC_Address: 'D1001',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '222',
-        },
-        {
-          id: 2,
-          p1: 'B',
-          p2: '2001',
-          SVID: 1002,
-          NAME: '这里是值',
-          FORMAT: 'l1',
-          LEN: 10,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          MAX: 1,
-          PLC_TYPE: 'uint32',
-          PLC_Address: 'B2001',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '',
-        },
-        {
-          id: 3,
-          p1: 'C',
-          p2: '2009',
-          SVID: 1002,
-          NAME: '这里是值',
-          FORMAT: 'l1',
-          LEN: 20,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          MAX: 1,
-          PLC_TYPE: 'uint16',
-          PLC_Address: 'C2009',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '222',
-        },
-      ],
+      tableData: [],
       options: [
         { label: 'D', value: 'D' },
         { label: 'E', value: 'E' },
@@ -184,10 +134,7 @@ export default {
       value1: false,
       alertTitle: '',
       req: {
-        keyWord: '',
-        status: '',
-        gateway: '',
-        dns: '',
+        name: '',
       },
       currentPage4: 2,
     };
@@ -197,9 +144,20 @@ export default {
     TableOperationButtons,
   },
   mounted() {
+    this.getData();
     // console.log(this.$store.state);
   },
   methods: {
+    getData() {
+      this.loading = true;
+      findSvidByName(this.req)
+        .then((res) => {
+          this.tableData = res.data || [];
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     handleClick() {
       console.log('handleClick');
     },
@@ -259,6 +217,7 @@ export default {
       const cellValue = row[field];
       // 判断单元格值是否被修改
       if ($table.isUpdateByRow(row, field)) {
+        console.log(row);
         this.loading = true;
         setTimeout(() => {
           this.$message({
@@ -307,6 +266,19 @@ export default {
           : '<el-link type="danger">测试失败</el-link>';
       }
       return '';
+    },
+  },
+  watch: {
+    'req.name': {
+      handler() {
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+        this.timer = setTimeout(() => {
+          this.getData();
+        }, 1000);
+      },
+      deep: true,
     },
   },
 };

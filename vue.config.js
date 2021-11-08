@@ -7,7 +7,7 @@ module.exports = {
     proxy: {
       // 配置多个代理
       '/api': {
-        target: 'http://192.168.1.153:8080/',
+        target: 'http://121.11.118.203:9813',
         changeOrigin: true,
         ws: true, // websocket支持
         secure: false,

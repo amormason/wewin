@@ -1,7 +1,6 @@
 <template>
   <div class="upload-configuration-container">
     <Header
-      breadcrumb="下行配置"
       title="下行配置"
       secondTitle="配置PLC的相关信息，配置完成后，模块不会重启，但是业务系统会进行重启，5s内请暂时不要操任何。"
     />
