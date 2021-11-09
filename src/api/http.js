@@ -5,7 +5,7 @@ import {
 import store from '@/store';
 // 创建一个 axios 实例
 const service = axios.create({
-  baseURL: '/api/', // url = base url + request url
+  baseURL: '/', // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 10000, // request timeout
   headers: {
@@ -48,8 +48,7 @@ service.interceptors.response.use((response) => {
   // Message.error(res.message);
   return res;
 }, (error) => {
-  console.log(error.msg);
-  Message.error('网络请求异常，请稍后重试!');
+  Message.error('网络请求异常，请稍后重试!' || error);
 });
 
 // 按照请求类型对axios进行封装

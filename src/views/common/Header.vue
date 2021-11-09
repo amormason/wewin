@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { login } from '@/api/request';
+import { logout } from '@/api/request';
 
 export default {
   name: 'Header',
@@ -138,7 +138,7 @@ export default {
   },
   methods: {
     singOut() {
-      login().then((res) => {
+      logout().then((res) => {
         console.log(res);
         if (res.status === 200) {
           this.$store.commit('delToken');

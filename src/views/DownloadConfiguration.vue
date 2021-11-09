@@ -1,18 +1,15 @@
 <template>
   <div class="upload-configuration-container">
-    <Header
-      title="下行配置"
-      secondTitle="配置PLC的相关信息，配置完成后，模块不会重启，但是业务系统会进行重启，5s内请暂时不要操任何。"
-    />
+    <Header title="下行配置" secondTitle="配置PLC的相关信息，配置完成后，模块不会重启，但是业务系统会进行重启，5s内请暂时不要操任何。" />
     <div class="data-table">
       <el-row :gutter="20">
         <el-col :span="4" class="label">PLC IP: </el-col>
         <el-col :span="12">
-          <el-input placeholder="192.168.1.100" v-model="hsms.ip" clearable>
+          <el-input placeholder="192.168.1.100" v-model="hsms.plcCommAddr" clearable>
           </el-input>
         </el-col>
         <el-col :span="6">
-          <el-input placeholder="端口" v-model="hsms.prot" clearable>
+          <el-input placeholder="端口" v-model="hsms.plcCommPort" clearable>
           </el-input>
         </el-col>
       </el-row>
@@ -20,13 +17,8 @@
       <el-row :gutter="20">
         <el-col :span="4" class="label">Protocol: </el-col>
         <el-col :span="12">
-          <el-select v-model="hsms.hsms" clearable placeholder="HSMS / SECES-I">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
+          <el-select v-model="hsms.prol" clearable placeholder="HSMS / SECES-I">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-col>
@@ -49,44 +41,18 @@
 
       <el-row class="operation">
         <el-col :span="24">
-          <el-button
-            type="primary"
-            size="small"
-            icon="el-icon-check"
-            :disabled="loading"
-            :loading="loading"
-            :closable="true"
-            >提交</el-button
-          >
-          <el-button
-            type="warning"
-            size="small"
-            icon="el-icon-s-claim"
-            @click="handldTest()"
-            :disabled="loading"
-            :loading="loading"
-            >测试</el-button
-          >
+          <el-button type="primary" size="small" icon="el-icon-check" @click="saveHandle()" :disabled="loading" :loading="loading" :closable="true">提交</el-button>
+          <el-button type="warning" size="small" icon="el-icon-s-claim" @click="handldTest()" :disabled="loading" :loading="loading">测试</el-button>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="24">
-          <el-alert
-            v-if="res.success === true"
-            title="成功提示的文案"
-            type="success"
-            effect="dark"
-          >
+          <el-alert v-if="res.success === true" title="成功提示的文案" type="success" effect="dark">
           </el-alert>
         </el-col>
 
-        <el-alert
-          v-if="res.success === false"
-          title="测试失败"
-          type="error"
-          effect="dark"
-        >
+        <el-alert v-if="res.success === false" title="测试失败" type="error" effect="dark">
         </el-alert>
       </el-row>
     </div>
@@ -95,6 +61,7 @@
 
 <script>
 import Header from './common/Header.vue';
+import { getPlcConf, setPlcConf } from '@/api/request';
 
 export default {
   name: 'DownloadConfiguration',
@@ -102,17 +69,9 @@ export default {
     return {
       loading: false,
       hsms: {
-        ip: '',
-        hsms: '',
-        gateway: '',
-        active: '',
-        LinkTest: '',
-        t3: '',
-        t4: '',
-        t5: '',
-        t6: '',
-        t7: '',
-        t8: '',
+        plcCommAddr: '',
+        plcCommPort: '',
+        prol: '',
       },
       res: {},
       activeOptions: [
@@ -127,24 +86,24 @@ export default {
       ],
       options: [
         {
-          value: '选项1',
-          label: '黄金糕',
+          value: 'mc',
+          label: 'MC',
         },
         {
-          value: '选项2',
-          label: '双皮奶',
+          value: 'fsmc',
+          label: 'FSMC',
         },
         {
-          value: '选项3',
-          label: '蚵仔煎',
+          value: 'modbusRTU',
+          label: 'ModbusRTU',
         },
         {
-          value: '选项4',
-          label: '龙须面',
+          value: 'modbusTCP',
+          label: 'ModbusTCP',
         },
         {
-          value: '选项5',
-          label: '北京烤鸭',
+          value: 's7',
+          label: 'S7',
         },
       ],
     };
@@ -153,6 +112,32 @@ export default {
     Header,
   },
   methods: {
+    getData() {
+      this.loading = true;
+      getPlcConf()
+        .then((res) => {
+          this.hsms = res.data;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    saveHandle() {
+      this.loading = true;
+      setPlcConf(this.hsms)
+        .then((res) => {
+          if (res.status === 200) {
+            this.getData();
+            this.$message({
+              message: res.msg || '恭喜你，这是一条成功消息',
+              type: 'success',
+            });
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -166,6 +151,9 @@ export default {
         };
       }, 1000);
     },
+  },
+  mounted() {
+    this.getData();
   },
 };
 </script>

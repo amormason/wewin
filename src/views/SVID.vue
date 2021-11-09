@@ -53,22 +53,22 @@
 
         <vxe-column field="comment" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
-        <vxe-column title="操作" width="50">
+        <vxe-column title="操作" width="150">
           <template #default="{ row }">
-            <el-link type="success" v-if="!row.id">保存</el-link>
+            <el-link type="success" v-if="row.isNew" @click="saveData(row)">保存</el-link>
             <el-popover placement="top" width="180" v-model="row.visible">
               <p>确定要删除这一行({{ row.SVID }})吗？</p>
               <div style="text-align: right; margin: 0">
                 <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
                 <el-button type="primary" size="mini" @click="deleteButtonEvent(row.SVID);row.visible = false;">确定</el-button>
               </div>
-              <el-link slot="reference" type="danger" v-if="row.id">删除</el-link>
+              <el-link slot="reference" type="danger">删除</el-link>
             </el-popover>
           </template>
         </vxe-column>
 
         <!-- <vxe-column type="html" :formatter="formatRole" field="CURRENTVALUE" title="当前值"></vxe-column> -->
-         <vxe-column field="value" title="当前值"></vxe-column>
+        <vxe-column field="value" title="当前值"></vxe-column>
       </vxe-table>
 
       <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
@@ -97,7 +97,7 @@
 <script>
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
-import { findSvidByName } from '@/api/request';
+import { findSvidByName, setSvid } from '@/api/request';
 
 export default {
   name: 'SVID',
@@ -158,6 +158,17 @@ export default {
           this.loading = false;
         });
     },
+    saveData(row) {
+      setSvid(row).then((res) => {
+        if (res.status === 200) {
+          this.$message({
+            message: res.msg || '恭喜你，这是一条成功消息',
+            type: 'success',
+          });
+        }
+      });
+    },
+
     handleClick() {
       console.log('handleClick');
     },
@@ -168,20 +179,19 @@ export default {
     //  新建的操作
     newButtonEvent() {
       this.tableData.unshift({
-        p1: '',
-        p2: '',
-        SVID: '',
-        NAME: '',
-        FORMAT: '',
-        LEN: 0,
-        UNITS: '0',
-        DEF: 0,
-        MIN: 0,
-        MAX: 0,
-        PLC_TYPE: '',
-        PLC_Address: '',
-        REMARK: '',
-        CURRENTVALUE: '',
+        isNew: true,
+        id: '',
+        name: '',
+        formatCodeType: '',
+        len: '',
+        def: '',
+        min: '',
+        max: '',
+        plcType: '',
+        plcAddr: '',
+        units: '',
+        value: '',
+        comment: '',
       });
       // this.dialogVisible = true;
     },
@@ -214,18 +224,25 @@ export default {
     editClosedEvent({ row, column }) {
       const $table = this.$refs.xTable1;
       const field = column.property;
-      const cellValue = row[field];
+      // const cellValue = row[field];
       // 判断单元格值是否被修改
       if ($table.isUpdateByRow(row, field)) {
-        console.log(row);
-        this.loading = true;
-        setTimeout(() => {
-          this.$message({
-            message: `局部保存成功！ ${field}=${cellValue}`,
-            type: 'success',
+        if (!row.isNew) {
+          const reqData = {};
+          Object.keys(row).map((key) => {
+            reqData[key.toLowerCase()] = row[key];
+            return '';
           });
           this.loading = false;
-        }, 300);
+          setSvid(reqData).then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+            }
+          });
+        }
       }
     },
 

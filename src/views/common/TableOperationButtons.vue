@@ -1,7 +1,7 @@
 <template>
   <el-row class="table-operation-buttons-container">
     <el-col :span="24">
-      <el-button type="success" size="small" icon="el-icon-plus" :loading="loading" @click="newButton.event" v-if="noNew">新建</el-button>
+      <el-button type="success" size="small" icon="el-icon-plus" :loading="loading" @click="newButton.event" v-if="!noNew">新建</el-button>
 
       <el-popover class="deletePopover" placement="top" width="160" v-model="deleteVisible">
         <p>确认将已选择的{{ deleteBtn.length }}条数据删除吗？</p>

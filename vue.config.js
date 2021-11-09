@@ -27,6 +27,6 @@ module.exports = {
     sourceMap: true,
   },
 
-  publicPath: '/weWin',
+  publicPath: '/',
   runtimeCompiler: true,
 };

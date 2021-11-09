@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { login } from '@/api/request';
+import { login, getCurrentUserInfo } from '@/api/request';
 
 export default {
   name: 'Login',
@@ -65,11 +65,10 @@ export default {
               message: '登录成功',
               type: 'success',
             });
-
+            getCurrentUserInfo().then((userInfo) => {
+              console.log(userInfo);
+            });
             setTimeout(() => {
-              // getCurrentUserInfo().then((userInfo) => {
-              //   console.log(userInfo);
-              // });
               this.$router.push(this.$route.query.redirect || '/deviceStatus');
             }, 500);
           }
