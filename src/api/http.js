@@ -5,7 +5,7 @@ import {
 import store from '@/store';
 // 创建一个 axios 实例
 const service = axios.create({
-  baseURL: '/', // url = base url + request url
+  baseURL: '/api/', // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 10000, // request timeout
   headers: {
