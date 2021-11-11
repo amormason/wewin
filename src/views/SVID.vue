@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-undef */
 <template>
   <div>
     <Header breadcrumb="SVID" title="SVID" />
@@ -75,7 +73,7 @@
         <vxe-column field="value" title="当前值"></vxe-column>
       </vxe-table>
 
-      <vxe-pager background @page-change="handlePageChange" :current-page.sync="requestParamsObj.page.currentPage" :page-size.sync="requestParamsObj.page.pageSize" :total="requestParamsObj.page.totalResult" :layouts="[
+      <vxe-pager background @page-change="handlePageChange" :current-page.sync="requestParamsObj.page.page" :page-size.sync="requestParamsObj.page.size" :total="requestParamsObj.page.total" :layouts="[
         'PrevJump',
         'PrevPage',
         'JumpNumber',
@@ -93,7 +91,7 @@
 <script>
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
-import { findSvidByName, setSvid, delSvid } from '@/api/request';
+import { findSvidByName, setSvid, delSvids } from '@/api/request';
 
 export default {
   name: 'SVID',
@@ -127,12 +125,11 @@ export default {
       requestParamsObj: {
         name: '',
         page: {
-          currentPage: 1,
-          pageSize: 20,
-          totalResult: 124,
+          page: 1,
+          size: 15,
+          total: 0,
         },
       },
-      currentPage4: 2,
     };
   },
   components: {
@@ -148,12 +145,17 @@ export default {
       const requestParamsObj = JSON.parse(
         JSON.stringify(this.requestParamsObj),
       );
-      delete requestParamsObj.page.totalResult;
+      delete requestParamsObj.page.total;
       this.loading = true;
       findSvidByName(requestParamsObj)
         .then((res) => {
           if (res.status === 200) {
-            this.tableData = res.data.map((item) => {
+            this.requestParamsObj.page = {
+              page: res.data.page,
+              size: res.data.size,
+              total: res.data.total,
+            };
+            this.tableData = res.data.result.map((item) => {
               const temp = item;
               const { plcname, plcvalue } = this.GLOBAL.getPLC(item.plcAddr);
               temp.plcname = plcname;
@@ -235,11 +237,11 @@ export default {
     // 删除表格数据
     deleteButtonEvent(rows) {
       const list = rows || this.multipleSelection;
-      const remoteData = list.filter((item) => item.id);
-      this.$refs.xTable.removeCheckboxRow();
+      const remoteData = list.filter((item) => item.id).map((item) => item.id);
+      // this.$refs.xTable.removeCheckboxRow();
       if (remoteData.length) {
         this.loading = true;
-        delSvid(remoteData[0].id)
+        delSvids(remoteData)
           .then((res) => {
             if (res.status === 200) {
               this.$message({
@@ -257,11 +259,11 @@ export default {
 
     // 分页参数改变
     handlePageChange(page) {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 1000);
-      console.log(page);
+      this.requestParamsObj.page = {
+        page: page.currentPage,
+        size: page.pageSize,
+      };
+      this.getData();
     },
 
     // 表格编辑完
@@ -336,19 +338,19 @@ export default {
       return '';
     },
   },
-  watch: {
-    requestParamsObj: {
-      handler() {
-        if (this.timer) {
-          clearTimeout(this.timer);
-        }
-        this.timer = setTimeout(() => {
-          this.getData();
-        }, 1000);
-      },
-      deep: true,
-    },
-  },
+  // watch: {
+  //   requestParamsObj: {
+  //     handler() {
+  //       if (this.timer) {
+  //         clearTimeout(this.timer);
+  //       }
+  //       this.timer = setTimeout(() => {
+  //         this.getData();
+  //       }, 1000);
+  //     },
+  //     deep: true,
+  //   },
+  // },
 };
 </script>
 

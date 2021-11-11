@@ -17,10 +17,11 @@ export const findDidByName = (params) => http.post('/conf/findDidByName', params
 
 export const findSvidByName = (params) => http.post('/svid/findSvidByName', params);
 export const setSvid = (params) => http.post('/svid/setSvid', params);
-export const delSvid = (params) => http.get(`/svid/delSvid/${params}`);
+export const delSvids = (params) => http.post('/svid/delSvids/', params);
 
 export const findEcidByName = (params) => http.post('/ecid/findEcidByName', params);
 export const setEcid = (params) => http.post('/ecid/setEcid', params);
 
+export const testPLC = () => http.get('/conf/testPLC');
 export const getPlcConf = () => http.get('/conf/getPlcConf');
 export const setPlcConf = (params) => http.post('/conf/setPlcConf', params);
