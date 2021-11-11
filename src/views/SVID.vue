@@ -5,7 +5,7 @@
       <el-row :gutter="0" class="form">
         <el-col :span="7">
           VID/NAME22备注:
-          <el-input placeholder="请输入" v-model="requestParamsObj.name"> </el-input>
+          <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData"> </el-input>
         </el-col>
         <!-- <el-col :span="6">
           备注:
