@@ -48,11 +48,11 @@
 
       <el-row>
         <el-col :span="24">
-          <el-alert v-if="res.success === true" title="成功提示的文案" type="success" effect="dark">
+          <el-alert v-if="res.success === true" :title="res.msg" type="success" effect="dark">
           </el-alert>
         </el-col>
 
-        <el-alert v-if="res.success === false" title="测试失败" type="error" effect="dark">
+        <el-alert v-if="res.success === false" :title="res.msg" type="error" effect="dark">
         </el-alert>
       </el-row>
     </div>
@@ -61,7 +61,7 @@
 
 <script>
 import Header from './common/Header.vue';
-import { getPlcConf, setPlcConf } from '@/api/request';
+import { getPlcConf, setPlcConf, testPLC } from '@/api/request';
 
 export default {
   name: 'DownloadConfiguration',
@@ -144,12 +144,16 @@ export default {
     handldTest() {
       this.loading = true;
       this.res.success = undefined;
-      setTimeout(() => {
-        this.loading = false;
-        this.res = {
-          success: Math.random() > 0.5,
-        };
-      }, 1000);
+      testPLC()
+        .then((res) => {
+          this.res = {
+            msg: res.data,
+            success: res.status === 200,
+          };
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
   mounted() {
