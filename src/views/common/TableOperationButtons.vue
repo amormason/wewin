@@ -15,7 +15,8 @@
         <el-button slot="reference" type="danger" icon="el-icon-delete" size="small" :loading="loading" :disabled="checking||!deleteBtn.length">批量删除({{ deleteBtn.length }})</el-button>
       </el-popover>
 
-      <el-button type="primary" icon="el-icon-receiving" size="small" :loading="loading" :disabled="checking">导入</el-button>
+      <el-button type="primary" icon="el-icon-receiving" size="small" :loading="loading" :disabled="checking" @click="selectFile($event)" v-if="improtUrl">导入</el-button>
+      <input type="file" name="" id="uploadEventFile" style="display:none" @change="getFile($event)" v-if="improtUrl" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 
       <el-popover class="Popover" placement="top" width="160" v-model="exportVisible">
         <p>确定要下载一个excel文件吗？</p>
@@ -34,6 +35,8 @@
 </template>
 
 <script>
+import { uploadFile } from '@/api/request';
+
 export default {
   name: 'TableOperationButtons',
   data() {
@@ -60,11 +63,40 @@ export default {
     testButton: Object,
     noNew: Boolean,
     checkFun: Function,
+    improtUrl: String,
   },
   components: {},
   computed: {},
   mounted() {},
   methods: {
+    selectFile(event) {
+      event.preventDefault();
+      document.querySelector('#uploadEventFile').click();
+    },
+    getFile(event) {
+      this.$parent.loading = true;
+      const file = event.target.files[0];
+      uploadFile(this.improtUrl, file)
+        .then((res) => {
+          console.log(res);
+          this.$message({
+            message: res.msg,
+            type: res.status === 200 ? 'success' : 'error',
+          });
+
+          // 刷新父组件数据
+          if (res.status === 200) {
+            this.$parent.getData();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message.error(error.msg || '发生了网络错误');
+        })
+        .finally(() => {
+          this.$parent.loading = false;
+        });
+    },
     // 改变监控状态
     changeChcek(status) {
       if (status) {
@@ -116,6 +148,9 @@ export default {
   margin: 2rem 0;
   button {
     margin: 0 20px 0 0;
+  }
+  .import-btn {
+    display: inline-block;
   }
 }
 </style>
