@@ -1,51 +1,53 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-undef */
 <template>
   <div>
     <Header breadcrumb="SVID" title="SVID" />
     <div class="dictionary-information-container">
       <el-row :gutter="0" class="form">
         <el-col :span="7">
-          VID/NAME备注:
-          <el-input placeholder="请输入" v-model="req.name"> </el-input>
+          VID/NAME22备注:
+          <el-input placeholder="请输入" v-model="requestParamsObj.name"> </el-input>
         </el-col>
         <!-- <el-col :span="6">
           备注:
-          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
+          <el-input placeholder="请输入" v-model="requestParamsObj.keyWord"> </el-input>
         </el-col> -->
       </el-row>
 
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton"></TableOperationButtons>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" :checkFun="getData"></TableOperationButtons>
 
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" @edit-closed="editClosedEvent" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
         trigger: 'dblclick',
-        mode: 'cell',
+        mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
-      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
-        <vxe-column type="checkbox" width="60"></vxe-column>
+      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-actived="editActivedEvent" @edit-closed="editClosedEvent">
+        <vxe-column type="checkbox" width="60" :disabled="true"></vxe-column>
         <vxe-column sortable field="id" title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="len" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="units" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="len" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="70"></vxe-column>
+        <vxe-column field="units" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="90"></vxe-column>
         <vxe-column field="def" title="DEF" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="min" title="MIN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="max" title="MAX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="plcType" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
-        <vxe-column width="150" field="PLC_Address" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        <vxe-column width="200" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
           <!--使用#edit自定义编辑-->
           <template #edit="{ row }">
             <el-row>
               <el-col :span="12">
-                <el-select v-model="row.p1" size="small" @change="editRowEvent(row)">
+                <el-select v-model="row.plcname" size="small" @change="row.plcAddr = row.plcname +row.plcvalue">
                   <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
               </el-col>
               <el-col :span="12">
-                <input type="text" v-model="row.p2" class="vxe-default-input" size="small" @change="editRowEvent(row)" />
+                <input type="text" v-model="row.plcvalue" class="vxe-default-input" size="small" @change="row.plcAddr = row.plcname +row.plcvalue" />
               </el-col>
             </el-row>
           </template>
@@ -55,15 +57,17 @@
 
         <vxe-column title="操作" width="150">
           <template #default="{ row }">
-            <el-link type="success" v-if="row.isNew" @click="saveData(row)">保存</el-link>
-            <el-popover placement="top" width="180" v-model="row.visible">
-              <p>确定要删除这一行({{ row.SVID }})吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="deleteButtonEvent(row.SVID);row.visible = false;">确定</el-button>
-              </div>
-              <el-link slot="reference" type="danger">删除</el-link>
-            </el-popover>
+            <div class="operation-cell">
+              <el-link type="success" v-if="row.isNew" @click="saveData(row)">保存</el-link>
+              <el-popover placement="top" width="180" v-model="row.visible">
+                <p>确定要删除这一行({{ row.id }})吗？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
+                  <el-button type="primary" size="mini" @click="deleteButtonEvent([row]);row.visible = false;">确定</el-button>
+                </div>
+                <el-link slot="reference" type="danger">删除</el-link>
+              </el-popover>
+            </div>
           </template>
         </vxe-column>
 
@@ -71,7 +75,7 @@
         <vxe-column field="value" title="当前值"></vxe-column>
       </vxe-table>
 
-      <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
+      <vxe-pager background @page-change="handlePageChange" :current-page.sync="requestParamsObj.page.currentPage" :page-size.sync="requestParamsObj.page.pageSize" :total="requestParamsObj.page.totalResult" :layouts="[
         'PrevJump',
         'PrevPage',
         'JumpNumber',
@@ -82,14 +86,6 @@
         'Total',
       ]">
       </vxe-pager>
-
-      <el-dialog title="新增" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-        这里是新增的表单
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-          <el-button type="success" size="small" @click="dialogVisible = false">新增</el-button>
-        </span>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -97,17 +93,12 @@
 <script>
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
-import { findSvidByName, setSvid } from '@/api/request';
+import { findSvidByName, setSvid, delSvid } from '@/api/request';
 
 export default {
   name: 'SVID',
   data() {
     return {
-      page: {
-        currentPage: 1,
-        pageSize: 20,
-        totalResult: 124,
-      },
       tableData: [],
       options: [
         { label: 'D', value: 'D' },
@@ -133,8 +124,13 @@ export default {
       },
       value1: false,
       alertTitle: '',
-      req: {
+      requestParamsObj: {
         name: '',
+        page: {
+          currentPage: 1,
+          pageSize: 20,
+          totalResult: 124,
+        },
       },
       currentPage4: 2,
     };
@@ -149,18 +145,55 @@ export default {
   },
   methods: {
     getData() {
+      const requestParamsObj = JSON.parse(
+        JSON.stringify(this.requestParamsObj),
+      );
+      delete requestParamsObj.page.totalResult;
       this.loading = true;
-      findSvidByName(this.req)
+      findSvidByName(requestParamsObj)
         .then((res) => {
-          this.tableData = res.data || [];
+          if (res.status === 200) {
+            this.tableData = res.data.map((item) => {
+              const temp = item;
+              const { plcname, plcvalue } = this.GLOBAL.getPLC(item.plcAddr);
+              temp.plcname = plcname;
+              temp.plcvalue = plcvalue;
+              return {
+                ...temp,
+              };
+            });
+          }
         })
         .finally(() => {
           this.loading = false;
         });
     },
+
+    // 编辑表格的规则
+    editActivedEvent({ row, rowIndex }) {
+      console.log({ row, rowIndex });
+    },
+
     saveData(row) {
-      setSvid(row).then((res) => {
+      const savaObj = {
+        id: row.id || '',
+        name: row.name || '',
+        formatCodeType: row.formatCodeType
+          ? parseInt(row.formatCodeType, 10)
+          : 0,
+        len: row.len ? parseInt(row.len, 10) : 0,
+        def: row.def || '',
+        min: row.min || '',
+        max: row.max || '',
+        plcType: row.plcType || '',
+        plcAddr: row.plcname + row.plcvalue,
+        units: row.units || '',
+        comment: row.comment || '',
+      };
+
+      setSvid(savaObj).then((res) => {
         if (res.status === 200) {
+          this.getData();
           this.$message({
             message: res.msg || '恭喜你，这是一条成功消息',
             type: 'success',
@@ -177,39 +210,49 @@ export default {
     },
 
     //  新建的操作
-    newButtonEvent() {
-      this.tableData.unshift({
+    async newButtonEvent() {
+      const $table = this.$refs.xTable;
+      const record = {
         isNew: true,
-        id: '',
-        name: '',
-        formatCodeType: '',
-        len: '',
-        def: '',
-        min: '',
-        max: '',
-        plcType: '',
-        plcAddr: '',
-        units: '',
-        value: '',
-        comment: '',
-      });
-      // this.dialogVisible = true;
-    },
-
-    // 测试当前页
-    testButtonEvent() {
-      this.testButton.clicked = !this.testButton.clicked;
+        id: '10',
+        name: 'SVID0',
+        formatCodeType: 104,
+        len: 10,
+        def: '2',
+        min: '1',
+        max: '9',
+        plcType: 'C',
+        plcAddr: 'A',
+        units: '014',
+        comment: '备注信息',
+        plcname: 'D',
+        plcvalue: '999',
+      };
+      const { row: newRow } = await $table.insertAt(record);
+      await $table.setActiveCell(newRow, 'id');
     },
 
     // 删除表格数据
-    deleteButtonEvent(list) {
-      console.log(list);
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.handleSelectionChange([]);
-        this.$refs.xTable1.clearCheckboxRow();
-      }, 1500);
+    deleteButtonEvent(rows) {
+      const list = rows || this.multipleSelection;
+      const remoteData = list.filter((item) => item.id);
+      this.$refs.xTable.removeCheckboxRow();
+      if (remoteData.length) {
+        this.loading = true;
+        delSvid(remoteData[0].id)
+          .then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+              this.getData();
+            }
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
     },
 
     // 分页参数改变
@@ -221,37 +264,45 @@ export default {
       console.log(page);
     },
 
+    // 表格编辑完
     editClosedEvent({ row, column }) {
-      const $table = this.$refs.xTable1;
+      const $table = this.$refs.xTable;
       const field = column.property;
       // const cellValue = row[field];
       // 判断单元格值是否被修改
       if ($table.isUpdateByRow(row, field)) {
-        if (!row.isNew) {
-          const reqData = {};
-          Object.keys(row).map((key) => {
-            reqData[key.toLowerCase()] = row[key];
-            return '';
-          });
-          this.loading = false;
-          setSvid(reqData).then((res) => {
-            if (res.status === 200) {
+        if (row.isNew) {
+          return;
+        }
+        const savaObj = {
+          id: row.id || '',
+          name: row.name || '',
+          formatCodeType: row.formatCodeType
+            ? parseInt(row.formatCodeType, 10)
+            : 0,
+          len: row.len ? parseInt(row.len, 10) : 0,
+          def: row.def || '',
+          min: row.min || '',
+          max: row.max || '',
+          plcType: row.plcType || '',
+          plcAddr: row.plcname + row.plcvalue,
+          units: row.units || '',
+          comment: row.comment || '',
+        };
+        this.loading = true;
+        setSvid(savaObj)
+          .then((res) => {
+            if (res && res.status === 200) {
               this.$message({
                 message: res.msg || '恭喜你，这是一条成功消息',
                 type: 'success',
               });
             }
+          })
+          .finally(() => {
+            this.getData();
           });
-        }
       }
-    },
-
-    // 表格编辑
-    editRowEvent(row) {
-      console.log(row);
-      const $grid = this.$refs.xTable1;
-      $grid.setActiveRow(null);
-      this.tableData[0].PLC_Address = row.p1 + row.p2;
     },
 
     selectAllEvent({ records }) {
@@ -286,7 +337,7 @@ export default {
     },
   },
   watch: {
-    'req.name': {
+    requestParamsObj: {
       handler() {
         if (this.timer) {
           clearTimeout(this.timer);
@@ -331,6 +382,13 @@ export default {
     .el-link {
       margin: 0 5px;
     }
+  }
+}
+.operation-cell {
+  display: flex;
+  justify-content: center;
+  a {
+    margin-right: 0.5rem;
   }
 }
 </style>

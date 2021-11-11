@@ -58,7 +58,8 @@ export default {
       this.loading = true;
       login(this.user)
         .then((res) => {
-          if (res && res.data && res.data.jwtToken) {
+          console.log(res);
+          if (res && res.data && res.status === 200) {
             this.$store.commit('setToken', res.data.jwtToken);
             this.$store.commit('setUser', this.user);
             this.$message({
@@ -71,6 +72,8 @@ export default {
             setTimeout(() => {
               this.$router.push(this.$route.query.redirect || '/deviceStatus');
             }, 500);
+          } else {
+            this.$message.error(res.msg || '登录失败');
           }
         })
         .finally(() => {

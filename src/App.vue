@@ -19,12 +19,10 @@ export default {
   created() {
     // 在页面加载时读取sessionStorage里的状态信息
     if (sessionStorage.getItem('state')) {
-      this.$store.replaceState(
-        {
-          ...this.$store.state,
-          ...JSON.parse(sessionStorage.getItem('state')),
-        },
-      );
+      this.$store.replaceState({
+        ...this.$store.state,
+        ...JSON.parse(sessionStorage.getItem('state')),
+      });
     }
 
     // 在页面刷新时将vuex里的信息保存到sessionStorage里
@@ -50,12 +48,15 @@ body {
     display: flex;
     .view-container {
       flex: 1;
-      max-width: 1664px;
+      min-width: 1664px;
       overflow-x: hidden;
     }
   }
   .data-table {
     margin: 1rem;
   }
+}
+.el-message {
+  margin-top: 150px;
 }
 </style>

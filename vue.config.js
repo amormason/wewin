@@ -1,7 +1,9 @@
 module.exports = {
   devServer: {
-    host: '0.0.0.0', // host改成自己的IP,
-    open: false, // 配置后自动启动浏览器
+    disableHostCheck: true,
+    host: '192.168.1.242', // host改成自己的IP,
+    bonjour: true,
+    open: true, // 配置后自动启动浏览器
     port: 8080, // 端口号
     hotOnly: true, // 热更新
     proxy: {
@@ -27,6 +29,8 @@ module.exports = {
     sourceMap: true,
   },
 
-  publicPath: '/',
+  publicPath: '/wewin',
   runtimeCompiler: true,
+  outputDir: 'wewin',
+  lintOnSave: false,
 };

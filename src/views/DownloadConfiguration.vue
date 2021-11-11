@@ -89,22 +89,22 @@ export default {
           value: 'mc',
           label: 'MC',
         },
-        {
-          value: 'fsmc',
-          label: 'FSMC',
-        },
-        {
-          value: 'modbusRTU',
-          label: 'ModbusRTU',
-        },
-        {
-          value: 'modbusTCP',
-          label: 'ModbusTCP',
-        },
-        {
-          value: 's7',
-          label: 'S7',
-        },
+        // {
+        //   value: 'fsmc',
+        //   label: 'FSMC',
+        // },
+        // {
+        //   value: 'modbusRTU',
+        //   label: 'ModbusRTU',
+        // },
+        // {
+        //   value: 'modbusTCP',
+        //   label: 'ModbusTCP',
+        // },
+        // {
+        //   value: 's7',
+        //   label: 'S7',
+        // },
       ],
     };
   },
