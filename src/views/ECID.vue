@@ -13,7 +13,7 @@
         </el-col> -->
       </el-row>
 
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton"></TableOperationButtons>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/ecid/importCSV" exportUrl="/ecid/exportCSV"></TableOperationButtons>
 
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>

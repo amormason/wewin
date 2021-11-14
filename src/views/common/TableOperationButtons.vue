@@ -24,7 +24,7 @@
           <el-button size="mini" type="text" @click="exportVisible = false">取消</el-button>
           <el-button type="primary" size="mini" :loading="loading" @click="handelExportCSV();">确认</el-button>
         </div>
-        <el-button slot="reference" type="primary" icon="el-icon-paperclip" size="small" :loading="loading" :disabled="checking">导出</el-button>
+        <el-button slot="reference" type="primary" icon="el-icon-paperclip" size="small" :loading="loading" :disabled="checking" v-if="exportUrl">导出</el-button>
       </el-popover>
 
       <el-switch v-model="checking" active-color="#13ce66" inactive-color="gray" active-text="正在监控" inactive-text="停止监控" @change="changeChcek(checking)"> </el-switch>
