@@ -15,6 +15,12 @@ const service = axios.create({
   },
 });
 
+const getFileNmaFromHeaders = (str) => {
+  const arr = str && str.split(';');
+  const filenameArr = arr && arr.filter((item) => item.includes('filename='));
+  return filenameArr && filenameArr[0] && filenameArr[0].split('=')[1];
+};
+
 // 请求拦截器
 service.interceptors.request.use(
   (configP) => {
@@ -30,7 +36,16 @@ service.interceptors.request.use(
 );
 
 // 返回拦截
-service.interceptors.response.use((response) => response.data, (error) => {
+service.interceptors.response.use((response) => {
+  const fileName = getFileNmaFromHeaders(response.headers['content-disposition']);
+  if (fileName) {
+    return {
+      data: response.data,
+      fileName,
+    };
+  }
+  return response.data;
+}, (error) => {
   Message.error(error.message || '网络请求异常，请稍后重试!' || error);
 });
 

@@ -79,10 +79,10 @@ export default {
       const file = event.target.files[0];
       uploadFile(this.improtUrl, file)
         .then((res) => {
-          console.log(res);
+          console.log('res:', res);
           this.$message({
-            message: res.msg,
-            type: res.status === 200 ? 'success' : 'error',
+            message: res.data.msg,
+            type: res.data.status === 200 ? 'success' : 'error',
           });
 
           // 刷新父组件数据
@@ -91,8 +91,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
-          this.$message.error(error.msg || '发生了网络错误');
+          this.$message.error(error.message || '发生了网络错误');
         })
         .finally(() => {
           this.$parent.loading = false;
@@ -113,9 +112,12 @@ export default {
     // 导出下载文件
     handelExportCSV() {
       exportCSV(this.exportUrl).then((res) => {
-        if (res) {
-          const blob = new Blob([res], { type: 'text/csv;charset=utf-8;' });
-          const filename = '导出数据';
+        console.log(res);
+        if (res && res.data) {
+          const blob = new Blob([res.data], {
+            type: 'text/csv;charset=utf-8;',
+          });
+          const filename = res.fileName || '导出数据';
           if (navigator.msSaveBlob) {
             // IE 10+
             navigator.msSaveBlob(blob, filename);
