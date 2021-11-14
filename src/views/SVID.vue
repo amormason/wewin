@@ -4,7 +4,7 @@
     <div class="dictionary-information-container">
       <el-row :gutter="0" class="form">
         <el-col :span="7">
-          VID/NAME22备注:
+          VID/NAME备注:
           <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData"> </el-input>
         </el-col>
         <!-- <el-col :span="6">
