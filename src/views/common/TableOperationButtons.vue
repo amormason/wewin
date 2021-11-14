@@ -22,7 +22,7 @@
         <p>确定要下载一个excel文件吗？</p>
         <div style="text-align: right; margin: 0">
           <el-button size="mini" type="text" @click="exportVisible = false">取消</el-button>
-          <el-button type="primary" size="mini" :loading="loading" @click="exportExcel();">确认</el-button>
+          <el-button type="primary" size="mini" :loading="loading" @click="handelExportCSV();">确认</el-button>
         </div>
         <el-button slot="reference" type="primary" icon="el-icon-paperclip" size="small" :loading="loading" :disabled="checking">导出</el-button>
       </el-popover>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { uploadFile } from '@/api/request';
+import { uploadFile, exportCSV } from '@/api/request';
 
 export default {
   name: 'TableOperationButtons',
@@ -64,6 +64,7 @@ export default {
     noNew: Boolean,
     checkFun: Function,
     improtUrl: String,
+    exportUrl: String,
   },
   components: {},
   computed: {},
@@ -110,9 +111,35 @@ export default {
       }
     },
     // 导出下载文件
-    exportExcel() {
+    handelExportCSV() {
+      exportCSV(this.exportUrl).then((res) => {
+        if (res) {
+          const blob = new Blob([res], { type: 'text/csv;charset=utf-8;' });
+          const filename = '导出数据';
+          if (navigator.msSaveBlob) {
+            // IE 10+
+            navigator.msSaveBlob(blob, filename);
+          } else {
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+              // feature detection
+              // Browsers that support HTML5 download attribute
+              const url = URL.createObjectURL(blob);
+              link.setAttribute('href', url);
+              link.setAttribute('download', filename);
+              link.style.visibility = 'hidden';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }
+          }
+          this.$message({
+            message: '导出数据成功',
+            type: 'success',
+          });
+        }
+      });
       this.exportVisible = false;
-      console.log('开始下载文件');
     },
   },
   watch: {

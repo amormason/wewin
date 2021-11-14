@@ -20,6 +20,7 @@ export const findDidByName = (params) => http.post('/conf/findDidByName', params
 export const findSvidByName = (params) => http.post('/svid/findSvidByName', params);
 export const setSvid = (params) => http.post('/svid/setSvid', params);
 export const delSvids = (params) => http.post('/svid/delSvids/', params);
+export const exportCSV = (params) => http.get(params);
 
 export const findEcidByName = (params) => http.post('/ecid/findEcidByName', params);
 export const setEcid = (params) => http.post('/ecid/setEcid', params);
@@ -31,7 +32,7 @@ export const setPlcConf = (params) => http.post('/conf/setPlcConf', params);
 // 上传文件
 export const uploadFile = (url, file) => {
   const formData = new FormData();
-  formData.append('multipartFile', file);
+  formData.append('file', file);
   const config = {
     baseURL: '/api/', // url = base url + request url
     withCredentials: true, // send cookies when cross-domain requests
