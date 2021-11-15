@@ -225,7 +225,6 @@ export default {
       const $table = this.$refs.xTable;
       const record = {
         isNew: true,
-        id: '10',
         name: 'SVID0',
         formatCodeType: 104,
         len: 10,

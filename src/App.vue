@@ -30,6 +30,15 @@ export default {
       sessionStorage.setItem('state', JSON.stringify(this.$store.state));
     });
   },
+  // watch: {
+  //   '$route.path': {
+  //     handler(to, from) {
+  //       console.log('to:::', to);
+  //       console.log('from:::', from);
+  //     },
+  //     deep: true,
+  //   },
+  // },
   methods: {},
 };
 </script>

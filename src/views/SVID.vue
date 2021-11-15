@@ -140,6 +140,7 @@ export default {
     this.getData();
     // console.log(this.$store.state);
   },
+
   methods: {
     getData() {
       const requestParamsObj = JSON.parse(
@@ -338,19 +339,6 @@ export default {
       return '';
     },
   },
-  // watch: {
-  //   requestParamsObj: {
-  //     handler() {
-  //       if (this.timer) {
-  //         clearTimeout(this.timer);
-  //       }
-  //       this.timer = setTimeout(() => {
-  //         this.getData();
-  //       }, 1000);
-  //     },
-  //     deep: true,
-  //   },
-  // },
 };
 </script>
 

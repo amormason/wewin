@@ -102,10 +102,8 @@ export default {
         this.checkingMessage = this.$message({
           message: '监控状态下不能操作表格数据',
           type: 'warning',
-          duration: 999999,
+          // duration: 999999,
         });
-      } else {
-        this.checkingMessage.close();
       }
     },
     // 导出下载文件
@@ -143,14 +141,10 @@ export default {
       this.exportVisible = false;
     },
   },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
   watch: {
-    '$route.path': {
-      handler(to, from) {
-        console.log('to:::', to);
-        console.log('from:::', from);
-      },
-      deep: true,
-    },
     deleteButton: {
       handler(newVal) {
         this.deleteBtn = newVal;

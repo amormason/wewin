@@ -5,3 +5,12 @@ $success-text-color:#67C23A;
 $danger-text-color:#F56C6C;
 $warning-text-color:#E6A23C;
 $info-text-color:#909399;
+
+
+.operation-cell {
+  display: flex;
+  justify-content: center;
+  a {
+    margin-right: 0.5rem;
+  }
+}

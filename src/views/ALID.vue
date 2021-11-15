@@ -45,17 +45,19 @@
         <vxe-column type="html" :formatter="formatRole" field="value" title="当前值"></vxe-column>
         <vxe-column field="comments" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
-        <vxe-column title="操作" width="50">
+        <vxe-column title="操作" width="150">
           <template #default="{ row }">
-            <el-link type="success" v-if="!row.alId">保存</el-link>
-            <el-popover placement="top" width="180" v-model="row.visible">
-              <p>确定要删除这一行({{ row.alId }})吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="deleteButtonEvent(row.alId);row.visible = false;">确定</el-button>
-              </div>
-              <el-link slot="reference" type="danger" v-if="row.alId">删除</el-link>
-            </el-popover>
+            <div class="operation-cell">
+              <el-link type="success" v-if="row.isNew" @click="saveData(row)">保存</el-link>
+              <el-popover placement="top" width="180" v-model="row.visible">
+                <p>确定要删除这一行({{ row.id }})吗？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
+                  <el-button type="primary" size="mini" @click="deleteButtonEvent([row]);row.visible = false;">确定</el-button>
+                </div>
+                <el-link slot="reference" type="danger">删除</el-link>
+              </el-popover>
+            </div>
           </template>
         </vxe-column>
 
@@ -73,13 +75,6 @@
       ]">
       </vxe-pager>
 
-      <el-dialog title="新增" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-        这里是新增的表单
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-          <el-button type="success" size="small" @click="dialogVisible = false">新增</el-button>
-        </span>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -173,25 +168,42 @@ export default {
     editActivedEvent({ row, rowIndex }) {
       console.log({ row, rowIndex });
     },
-    //  新建的操作
-    newButtonEvent() {
-      this.tableData.unshift({
-        p1: '',
-        p2: '',
-        ALID: '',
-        NAME: '',
-        FORMAT: '',
-        LEN: 0,
-        UNITS: '0',
-        DEF: 0,
-        MIN: 0,
-        MAX: 0,
-        PLC_TYPE: '',
-        PLC_Address: '',
-        REMARK: '',
-        CURRENTVALUE: '',
+    saveData(row) {
+      const savaObj = {
+        activeValue: row.activeValue,
+        alId: row.alId,
+        alcd: row.alcd,
+        altx: row.altx,
+        comments: row.comments,
+        plcAddr: row.plcname + row.plcvalue,
+        plcType: row.plcType,
+      };
+
+      setAlarm(savaObj).then((res) => {
+        if (res.status === 200) {
+          this.getData();
+          this.$message({
+            message: res.msg || '恭喜你，这是一条成功消息',
+            type: 'success',
+          });
+        }
       });
-      // this.dialogVisible = true;
+    },
+    //  新建的操作
+    async newButtonEvent() {
+      const $table = this.$refs.xTable;
+      const record = {
+        isNew: true,
+        activeValue: 1,
+        alId: '9901',
+        alcd: '',
+        altx: 'AlarmID0001',
+        comments: 'XXXX',
+        plcAddr: 'B1001',
+        plcType: 'bool',
+      };
+      const { row: newRow } = await $table.insertAt(record);
+      await $table.setActiveCell(newRow, 'alId');
     },
 
     // 测试当前页
@@ -200,10 +212,11 @@ export default {
     },
 
     // 删除表格数据
-    // 删除表格数据
     deleteButtonEvent(rows) {
       const list = rows || this.multipleSelection;
-      const remoteData = list.filter((item) => item.id).map((item) => item.id);
+      const remoteData = list
+        .filter((item) => !item.isNew)
+        .map((item) => item.alId);
       // this.$refs.xTable.removeCheckboxRow();
       if (remoteData.length) {
         this.loading = true;
@@ -233,19 +246,14 @@ export default {
           return;
         }
         const savaObj = {
-          id: row.id || '',
-          name: row.name || '',
-          formatCodeType: row.formatCodeType
-            ? parseInt(row.formatCodeType, 10)
-            : 0,
-          len: row.len ? parseInt(row.len, 10) : 0,
-          def: row.def || '',
-          min: row.min || '',
-          max: row.max || '',
-          plcType: row.plcType || '',
+          activeValue: row.activeValue,
+          alId: row.alId,
+          alcd: row.alcd,
+          altx: row.altx,
+          comments: row.comments,
           plcAddr: row.plcname + row.plcvalue,
-          units: row.units || '',
-          comment: row.comment || '',
+          plcType: row.plcType,
+          // value: '',
         };
         this.loading = true;
         setAlarm(savaObj)
