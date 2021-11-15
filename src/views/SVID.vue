@@ -5,7 +5,7 @@
       <el-row :gutter="0" class="form">
         <el-col :span="7">
           VID/NAME备注:
-          <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData"> </el-input>
+          <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
         <!-- <el-col :span="6">
           备注:
@@ -13,7 +13,7 @@
         </el-col> -->
       </el-row>
 
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" :checkFun="getData" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV"></TableOperationButtons>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV"></TableOperationButtons>
 
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
@@ -120,7 +120,7 @@ export default {
         event: this.testButtonEvent,
         clicked: false,
       },
-      value1: false,
+      checking: false,
       alertTitle: '',
       requestParamsObj: {
         name: '',

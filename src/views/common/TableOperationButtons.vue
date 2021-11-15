@@ -62,7 +62,6 @@ export default {
     exportButton: Object,
     testButton: Object,
     noNew: Boolean,
-    checkFun: Function,
     improtUrl: String,
     exportUrl: String,
   },
@@ -145,6 +144,13 @@ export default {
     },
   },
   watch: {
+    '$route.path': {
+      handler(to, from) {
+        console.log('to:::', to);
+        console.log('from:::', from);
+      },
+      deep: true,
+    },
     deleteButton: {
       handler(newVal) {
         this.deleteBtn = newVal;
@@ -159,9 +165,10 @@ export default {
     },
     checking: {
       handler(val) {
+        this.$parent.checking = val;
         if (val) {
           this.timer = setInterval(() => {
-            this.checkFun();
+            this.$parent.getData();
           }, 1000);
         } else {
           clearInterval(this.timer);

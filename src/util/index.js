@@ -14,4 +14,20 @@ export default {
       plcvalue: plcString.replace(/[^0-9]/ig, ''),
     };
   },
+  plcAddrOptions: [{
+    label: 'D',
+    value: 'D',
+  }, {
+    label: 'E',
+    value: 'E',
+  }, {
+    label: 'C',
+    value: 'C',
+  }, {
+    label: 'B',
+    value: 'B',
+  }, {
+    label: 'A',
+    value: 'A',
+  }],
 };

@@ -5,67 +5,63 @@
 
       <el-row :gutter="0" class="form">
         <el-col :span="5">
-          Alarm/TITLE:
-          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
-        </el-col>
-        <el-col :span="6">
-          备注:
-          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
+          Alarm/TITLE备注:
+          <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
       </el-row>
 
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton"></TableOperationButtons>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/alarm/importCSV" exportUrl="/alarm/exportCSV"></TableOperationButtons>
 
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" @edit-closed="editClosedEvent" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
         trigger: 'dblclick',
-        mode: 'cell',
+        mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
-      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
+      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-actived="editActivedEvent" @edit-closed="editClosedEvent">
         <vxe-column type="checkbox" width="60"></vxe-column>
-        <vxe-column sortable field="ALID" title="ALID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="ALCD" title="ALCD" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="ALTX" title="ALTX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="PLC_TYPE" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column width="150" field="PLC_Address" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        <vxe-column sortable field="alId" title="ALID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="alcd" title="ALCD" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="altx" title="ALTX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="plcType" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column width="200" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
           <!--使用#edit自定义编辑-->
           <template #edit="{ row }">
             <el-row>
               <el-col :span="12">
-                <el-select v-model="row.p1" size="small" @change="editRowEvent(row)">
+                <el-select v-model="row.plcname" size="small" @change="row.plcAddr = row.plcname +row.plcvalue">
                   <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
               </el-col>
               <el-col :span="12">
-                <input type="text" v-model="row.p2" class="vxe-default-input" size="small" @change="editRowEvent(row)" />
+                <input type="text" v-model="row.plcvalue" class="vxe-default-input" size="small" @change="row.plcAddr = row.plcname +row.plcvalue" />
               </el-col>
             </el-row>
           </template>
         </vxe-column>
-        <vxe-column field="way" title="触发方式" :edit-render="{name: '$select', options: wayList}"></vxe-column>
-        <vxe-column type="html" :formatter="formatRole" field="CURRENTVALUE" title="当前值"></vxe-column>
-        <vxe-column field="REMARK" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="activeValue" title="触发方式" :edit-render="{name: '$select', options: wayList}"></vxe-column>
+        <vxe-column type="html" :formatter="formatRole" field="value" title="当前值"></vxe-column>
+        <vxe-column field="comments" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
         <vxe-column title="操作" width="50">
           <template #default="{ row }">
-            <el-link type="success" v-if="!row.id">保存</el-link>
+            <el-link type="success" v-if="!row.alId">保存</el-link>
             <el-popover placement="top" width="180" v-model="row.visible">
-              <p>确定要删除这一行({{ row.ALID }})吗？</p>
+              <p>确定要删除这一行({{ row.alId }})吗？</p>
               <div style="text-align: right; margin: 0">
                 <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="deleteButtonEvent(row.ALID);row.visible = false;">确定</el-button>
+                <el-button type="primary" size="mini" @click="deleteButtonEvent(row.alId);row.visible = false;">确定</el-button>
               </div>
-              <el-link slot="reference" type="danger" v-if="row.id">删除</el-link>
+              <el-link slot="reference" type="danger" v-if="row.alId">删除</el-link>
             </el-popover>
           </template>
         </vxe-column>
 
       </vxe-table>
 
-      <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
+      <vxe-pager background @page-change="handlePageChange" :current-page.sync="requestParamsObj.page.page" :page-size.sync="requestParamsObj.page.size" :total="requestParamsObj.page.total" :layouts="[
         'PrevJump',
         'PrevPage',
         'JumpNumber',
@@ -91,39 +87,18 @@
 <script>
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
+import { findAlarmByName, setAlarm, delAlarm } from '@/api/request';
 
 export default {
   name: 'ALID',
   data() {
     return {
-      page: {
-        currentPage: 1,
-        pageSize: 20,
-        totalResult: 124,
-      },
-      tableData: [
-        {
-          id: 1,
-          p1: 'D',
-          p2: '1001',
-          ALID: 1001,
-          ALCD: '1',
-          ALTX: '仅ASCII',
-          LEN: 20,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          way: 1,
-          PLC_TYPE: 'bool',
-          PLC_Address: 'D1001',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '222',
-        },
-      ],
+      tableData: [],
       wayList: [
-        { label: '上升沿', value: '1' },
-        { label: '下降沿', value: '2' },
+        { label: '上升沿', value: 1 },
+        { label: '下降沿', value: 0 },
       ],
+      options: this.GLOBAL.plcAddrOptions,
       loading: false,
       visible: false,
       dialogVisible: false,
@@ -139,15 +114,16 @@ export default {
         event: this.testButtonEvent,
         clicked: false,
       },
-      value1: false,
+      checking: false,
       alertTitle: '',
-      req: {
-        keyWord: '',
-        status: '',
-        gateway: '',
-        dns: '',
+      requestParamsObj: {
+        name: '',
+        page: {
+          page: 1,
+          size: 15,
+          total: 0,
+        },
       },
-      currentPage4: 2,
     };
   },
   components: {
@@ -155,16 +131,48 @@ export default {
     TableOperationButtons,
   },
   mounted() {
-    // console.log(this.$store.state);
+    this.getData();
   },
   methods: {
+    getData() {
+      const requestParamsObj = JSON.parse(
+        JSON.stringify(this.requestParamsObj),
+      );
+      delete requestParamsObj.page.total;
+      this.loading = true;
+      findAlarmByName(requestParamsObj)
+        .then((res) => {
+          if (res.status === 200) {
+            this.requestParamsObj.page = {
+              page: res.data.page,
+              size: res.data.size,
+              total: res.data.total,
+            };
+            this.tableData = res.data.result.map((item) => {
+              const temp = item;
+              const { plcname, plcvalue } = this.GLOBAL.getPLC(item.plcAddr);
+              temp.plcname = plcname;
+              temp.plcvalue = plcvalue;
+              return {
+                ...temp,
+              };
+            });
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     handleClick() {
       console.log('handleClick');
     },
     handleClose() {
       console.log('handleClose');
     },
-
+    // 编辑表格的规则
+    editActivedEvent({ row, rowIndex }) {
+      console.log({ row, rowIndex });
+    },
     //  新建的操作
     newButtonEvent() {
       this.tableData.unshift({
@@ -192,14 +200,67 @@ export default {
     },
 
     // 删除表格数据
-    deleteButtonEvent(list) {
-      console.log(list);
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.handleSelectionChange([]);
-        this.$refs.xTable1.clearCheckboxRow();
-      }, 1500);
+    // 删除表格数据
+    deleteButtonEvent(rows) {
+      const list = rows || this.multipleSelection;
+      const remoteData = list.filter((item) => item.id).map((item) => item.id);
+      // this.$refs.xTable.removeCheckboxRow();
+      if (remoteData.length) {
+        this.loading = true;
+        delAlarm(remoteData)
+          .then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+              this.getData();
+            }
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
+    },
+
+    editClosedEvent({ row, column }) {
+      const $table = this.$refs.xTable;
+      const field = column.property;
+      // const cellValue = row[field];
+      // 判断单元格值是否被修改
+      if ($table.isUpdateByRow(row, field)) {
+        if (row.isNew) {
+          return;
+        }
+        const savaObj = {
+          id: row.id || '',
+          name: row.name || '',
+          formatCodeType: row.formatCodeType
+            ? parseInt(row.formatCodeType, 10)
+            : 0,
+          len: row.len ? parseInt(row.len, 10) : 0,
+          def: row.def || '',
+          min: row.min || '',
+          max: row.max || '',
+          plcType: row.plcType || '',
+          plcAddr: row.plcname + row.plcvalue,
+          units: row.units || '',
+          comment: row.comment || '',
+        };
+        this.loading = true;
+        setAlarm(savaObj)
+          .then((res) => {
+            if (res && res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+            }
+          })
+          .finally(() => {
+            this.getData();
+          });
+      }
     },
 
     // 分页参数改变
@@ -209,31 +270,6 @@ export default {
         this.loading = false;
       }, 1000);
       console.log(page);
-    },
-
-    editClosedEvent({ row, column }) {
-      const $table = this.$refs.xTable1;
-      const field = column.property;
-      const cellValue = row[field];
-      // 判断单元格值是否被修改
-      if ($table.isUpdateByRow(row, field)) {
-        this.loading = true;
-        setTimeout(() => {
-          this.$message({
-            message: `局部保存成功！ ${field}=${cellValue}`,
-            type: 'success',
-          });
-          this.loading = false;
-        }, 300);
-      }
-    },
-
-    // 表格编辑
-    editRowEvent(row) {
-      console.log(row);
-      const $grid = this.$refs.xTable1;
-      $grid.setActiveRow(null);
-      this.tableData[0].PLC_Address = row.p1 + row.p2;
     },
 
     selectAllEvent({ records }) {
