@@ -4,7 +4,7 @@
     <div class="dictionary-information-container">
       <div class="form">
         Name:
-        <el-input class="keyword" placeholder="请输入" clearable v-model="req.name">
+        <el-input class="keyword" placeholder="请输入" clearable v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading">
         </el-input>
       </div>
 
@@ -30,7 +30,7 @@
         showStatus: true,
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
-         <!-- <vxe-column type="seq" width="60"></vxe-column> -->
+        <!-- <vxe-column type="seq" width="60"></vxe-column> -->
         <vxe-column sortable field="name" title="Name"></vxe-column>
         <vxe-column field="format" title="FORMAT"></vxe-column>
         <vxe-column field="len" title="LEN"></vxe-column>
@@ -38,7 +38,7 @@
         <!-- <vxe-column sortable field="date" title="创建时间"></vxe-column> -->
       </vxe-table>
 
-      <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
+      <vxe-pager background @page-change="handlePageChange" :current-page.sync="requestParamsObj.page.page" :page-size.sync="requestParamsObj.page.size" :total="requestParamsObj.page.total" :layouts="[
         'PrevJump',
         'PrevPage',
         'JumpNumber',
@@ -67,8 +67,13 @@ export default {
         pageSize: 20,
         totalResult: 124,
       },
-      req: {
+      requestParamsObj: {
         name: '',
+        page: {
+          page: 1,
+          size: 15,
+          total: 0,
+        },
       },
       deleteButton: {
         event: this.deleteButtonEvent,
@@ -83,9 +88,14 @@ export default {
   methods: {
     getData() {
       this.loading = true;
-      findDidByName(this.req)
+      findDidByName(this.requestParamsObj)
         .then((res) => {
-          this.tableData = res.data || [];
+          this.requestParamsObj.page = {
+            page: res.data.page,
+            size: res.data.size,
+            total: res.data.total,
+          };
+          this.tableData = (res.data && res.data.result) || [];
         })
         .finally(() => {
           this.loading = false;
@@ -97,9 +107,13 @@ export default {
     selectChangeEvent() {
       console.log('selectChangeEvent');
     },
-    // 翻页
-    handlePageChange() {
-      console.log('handlePageChange');
+    // 分页参数改变
+    handlePageChange(page) {
+      this.requestParamsObj.page = {
+        page: page.currentPage,
+        size: page.pageSize,
+      };
+      this.getData();
     },
     //  新建的操作
     newButtonEvent() {
@@ -135,19 +149,7 @@ export default {
   mounted() {
     this.getData();
   },
-  watch: {
-    'req.name': {
-      handler() {
-        if (this.timer) {
-          clearTimeout(this.timer);
-        }
-        this.timer = setTimeout(() => {
-          this.getData();
-        }, 1000);
-      },
-      deep: true,
-    },
-  },
+
   components: {
     Header,
   },
