@@ -88,7 +88,13 @@ export default {
   methods: {
     getData() {
       this.loading = true;
-      findDidByName(this.requestParamsObj)
+      const requestParamsObj = JSON.parse(
+        JSON.stringify(this.requestParamsObj),
+      );
+      delete requestParamsObj.page.total;
+      console.log(requestParamsObj);
+      this.loading = true;
+      findDidByName(requestParamsObj)
         .then((res) => {
           this.requestParamsObj.page = {
             page: res.data.page,
