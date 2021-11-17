@@ -24,7 +24,7 @@
 
       <!-- <el-alert title="成功提示的文案" type="success" effect="dark"> </el-alert> -->
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
         trigger: 'dblclick',
         mode: 'cell',
         showStatus: true,

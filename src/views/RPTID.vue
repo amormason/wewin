@@ -225,7 +225,7 @@ export default {
     },
 
     editClosedEvent({ row, column }) {
-      const $table = this.$refs.xTable1;
+      const $table = this.$refs.xTable;
       const field = column.property;
       const cellValue = row[field];
       // 判断单元格值是否被修改
@@ -244,7 +244,7 @@ export default {
     // 表格编辑
     editRowEvent(row) {
       console.log(row);
-      const $grid = this.$refs.xTable1;
+      const $grid = this.$refs.xTable;
       $grid.setActiveRow(null);
       this.tableData[0].PLC_Address = row.p1 + row.p2;
     },
