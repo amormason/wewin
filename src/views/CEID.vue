@@ -90,7 +90,7 @@ export default {
       tableData: [],
       wayList: [
         { label: '上升沿', value: 1 },
-        { label: '下降沿', value: 2 },
+        { label: '下降沿', value: 0 },
       ],
       options: [
         { label: 'D', value: 'D' },
