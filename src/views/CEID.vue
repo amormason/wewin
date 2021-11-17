@@ -1,70 +1,68 @@
 <template>
   <div>
-    <Header breadcrumb="CEID" title="CEID" />
+    <Header breadcrumb="CEID" title="CEID -- Event List" />
     <div class="dictionary-information-container">
       <el-row :gutter="0" class="form">
-        <el-col :span="5">
-          CEID/NAME:
-          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
-        </el-col>
-        <el-col :span="6">
-          备注:
-          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
+        <el-col :span="7">
+          CEID/NAME备注:
+          <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
       </el-row>
 
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton"></TableOperationButtons>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/ceid/importCSV" exportUrl="/ceid/exportCSV"></TableOperationButtons>
 
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" @edit-closed="editClosedEvent" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
         trigger: 'dblclick',
-        mode: 'cell',
+        mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
-      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
+      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-actived="editActivedEvent" @edit-closed="editClosedEvent">
         <vxe-column type="checkbox" width="60"></vxe-column>
-        <vxe-column sortable field="CEID" title="CEID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="PRTID" title="PRTID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="PLC_TYPE" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="way" title="触发方式" :edit-render="{name: '$select', options: wayList}"></vxe-column>
-        <vxe-column width="150" field="PLC_Address" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        <vxe-column sortable field="id" title="CEID" width="100" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="rptsStr" width="500" title="PRTID" :edit-render="{ name: 'textarea', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="plcType" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="activeValue" title="触发方式" :edit-render="{name: '$select', options: wayList}"></vxe-column>
+        <vxe-column width="300" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
           <!--使用#edit自定义编辑-->
           <template #edit="{ row }">
             <el-row>
               <el-col :span="12">
-                <el-select v-model="row.p1" size="small" @change="editRowEvent(row)">
+                <el-select v-model="row.plcname" size="small" @change="row.plcAddr = row.plcname +row.plcvalue">
                   <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
               </el-col>
               <el-col :span="12">
-                <input type="text" v-model="row.p2" class="vxe-default-input" size="small" @change="editRowEvent(row)" />
+                <input type="text" v-model="row.plcvalue" class="vxe-default-input" size="small" @change="row.plcAddr = row.plcname +row.plcvalue" />
               </el-col>
             </el-row>
           </template>
         </vxe-column>
 
-        <vxe-column field="REMARK" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="comment" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
-        <vxe-column title="操作" width="50">
+        <vxe-column title="操作" width="150">
           <template #default="{ row }">
-            <el-link type="success" v-if="!row.id">保存</el-link>
-            <el-popover placement="top" width="180" v-model="row.visible">
-              <p>确定要删除这一行({{ row.CEID }})吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="deleteButtonEvent(row.CEID);row.visible = false;">确定</el-button>
-              </div>
-              <el-link slot="reference" type="danger" v-if="row.id">删除</el-link>
-            </el-popover>
+            <div class="operation-cell">
+              <el-link type="success" v-if="row.isNew" @click="saveData(row)">保存</el-link>
+              <el-popover placement="top" width="180" v-model="row.visible">
+                <p>确定要删除这一行({{ row.id }})吗？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
+                  <el-button type="primary" size="mini" @click="deleteButtonEvent([row]);row.visible = false;">确定</el-button>
+                </div>
+                <el-link slot="reference" type="danger">删除</el-link>
+              </el-popover>
+            </div>
           </template>
         </vxe-column>
 
         <vxe-column type="html" :formatter="formatRole" field="CURRENTVALUE" title="当前值"></vxe-column>
       </vxe-table>
 
-      <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
+      <vxe-pager background @page-change="handlePageChange" :current-page.sync="requestParamsObj.page.page" :page-size.sync="requestParamsObj.page.size" :total="requestParamsObj.page.total" :layouts="[
         'PrevJump',
         'PrevPage',
         'JumpNumber',
@@ -76,13 +74,6 @@
       ]">
       </vxe-pager>
 
-      <el-dialog title="新增" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-        这里是新增的表单
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-          <el-button type="success" size="small" @click="dialogVisible = false">新增</el-button>
-        </span>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -90,72 +81,16 @@
 <script>
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
+import { findCeidByName, setCeid, delEcids } from '@/api/request';
 
 export default {
   name: 'CEID',
   data() {
     return {
-      page: {
-        currentPage: 1,
-        pageSize: 20,
-        totalResult: 124,
-      },
-      tableData: [
-        {
-          id: 1,
-          p1: 'D',
-          p2: '1001',
-          CEID: 1001,
-          NAME: '这里是值',
-          PRTID: '20,21,23',
-          LEN: 20,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          way: '1',
-          PLC_TYPE: 'uint16',
-          PLC_Address: 'D1001',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '222',
-        },
-        {
-          id: 2,
-          p1: 'B',
-          p2: '2001',
-          CEID: 1002,
-          NAME: '这里是值',
-          PRTID: '20,21,23',
-          LEN: 10,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          way: '2',
-          PLC_TYPE: 'uint32',
-          PLC_Address: 'B2001',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '',
-        },
-        {
-          id: 3,
-          p1: 'C',
-          p2: '2009',
-          CEID: 1002,
-          NAME: '这里是值',
-          PRTID: '20,21,23',
-          LEN: 20,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          way: '1',
-          PLC_TYPE: 'uint16',
-          PLC_Address: 'C2009',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '222',
-        },
-      ],
+      tableData: [],
       wayList: [
-        { label: '上升沿', value: '1' },
-        { label: '下降沿', value: '2' },
+        { label: '上升沿', value: 1 },
+        { label: '下降沿', value: 2 },
       ],
       options: [
         { label: 'D', value: 'D' },
@@ -179,15 +114,16 @@ export default {
         event: this.testButtonEvent,
         clicked: false,
       },
-      value1: false,
+      checking: false,
       alertTitle: '',
-      req: {
-        keyWord: '',
-        status: '',
-        gateway: '',
-        dns: '',
+      requestParamsObj: {
+        name: '',
+        page: {
+          page: 1,
+          size: 15,
+          total: 0,
+        },
       },
-      currentPage4: 2,
     };
   },
   components: {
@@ -195,35 +131,105 @@ export default {
     TableOperationButtons,
   },
   mounted() {
-    // console.log(this.$store.state);
+    this.getData();
   },
   methods: {
+    getData() {
+      const requestParamsObj = JSON.parse(
+        JSON.stringify(this.requestParamsObj),
+      );
+      delete requestParamsObj.page.total;
+      this.loading = true;
+      this.alertTitle = null;
+      this.$refs.xTable.clearCheckboxRow();
+      findCeidByName(requestParamsObj)
+        .then((res) => {
+          if (res.status === 200) {
+            this.requestParamsObj.page = {
+              page: res.data.page,
+              size: res.data.size,
+              total: res.data.total,
+            };
+            this.tableData = res.data.result.map((item) => {
+              const temp = item;
+              const { plcname, plcvalue } = this.GLOBAL.getPLC(item.plcAddr);
+              temp.plcname = plcname;
+              temp.plcvalue = plcvalue;
+              return {
+                ...temp,
+              };
+            });
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+
+    //  新建的操作
+    async newButtonEvent() {
+      const $table = this.$refs.xTable;
+      const record = {
+        isNew: true,
+        id: '2900',
+        name: 'ECID2900',
+        formatCodeType: 168,
+        len: 20,
+        def: '10',
+        min: '10',
+        max: '100',
+        plcType: null,
+        plcAddr: null,
+        units: 'V',
+        value: '123',
+        comment: '',
+      };
+      const { row: newRow } = await $table.insertAt(record);
+      await $table.setActiveCell(newRow, 'id');
+    },
+
+    // 编辑表格的规则
+    editActivedEvent({ row, rowIndex }) {
+      console.log({ row, rowIndex });
+    },
+
+    saveData(row) {
+      const savaObj = {
+        id: row.id || '',
+        name: row.name || '',
+        plcType: row.plcType || '',
+        plcAddr: row.plcname + row.plcvalue,
+        comment: row.comment || '',
+        activeValue: row.activeValueShow,
+        data: row.data,
+        en: row.en,
+        rptsStr: row.rptsStr || '',
+        title: row.title || '',
+      };
+
+      setCeid(savaObj).then((res) => {
+        if (res.status === 200) {
+          this.getData();
+          this.$message({
+            message: res.msg || '恭喜你，这是一条成功消息',
+            type: 'success',
+          });
+        }
+      });
+    },
+    // 分页参数改变
+    handlePageChange(page) {
+      this.requestParamsObj.page = {
+        page: page.currentPage,
+        size: page.pageSize,
+      };
+      this.getData();
+    },
     handleClick() {
       console.log('handleClick');
     },
     handleClose() {
       console.log('handleClose');
-    },
-
-    //  新建的操作
-    newButtonEvent() {
-      this.tableData.unshift({
-        p1: '',
-        p2: '',
-        CEID: '',
-        NAME: '',
-        FORMAT: '',
-        LEN: 0,
-        UNITS: '0',
-        DEF: 0,
-        MIN: 0,
-        MAX: 0,
-        PLC_TYPE: '',
-        PLC_Address: '',
-        REMARK: '',
-        CURRENTVALUE: '',
-      });
-      // this.dialogVisible = true;
     },
 
     // 测试当前页
@@ -232,39 +238,63 @@ export default {
     },
 
     // 删除表格数据
-    deleteButtonEvent(list) {
-      console.log(list);
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.handleSelectionChange([]);
-        this.$refs.xTable1.clearCheckboxRow();
-      }, 1500);
+    deleteButtonEvent(rows) {
+      const list = rows || this.multipleSelection;
+      const remoteData = list.filter((item) => item.id).map((item) => item.id);
+      // this.$refs.xTable.removeCheckboxRow();
+      if (remoteData.length) {
+        this.loading = true;
+        delEcids(remoteData)
+          .then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+              this.getData();
+            }
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
     },
 
-    // 分页参数改变
-    handlePageChange(page) {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 1000);
-      console.log(page);
-    },
-
+    // 表格编辑完
     editClosedEvent({ row, column }) {
-      const $table = this.$refs.xTable1;
+      const $table = this.$refs.xTable;
       const field = column.property;
-      const cellValue = row[field];
+      // const cellValue = row[field];
       // 判断单元格值是否被修改
       if ($table.isUpdateByRow(row, field)) {
+        if (row.isNew) {
+          return;
+        }
+        const savaObj = {
+          id: row.id || '',
+          name: row.name || '',
+          plcType: row.plcType || '',
+          plcAddr: row.plcname + row.plcvalue,
+          comment: row.comment || '',
+          activeValue: Number.parseInt(row.activeValue, 10),
+          data: row.data,
+          en: row.en,
+          rptsStr: row.rptsStr || '',
+          title: row.title || '',
+        };
         this.loading = true;
-        setTimeout(() => {
-          this.$message({
-            message: `局部保存成功！ ${field}=${cellValue}`,
-            type: 'success',
+        setCeid(savaObj)
+          .then((res) => {
+            if (res && res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+            }
+          })
+          .finally(() => {
+            this.getData();
           });
-          this.loading = false;
-        }, 300);
       }
     },
 

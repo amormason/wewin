@@ -33,6 +33,10 @@ export const findRptidByName = (params) => http.post('/rptid/findRptidByName', p
 export const setRptid = (params) => http.post('/rptid/setRptid', params);
 export const delRptids = (params) => http.post('/rptid/delRptids', params);
 
+export const findCeidByName = (params) => http.post('/ceid/findCeidByName', params);
+export const setCeid = (params) => http.post('/ceid/setCeid', params);
+export const delCeids = (params) => http.post('/ceid/delCeids', params);
+
 export const testPLC = () => http.get('/conf/testPLC');
 export const getPlcConf = () => http.get('/conf/getPlcConf');
 export const setPlcConf = (params) => http.post('/conf/setPlcConf', params);

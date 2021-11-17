@@ -120,6 +120,8 @@ export default {
       );
       delete requestParamsObj.page.total;
       this.loading = true;
+      this.alertTitle = null;
+      this.$refs.xTable.clearCheckboxRow();
       findRptidByName(requestParamsObj)
         .then((res) => {
           if (res.status === 200) {

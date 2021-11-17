@@ -139,6 +139,8 @@ export default {
 
   methods: {
     getData() {
+      this.alertTitle = null;
+      this.$refs.xTable.clearCheckboxRow();
       const requestParamsObj = JSON.parse(
         JSON.stringify(this.requestParamsObj),
       );

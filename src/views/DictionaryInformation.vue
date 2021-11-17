@@ -94,6 +94,8 @@ export default {
       delete requestParamsObj.page.total;
       console.log(requestParamsObj);
       this.loading = true;
+      this.alertTitle = null;
+      this.$refs.xTable.clearCheckboxRow();
       findDidByName(requestParamsObj)
         .then((res) => {
           this.requestParamsObj.page = {
