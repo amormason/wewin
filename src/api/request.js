@@ -29,6 +29,10 @@ export const findAlarmByName = (params) => http.post('/alarm/findAlarmByName', p
 export const setAlarm = (params) => http.post('/alarm/setAlarm', params);
 export const delAlarm = (params) => http.post('/alarm/del/alarms', params);
 
+export const findRptidByName = (params) => http.post('/rptid/findRptidByName', params);
+export const setRptid = (params) => http.post('/rptid/setRptid', params);
+export const delRptids = (params) => http.post('/rptid/delRptids', params);
+
 export const testPLC = () => http.get('/conf/testPLC');
 export const getPlcConf = () => http.get('/conf/getPlcConf');
 export const setPlcConf = (params) => http.post('/conf/setPlcConf', params);

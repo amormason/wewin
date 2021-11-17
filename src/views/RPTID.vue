@@ -3,49 +3,47 @@
     <Header breadcrumb="RPTID" title="RPTID" />
     <div class="dictionary-information-container">
       <el-row :gutter="0" class="form">
-        <el-col :span="5">
-          RPTID/NAME:
-          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
-        </el-col>
-        <el-col :span="6">
-          备注:
-          <el-input placeholder="请输入" v-model="req.keyWord"> </el-input>
+        <el-col :span="7">
+          RPTID/NAME备注:
+          <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
       </el-row>
 
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton"></TableOperationButtons>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/rptid/importCSV" exportUrl="/rptid/exportCSV" :noChecking="true"></TableOperationButtons>
 
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable1" class="vxe-table" empty-text="没有更多数据了！" @edit-closed="editClosedEvent" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
         trigger: 'dblclick',
-        mode: 'cell',
+        mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
-      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
+      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-actived="editActivedEvent" @edit-closed="editClosedEvent">
         <vxe-column type="checkbox" width="60"></vxe-column>
-        <vxe-column sortable field="RPTID" title="RPTID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="VID" title="VID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="REMARK" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column sortable field="id" width="120" title="RPTID" :edit-render="{ name: 'input', attrs: { type: 'text',row:50} }"></vxe-column>
+        <vxe-column field="vidsStr" title="VID" :edit-render="{ name: 'textarea', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="comments" title="备注" width="120" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
-        <vxe-column title="操作" width="50">
+        <vxe-column title="操作" width="150">
           <template #default="{ row }">
-            <el-link type="success" v-if="!row.id">保存</el-link>
-            <el-popover placement="top" width="180" v-model="row.visible">
-              <p>确定要删除这一行({{ row.RPTID }})吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="deleteButtonEvent(row.RPTID);row.visible = false;">确定</el-button>
-              </div>
-              <el-link slot="reference" type="danger" v-if="row.id">删除</el-link>
-            </el-popover>
+            <div class="operation-cell">
+              <el-link type="success" v-if="row.isNew" @click="saveData(row)">保存</el-link>
+              <el-popover placement="top" width="180" v-model="row.visible">
+                <p>确定要删除这一行({{ row.id }})吗？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
+                  <el-button type="primary" size="mini" @click="deleteButtonEvent([row]);row.visible = false;">确定</el-button>
+                </div>
+                <el-link slot="reference" type="danger">删除</el-link>
+              </el-popover>
+            </div>
           </template>
         </vxe-column>
 
       </vxe-table>
 
-      <vxe-pager background @page-change="handlePageChange" :current-page.sync="page.currentPage" :page-size.sync="page.pageSize" :total="page.totalResult" :layouts="[
+      <vxe-pager background @page-change="handlePageChange" :current-page.sync="requestParamsObj.page.page" :page-size.sync="requestParamsObj.page.size" :total="requestParamsObj.page.total" :layouts="[
         'PrevJump',
         'PrevPage',
         'JumpNumber',
@@ -56,14 +54,6 @@
         'Total',
       ]">
       </vxe-pager>
-
-      <el-dialog title="新增" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-        这里是新增的表单
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-          <el-button type="success" size="small" @click="dialogVisible = false">新增</el-button>
-        </span>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -71,6 +61,7 @@
 <script>
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
+import { findRptidByName, setRptid, delRptids } from '@/api/request';
 
 export default {
   name: 'RPTID',
@@ -81,59 +72,7 @@ export default {
         pageSize: 20,
         totalResult: 124,
       },
-      tableData: [
-        {
-          id: 1,
-          p1: 'D',
-          p2: '1001',
-          RPTID: 1001,
-          NAME: '这里是值',
-          VID: '1001,1002',
-          LEN: 20,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          way: 1,
-          PLC_TYPE: 'uint16',
-          PLC_Address: 'D1001',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '222',
-        },
-        {
-          id: 2,
-          p1: 'B',
-          p2: '2001',
-          RPTID: 1002,
-          NAME: '这里是值',
-          VID: '1001',
-          LEN: 10,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          way: 2,
-          PLC_TYPE: 'uint32',
-          PLC_Address: 'B2001',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '',
-        },
-        {
-          id: 3,
-          p1: 'C',
-          p2: '2009',
-          RPTID: 1002,
-          NAME: '这里是值',
-          VID: '1005',
-          LEN: 20,
-          UNITS: 'A',
-          DEF: 1,
-          MIN: 1,
-          way: 1,
-          PLC_TYPE: 'uint16',
-          PLC_Address: 'C2009',
-          REMARK: '一些内容说明',
-          CURRENTVALUE: '222',
-        },
-      ],
+      tableData: [],
       wayList: [
         { label: '上升沿', value: '1' },
         { label: '下降沿', value: '2' },
@@ -153,13 +92,15 @@ export default {
         event: this.testButtonEvent,
         clicked: false,
       },
-      value1: false,
+      checking: false,
       alertTitle: '',
-      req: {
-        keyWord: '',
-        status: '',
-        gateway: '',
-        dns: '',
+      requestParamsObj: {
+        name: '',
+        page: {
+          page: 1,
+          size: 15,
+          total: 0,
+        },
       },
       currentPage4: 2,
     };
@@ -169,9 +110,57 @@ export default {
     TableOperationButtons,
   },
   mounted() {
+    this.getData();
     // console.log(this.$store.state);
   },
   methods: {
+    getData() {
+      const requestParamsObj = JSON.parse(
+        JSON.stringify(this.requestParamsObj),
+      );
+      delete requestParamsObj.page.total;
+      this.loading = true;
+      findRptidByName(requestParamsObj)
+        .then((res) => {
+          if (res.status === 200) {
+            this.requestParamsObj.page = {
+              page: res.data.page,
+              size: res.data.size,
+              total: res.data.total,
+            };
+            this.tableData = res.data.result.map((item) => {
+              const temp = item;
+              const { plcname, plcvalue } = this.GLOBAL.getPLC(item.plcAddr);
+              temp.plcname = plcname;
+              temp.plcvalue = plcvalue;
+              return {
+                ...temp,
+              };
+            });
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+
+    saveData(row) {
+      const savaObj = {
+        id: row.id || '',
+        vidsStr: row.vidsStr || '',
+        comments: row.comments || '',
+      };
+
+      setRptid(savaObj).then((res) => {
+        if (res.status === 200) {
+          this.getData();
+          this.$message({
+            message: res.msg || '恭喜你，这是一条成功消息',
+            type: 'success',
+          });
+        }
+      });
+    },
     handleClick() {
       console.log('handleClick');
     },
@@ -180,49 +169,57 @@ export default {
     },
 
     //  新建的操作
-    newButtonEvent() {
-      this.tableData.unshift({
-        p1: '',
-        p2: '',
-        RPTID: '',
-        NAME: '',
-        FORMAT: '',
-        LEN: 0,
-        UNITS: '0',
-        DEF: 0,
-        MIN: 0,
-        MAX: 0,
-        PLC_TYPE: '',
-        PLC_Address: '',
-        REMARK: '',
-        CURRENTVALUE: '',
-      });
-      // this.dialogVisible = true;
+    async newButtonEvent() {
+      const $table = this.$refs.xTable;
+      const record = {
+        isNew: true,
+        id: '',
+        vidsStr: '',
+        comments: '',
+      };
+      const { row: newRow } = await $table.insertAt(record);
+      await $table.setActiveCell(newRow, 'id');
     },
 
+    // 编辑表格的规则
+    editActivedEvent({ row, rowIndex }) {
+      console.log({ row, rowIndex });
+    },
     // 测试当前页
     testButtonEvent() {
       this.testButton.clicked = !this.testButton.clicked;
     },
 
     // 删除表格数据
-    deleteButtonEvent(list) {
-      console.log(list);
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.handleSelectionChange([]);
-        this.$refs.xTable1.clearCheckboxRow();
-      }, 1500);
+    deleteButtonEvent(rows) {
+      const list = rows || this.multipleSelection;
+      const remoteData = list.filter((item) => item.id).map((item) => item.id);
+      // this.$refs.xTable.removeCheckboxRow();
+      if (remoteData.length) {
+        this.loading = true;
+        delRptids(remoteData)
+          .then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+              this.getData();
+            }
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
     },
 
     // 分页参数改变
     handlePageChange(page) {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 1000);
-      console.log(page);
+      this.requestParamsObj.page = {
+        page: page.currentPage,
+        size: page.pageSize,
+      };
+      this.getData();
     },
 
     editClosedEvent({ row, column }) {
@@ -314,6 +311,10 @@ export default {
     .el-link {
       margin: 0 5px;
     }
+  }
+  .textarea {
+    height: 100px;
+    display: block;
   }
 }
 </style>

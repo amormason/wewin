@@ -7,10 +7,6 @@
           VID/NAME备注:
           <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
-        <!-- <el-col :span="6">
-          备注:
-          <el-input placeholder="请输入" v-model="requestParamsObj.keyWord"> </el-input>
-        </el-col> -->
       </el-row>
 
       <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV"></TableOperationButtons>

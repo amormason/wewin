@@ -27,7 +27,7 @@
         <el-button slot="reference" type="primary" icon="el-icon-paperclip" size="small" :loading="loading" :disabled="checking" v-if="exportUrl">导出</el-button>
       </el-popover>
 
-      <el-switch v-model="checking" active-color="#13ce66" inactive-color="gray" active-text="正在监控" inactive-text="停止监控" @change="changeChcek(checking)"> </el-switch>
+      <el-switch v-model="checking" active-color="#13ce66" inactive-color="gray" active-text="正在监控" inactive-text="停止监控" v-if="!noChecking" @change="changeChcek(checking)"> </el-switch>
 
       <!-- <el-button v-if="testButton" icon="el-icon-s-operation" :type="testBtn.clicked ? 'success':''" size="small" :loading="loading" @click="testButton.event">测试当前页</el-button> -->
     </el-col>
@@ -64,6 +64,7 @@ export default {
     noNew: Boolean,
     improtUrl: String,
     exportUrl: String,
+    noChecking: Boolean,
   },
   components: {},
   computed: {},
