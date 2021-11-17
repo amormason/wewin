@@ -224,20 +224,34 @@ export default {
       this.getData();
     },
 
+    // 表格编辑完
     editClosedEvent({ row, column }) {
       const $table = this.$refs.xTable;
       const field = column.property;
-      const cellValue = row[field];
+      // const cellValue = row[field];
       // 判断单元格值是否被修改
       if ($table.isUpdateByRow(row, field)) {
+        if (row.isNew) {
+          return;
+        }
+        const savaObj = {
+          id: row.id || '',
+          vidsStr: row.vidsStr || '',
+          comments: row.comments || '',
+        };
         this.loading = true;
-        setTimeout(() => {
-          this.$message({
-            message: `局部保存成功！ ${field}=${cellValue}`,
-            type: 'success',
+        setRptid(savaObj)
+          .then((res) => {
+            if (res && res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+            }
+          })
+          .finally(() => {
+            this.getData();
           });
-          this.loading = false;
-        }, 300);
       }
     },
 
