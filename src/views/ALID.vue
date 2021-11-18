@@ -4,7 +4,7 @@
     <div class="dictionary-information-container">
 
       <el-row :gutter="0" class="form">
-        <el-col :span="5">
+        <el-col :span="7">
           Alarm/TITLE备注:
           <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
