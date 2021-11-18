@@ -6,10 +6,10 @@
           <h1>weWin</h1>
           <div class="title">最强SECS转换器模块</div>
           <div class="placeholder">请你输入登录信息</div>
-          <div>
+          <div @keyup.enter="login">
             <el-input class="form-input" placeholder="账号" v-model="user.mobile" prefix-icon="el-icon-user" clearable></el-input>
           </div>
-          <div>
+          <div @keyup.enter="login">
             <el-input class="form-input" type="password" placeholder="密码" v-model="user.vcode" prefix-icon="el-icon-message" clearable></el-input>
           </div>
           <div>
