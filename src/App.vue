@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Menu />
+    <Menu v-show="isLogined" />
     <div class="view-container">
       <router-view />
     </div>
@@ -14,7 +14,12 @@ export default {
   components: { Menu },
   name: 'App',
   data() {
-    return {};
+    return {
+      isLogined: this.$store.state.token,
+    };
+  },
+  updated() {
+    this.isLogined = this.$store.state.token;
   },
   created() {
     // 在页面加载时读取sessionStorage里的状态信息
