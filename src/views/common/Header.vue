@@ -138,22 +138,31 @@ export default {
   },
   methods: {
     singOut() {
-      logout().then((res) => {
-        console.log(res);
-        if (res.status === 200) {
+      logout()
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
+            this.$store.commit('delToken');
+            this.$router.push('/login');
+            this.$message({
+              message: '您已退出登录',
+              type: 'success',
+            });
+          } else {
+            this.$message({
+              message: '登出系统失败',
+              type: 'error',
+            });
+          }
+        })
+        .finally(() => {
           this.$store.commit('delToken');
           this.$router.push('/login');
           this.$message({
             message: '您已退出登录',
             type: 'success',
           });
-        } else {
-          this.$message({
-            message: '登出系统失败',
-            type: 'error',
-          });
-        }
-      });
+        });
     },
   },
 };
@@ -211,6 +220,7 @@ export default {
         color: $info-text-color;
       }
       .username {
+        cursor: pointer;
         height: 100%;
         display: flex;
         align-items: center;

@@ -1,37 +1,39 @@
 <template>
-  <div class="login">
-    <el-row>
-      <el-col :span="24" class="login-form">
-        <h1>weWin</h1>
-        <div class="title">最强SECS转换器模块</div>
-        <div class="placeholder">请你输入登录信息</div>
-        <div>
-          <el-input placeholder="账号" v-model="user.mobile" clearable></el-input>
+  <div class="container">
+    <div class="login">
+      <el-row>
+        <el-col :span="24" class="login-form">
+          <h1>weWin</h1>
+          <div class="title">最强SECS转换器模块</div>
+          <div class="placeholder">请你输入登录信息</div>
+          <div>
+            <el-input class="form-input" placeholder="账号" v-model="user.mobile" prefix-icon="el-icon-user" clearable></el-input>
+          </div>
+          <div>
+            <el-input class="form-input" type="password" placeholder="密码" v-model="user.vcode" prefix-icon="el-icon-message" clearable></el-input>
+          </div>
+          <div>
+            <el-button type="primary" :loading="loading" class="login-button" @click="login">登录</el-button>
+          </div>
+        </el-col>
+      </el-row>
+      <div class="footer">
+        <ul>
+          <li>
+            帮助
+          </li>
+          <li>
+            隐私
+          </li>
+          <li>
+            条款
+          </li>
+        </ul>
+        <div class="coopyright">
+          copyright @ 2022 广州快点科技出品
         </div>
-        <div>
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-input type="password" placeholder="密码" v-model="user.vcode" clearable></el-input>
-            </el-col>
-          </el-row>
-        </div>
-        <!-- <div>
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-checkbox v-model="loginInfo.checked">自动登录</el-checkbox>
-            </el-col>
-            <el-col :span="12">&nbsp;</el-col>
-            <el-col :span="6">
-              <el-link>忘记密码</el-link>
-            </el-col>
-          </el-row>
-        </div> -->
-        <!-- {{ loginInfo }} -->
-        <div>
-          <el-button type="primary" :loading="loading" class="login-button" @click="login">登录</el-button>
-        </div>
-      </el-col>
-    </el-row>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -44,8 +46,8 @@ export default {
     return {
       loading: false,
       user: {
-        mobile: 'admin',
-        vcode: 'admin',
+        mobile: '',
+        vcode: '',
       },
     };
   },
@@ -98,29 +100,67 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.login {
-  width: 400px;
-  margin: 0 auto;
-  margin-top: 100px;
-  text-align: center;
-  .title {
-    color: #909399;
-    margin-top: 100px !important;
-  }
-  .placeholder {
-    margin-top: 70px !important;
-    color: #409eff;
-    border-bottom: 2px solid currentColor;
-    padding-bottom: 20px;
-    font-weight: bold;
-  }
-  .login-form {
-    > div {
-      margin: 20px 0;
+.container {
+  background-color: #f1f2f6;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  background-image: url(~@/assets/bg.jpg);
+  background-size: 1920px 1080px;
+  .login {
+    width: 368px;
+    margin: 0 auto;
+    text-align: center;
+    .title {
+      color: rgba(0, 0, 0, 0.42745098039215684);
+      height: 74px;
+      margin-top: 40px !important;
     }
-    .login-button {
-      display: block;
-      width: 100%;
+    .placeholder {
+      margin: 0 auto 20px !important;
+      color: #409eff;
+      border-bottom: 2px solid currentColor;
+      font-weight: bold;
+      width: 227px;
+      line-height: 46px;
+    }
+    .login-form {
+      h1 {
+        line-height: 74px;
+        margin: 0;
+        font-size: 36px;
+      }
+      /deep/ .form-input {
+        margin-bottom: 24px;
+        input {
+          height: 34px !important;
+        }
+      }
+      .login-button {
+        display: block;
+        height: 40px;
+        background-color: #218efa;
+        width: 100%;
+      }
+    }
+    .footer {
+      color: rgba(0, 0, 0, 0.4470588235294118);
+      font-size: 14px;
+      ul {
+        margin: 150px auto 10px !important;
+        width: 300px;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: space-around;
+        li {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+      }
     }
   }
 }
