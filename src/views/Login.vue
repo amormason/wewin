@@ -60,10 +60,9 @@ export default {
       this.loading = true;
       login(this.user)
         .then((res) => {
-          console.log(res);
           if (res && res.data && res.status === 200) {
             this.$store.commit('setToken', res.data.jwtToken);
-            this.$store.commit('setUser', this.user);
+            // this.$store.commit('setUser', this.user);
             this.$message({
               message: '登录成功',
               type: 'success',

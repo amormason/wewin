@@ -1,6 +1,6 @@
 const storage = {
   set(key, value) {
-    sessionStorage.setItem(key, JSON.stringify(value));
+    sessionStorage.setItem(key, (typeof (value) === 'string') ? value : JSON.stringify(value));
   },
   get(key) {
     return JSON.parse(sessionStorage.getItem(key));

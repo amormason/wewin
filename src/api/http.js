@@ -2,7 +2,9 @@ import axios from 'axios';
 import {
   Message,
 } from 'element-ui';
-import store from '@/store';
+
+const token = sessionStorage.getItem('token');
+
 // 创建一个 axios 实例
 const service = axios.create({
   baseURL: '/api/', // url = base url + request url
@@ -25,7 +27,7 @@ const getFileNmaFromHeaders = (str) => {
 service.interceptors.request.use(
   (configP) => {
     const config = configP;
-    config.headers.Authorization = store.state.token;
+    config.headers.Authorization = token;
     return config;
   },
   (error) => {
@@ -58,6 +60,21 @@ const http = {
   },
   post(url, data) {
     return service.post(url, data);
+  },
+  // 上传文件
+  uploadFile(url, file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const config = {
+      baseURL: '/api/', // url = base url + request url
+      withCredentials: true, // send cookies when cross-domain requests
+      timeout: 10000, // request timeout
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: token,
+      },
+    };
+    return axios.post(url, formData, config);
   },
 };
 

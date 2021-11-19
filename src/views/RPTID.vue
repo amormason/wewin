@@ -22,7 +22,7 @@
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-actived="editActivedEvent" @edit-closed="editClosedEvent">
         <vxe-column type="checkbox" width="60"></vxe-column>
         <vxe-column sortable field="id" width="120" title="RPTID" :edit-render="{ name: 'input', attrs: { type: 'text',row:50} }"></vxe-column>
-        <vxe-column field="vidsStr" title="VID" :edit-render="{ name: 'textarea', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="vidsStr" title="VID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="comments" title="备注" width="120" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
         <vxe-column title="操作" width="150">

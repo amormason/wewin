@@ -1,12 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import storage from './storage';
+import {
+  getFormatOptions,
+} from '@/api/request';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     token: '',
+    formatOptions: [],
     user: {},
     authenticated: false,
   },
@@ -28,7 +32,21 @@ export default new Vuex.Store({
       state.user = user;
       storage.set('user', user);
     },
+
+    updateFormatOptions(state, formatOptions) {
+      state.formatOptions = formatOptions;
+      storage.set('formatOptions', formatOptions);
+    },
   },
-  actions: {},
+  actions: {
+    async getFormatOptions({
+      commit,
+    }) {
+      await getFormatOptions().then((result) => {
+        console.log('data:', result);
+        commit('updateFormatOptions', result.data);
+      });
+    },
+  },
   modules: {},
 });

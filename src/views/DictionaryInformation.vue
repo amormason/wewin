@@ -7,7 +7,7 @@
         <el-input class="keyword" placeholder="请输入" clearable v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading">
         </el-input>
       </div>
-
+      {{formatOptions}}
       <!-- <el-row class="buttons-container">
       <el-col :span="24">
         <el-button type="primary" size="small" icon="el-icon-plus"
@@ -29,12 +29,23 @@
         mode: 'cell',
         showStatus: true,
         icon: 'el-icon-s-tools',
-      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
+      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-closed="editClosedEvent">
         <!-- <vxe-column type="seq" width="60"></vxe-column> -->
         <vxe-column sortable field="name" title="Name"></vxe-column>
-        <vxe-column field="format" title="FORMAT"></vxe-column>
-        <vxe-column field="len" title="LEN"></vxe-column>
-        <vxe-column field="comment" title="备注"></vxe-column>
+
+        <vxe-column field="format" title="FORMAT" :edit-render="{}">
+          <template #default="{ row }">
+            <span>{{ format(row.formatOptions) }}</span>
+          </template>
+          <template #edit="{ row }">
+            <vxe-select v-model="row.format" transfer>
+              <vxe-option v-for="item in formatOptions" :key="item.value" :value="item.value" :label="item.label"></vxe-option>
+            </vxe-select>
+          </template>
+        </vxe-column>
+
+        <vxe-column field="len" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="comment" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <!-- <vxe-column sortable field="date" title="创建时间"></vxe-column> -->
       </vxe-table>
 
@@ -55,13 +66,20 @@
 
 <script>
 import Header from './common/Header.vue';
-import { findDidByName } from '@/api/request';
+import { findDidByName, setDid } from '@/api/request';
 
 export default {
   name: 'ModuleNetworkConfiguration',
   data() {
     return {
       loading: false,
+      formatOptions: [
+        { label: 'D', value: 'D' },
+        { label: 'E', value: 'E' },
+        { label: 'C', value: 'C' },
+        { label: 'B', value: 'B' },
+        { label: 'A', value: 'A' },
+      ],
       page: {
         currentPage: 1,
         pageSize: 20,
@@ -92,7 +110,6 @@ export default {
         JSON.stringify(this.requestParamsObj),
       );
       delete requestParamsObj.page.total;
-      console.log(requestParamsObj);
       this.loading = true;
       this.alertTitle = null;
       this.$refs.xTable.clearCheckboxRow();
@@ -108,6 +125,43 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    format(key) {
+      const fomatObject = {};
+      this.formatOptions.forEach((item) => {
+        fomatObject[item.label] = item.value || '未定义';
+      });
+      return fomatObject[key] || '未定义的FORMAT';
+    },
+    editClosedEvent({ row, column }) {
+      const $table = this.$refs.xTable;
+      const field = column.property;
+      // const cellValue = row[field];
+      // 判断单元格值是否被修改
+      if ($table.isUpdateByRow(row, field)) {
+        if (row.isNew) {
+          return;
+        }
+        const savaObj = {
+          name: row.name,
+          format: row.format,
+          len: row.len,
+          comment: row.comment,
+        };
+        this.loading = true;
+        setDid(savaObj)
+          .then((res) => {
+            if (res && res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+            }
+          })
+          .finally(() => {
+            this.getData();
+          });
+      }
     },
     selectAllEvent() {
       console.log('selectAllEvent');
@@ -149,13 +203,15 @@ export default {
       setTimeout(() => {
         this.loading = false;
         this.handleSelectionChange([]);
-        this.$refs.xTable1.clearCheckboxRow();
+        this.$refs.xTable.clearCheckboxRow();
       }, 1500);
     },
   },
 
   mounted() {
     this.getData();
+    this.$store.dispatch('getFormatOptions');
+    // this.formatOptions = this.$store.state.formatOptions;
   },
 
   components: {

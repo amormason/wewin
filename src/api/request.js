@@ -1,11 +1,10 @@
 // 导入api.js
-import axios from 'axios';
-import store from '@/store';
 import http from './http';
 
 export const login = (params) => http.post('/login/login', params);
 export const getCurrentUserInfo = () => http.post('/login/getCurrentUserInfo');
 export const logout = () => http.post('/logout');
+export const getFormatOptions = () => http.get('/status/getAllStatus');
 
 export const getDeviceStatus = () => http.get('/status/getAllStatus');
 
@@ -16,6 +15,7 @@ export const getHsmsInfo = () => http.get('/conf/getHsmsInfo');
 export const setHsmsInfo = (params) => http.post('/conf/setHsmsInfo', params);
 
 export const findDidByName = (params) => http.post('/conf/findDidByName', params);
+export const setDid = (params) => http.post('/conf/setDid', params);
 
 export const findSvidByName = (params) => http.post('/svid/findSvidByName', params);
 export const setSvid = (params) => http.post('/svid/setSvid', params);
@@ -42,18 +42,20 @@ export const getPlcConf = () => http.get('/conf/getPlcConf');
 export const setPlcConf = (params) => http.post('/conf/setPlcConf', params);
 
 export const exportCSV = (params) => http.get(params);
+
+export const uploadFile = (url, file) => http.uploadFile(url, file);
 // 上传文件
-export const uploadFile = (url, file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  const config = {
-    baseURL: '/api/', // url = base url + request url
-    withCredentials: true, // send cookies when cross-domain requests
-    timeout: 10000, // request timeout
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      Authorization: store.state.token,
-    },
-  };
-  return axios.post(url, formData, config);
-};
+// export const uploadFile = (url, file) => {
+//   const formData = new FormData();
+//   formData.append('file', file);
+//   const config = {
+//     baseURL: '/api/', // url = base url + request url
+//     withCredentials: true, // send cookies when cross-domain requests
+//     timeout: 10000, // request timeout
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//       Authorization: store.state.token,
+//     },
+//   };
+//   return axios.post(url, formData, config);
+// };
