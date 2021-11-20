@@ -25,7 +25,7 @@
         <vxe-column sortable field="alId" title="ALID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="alcd" title="ALCD" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="altx" title="ALTX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="plcType" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="plcType" title="数据类型" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column width="200" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
           <!--使用#edit自定义编辑-->
           <template #edit="{ row }">

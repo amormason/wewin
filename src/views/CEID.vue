@@ -23,7 +23,7 @@
         <vxe-column type="checkbox" width="60"></vxe-column>
         <vxe-column sortable field="id" title="CEID" width="100" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="rptsStr" width="500" title="PRTID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="plcType" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="plcType" title="数据类型" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="activeValue" title="触发方式" :edit-render="{name: '$select', options: wayList}"></vxe-column>
         <vxe-column width="300" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
           <!--使用#edit自定义编辑-->
