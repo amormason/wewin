@@ -25,7 +25,7 @@
         <vxe-column sortable field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{}">
           <template #default="{ row }">
-            <span>{{ plcTypeOptions[row.formatCodeType] || '未定义的FORMAT' }}</span>
+            <span>{{ formatOptions[row.formatCodeType] || '未定义的FORMAT' }}</span>
           </template>
           <template #edit="{ row }">
             <vxe-select v-model="row.formatCodeType" transfer>

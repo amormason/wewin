@@ -34,7 +34,7 @@
 
         <vxe-column field="format" title="FORMAT" :edit-render="{}">
           <template #default="{ row }">
-            <span>{{ this.formatOptions[row.format] || '未定义的FORMAT'}}</span>
+            <span>{{ formatOptions[row.format] || '未定义的FORMAT'}}</span>
           </template>
           <template #edit="{ row }">
             <vxe-select v-model="row.format" transfer>
