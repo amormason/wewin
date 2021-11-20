@@ -32,7 +32,7 @@ const routes = [{
   component: () => import('../views/DeviceStatus.vue'),
   meta: {
     requireAuth: true,
-    title: '登录页面',
+    title: '设备状态',
   },
 },
 {
