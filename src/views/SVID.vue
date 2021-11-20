@@ -23,10 +23,19 @@
         <vxe-column type="checkbox" width="60" :disabled="true"></vxe-column>
         <vxe-column field="id" title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column sortable field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="len" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="70"></vxe-column>
+        <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{}">
+          <template #default="{ row }">
+            <span>{{ format(row.formatCodeType) }}</span>
+          </template>
+          <template #edit="{ row }">
+            <vxe-select v-model="row.formatCodeType" transfer>
+              <vxe-option v-for="(value, name) in formatOptions" :key="value" :value="name" :label="value"></vxe-option>
+            </vxe-select>
+          </template>
+        </vxe-column>
+        <vxe-column field="len" title="LENGHT" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="70"></vxe-column>
         <vxe-column field="units" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="90"></vxe-column>
-        <vxe-column field="def" title="DEF" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="def" title="DEFAULT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="min" title="MIN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="max" title="MAX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="plcType" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
@@ -94,6 +103,7 @@ export default {
   data() {
     return {
       tableData: [],
+      formatOptions: this.$store.state.formatOptions || {},
       options: [
         { label: 'D', value: 'D' },
         { label: 'E', value: 'E' },
@@ -159,6 +169,7 @@ export default {
               const { plcname, plcvalue } = this.GLOBAL.getPLC(item.plcAddr);
               temp.plcname = plcname;
               temp.plcvalue = plcvalue;
+              temp.formatCodeType = `${item.formatCodeType}`;
               return {
                 ...temp,
               };
@@ -168,6 +179,9 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    format(key) {
+      return this.formatOptions[key] || '未定义的FORMAT';
     },
 
     // 按照NAME排序
@@ -281,6 +295,7 @@ export default {
     editClosedEvent({ row, column }) {
       const $table = this.$refs.xTable;
       const field = column.property;
+      console.log(row.formatCodeType);
       // const cellValue = row[field];
       // 判断单元格值是否被修改
       if ($table.isUpdateByRow(row, field)) {

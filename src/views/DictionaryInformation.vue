@@ -43,7 +43,7 @@
           </template>
         </vxe-column>
 
-        <vxe-column field="len" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="len" title="LENGHT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="comment" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <!-- <vxe-column sortable field="date" title="创建时间"></vxe-column> -->
       </vxe-table>
@@ -126,8 +126,6 @@ export default {
         });
     },
     format(key) {
-      console.log('this.formatOptions:', this.formatOptions);
-      console.log(key);
       return this.formatOptions[key] || '未定义的FORMAT';
     },
     editClosedEvent({ row, column }) {

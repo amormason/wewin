@@ -29,10 +29,20 @@
         <vxe-column type="checkbox" width="60"></vxe-column>
         <vxe-column sortable field="id" title="ECID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="len" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <!-- <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column> -->
+        <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{}">
+          <template #default="{ row }">
+            <span>{{ format(row.formatCodeType) }}</span>
+          </template>
+          <template #edit="{ row }">
+            <vxe-select v-model="row.formatCodeType" transfer>
+              <vxe-option v-for="(value, name) in formatOptions" :key="value" :value="name" :label="value"></vxe-option>
+            </vxe-select>
+          </template>
+        </vxe-column>
+        <vxe-column field="len" title="LENGHT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="units" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="def" title="DEF" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="def" title="DEFAULT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="min" title="MIN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="max" title="MAX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="plcType" title="PLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
@@ -109,6 +119,7 @@ export default {
   data() {
     return {
       tableData: [],
+      formatOptions: this.$store.state.formatOptions || {},
       options: [
         { label: 'D', value: 'D' },
         { label: 'E', value: 'E' },
@@ -171,6 +182,7 @@ export default {
             this.tableData = res.data.result.map((item) => {
               const temp = item;
               const { plcname, plcvalue } = this.GLOBAL.getPLC(item.plcAddr);
+              temp.formatCodeType = `${item.formatCodeType}`;
               temp.plcname = plcname;
               temp.plcvalue = plcvalue;
               return {
@@ -182,6 +194,9 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    format(key) {
+      return this.formatOptions[key] || '未定义的FORMAT';
     },
     handleClick() {
       console.log('handleClick');
