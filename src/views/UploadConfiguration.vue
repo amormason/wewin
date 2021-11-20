@@ -11,7 +11,7 @@
           </el-row>
 
           <el-row :gutter="20">
-            <el-col :span="3" class="label required">Host IP: </el-col>
+            <el-col :span="3" class="label">Host IP: </el-col>
             <el-col :span="12">
               <el-input placeholder="请输入一个有效的IP地址" v-model="hsms.ip" clearable maxlength="15">
               </el-input>
@@ -36,7 +36,7 @@
           </el-row>
 
           <el-row :gutter="20">
-            <el-col :span="3" class="label required">DeviceID: </el-col>
+            <el-col :span="3" class="label">DeviceID: </el-col>
             <el-col :span="12">
               <el-input placeholder="DeviceID" v-model="hsms.comId" clearable maxlength="10">
               </el-input>
@@ -160,8 +160,36 @@ export default {
         this.$message.error('请输入一个有效的IP地址');
         return false;
       }
+      if (!this.hsms.port) {
+        this.$message.error('端口不能为空');
+        return false;
+      }
       if (!this.hsms.comId) {
         this.$message.error('DeviceID不能为空');
+        return false;
+      }
+      if (!this.hsms.t3) {
+        this.$message.error('T3不能为空');
+        return false;
+      }
+      if (!this.hsms.t5) {
+        this.$message.error('T5不能为空');
+        return false;
+      }
+      if (!this.hsms.t6) {
+        this.$message.error('T6不能为空');
+        return false;
+      }
+      if (!this.hsms.t7) {
+        this.$message.error('T7不能为空');
+        return false;
+      }
+      if (!this.hsms.t8) {
+        this.$message.error('T8不能为空');
+        return false;
+      }
+      if (!this.hsms.linkTest) {
+        this.$message.error('LinkTest不能为空');
         return false;
       }
       return true;
@@ -171,12 +199,7 @@ export default {
       const numberArray = ['port', 'linkTest', 't3', 't5', 't6', 't7', 't8'];
       Object.keys(hsms).forEach((key) => {
         if (numberArray.includes(key)) {
-          if (hsms[key]) {
-            console.log(key);
-            hsms[key] = Number.parseInt(hsms[key], 10);
-          } else {
-            hsms[key] = '';
-          }
+          hsms[key] = Number.parseInt(hsms[key], 10);
         }
       });
       if (this.checkData()) {
