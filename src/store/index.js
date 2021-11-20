@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import storage from './storage';
 import {
   getFormatOptions,
+  getPlcTypeOptions,
 } from '@/api/request';
 
 Vue.use(Vuex);
@@ -10,7 +11,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     token: '',
-    formatOptions: [],
+    formatOptions: {},
+    plcTypeOptions: {},
     user: {},
     authenticated: false,
   },
@@ -41,8 +43,26 @@ export default new Vuex.Store({
       state.formatOptions = ret;
       storage.set('formatOptions', ret);
     },
+
+    updatePlcTypeOptions(state, plcTypeOptions) {
+      const ret = {};
+      Object.keys(plcTypeOptions).forEach((key) => {
+        ret[plcTypeOptions[key]] = key;
+      });
+      state.formatOptions = ret;
+      storage.set('plcTypeOptions', ret);
+    },
   },
   actions: {
+
+    async getPlcTypeOptions({
+      commit,
+    }) {
+      await getPlcTypeOptions().then((result) => {
+        commit('updateFormatOptions', result.data);
+      });
+    },
+
     async getFormatOptions({
       commit,
     }) {

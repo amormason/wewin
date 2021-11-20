@@ -32,7 +32,7 @@
         <!-- <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column> -->
         <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{}">
           <template #default="{ row }">
-            <span>{{ format(row.formatCodeType) }}</span>
+            <span>{{ formatOptions[row.formatCodeType] || '未定义的FORMAT'}}</span>
           </template>
           <template #edit="{ row }">
             <vxe-select v-model="row.formatCodeType" transfer>
@@ -45,7 +45,6 @@
         <vxe-column field="def" title="DEFAULT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="min" title="MIN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="max" title="MAX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="plcType" title="数据类型" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
         <vxe-column width="200" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
           <!--使用#edit自定义编辑-->
@@ -60,6 +59,17 @@
                 <input type="text" v-model="row.plcvalue" class="vxe-default-input" size="small" @change="row.plcAddr = row.plcname +row.plcvalue" />
               </el-col>
             </el-row>
+          </template>
+        </vxe-column>
+
+        <vxe-column field="plcType" title="数据类型" :edit-render="{}">
+          <template #default="{ row }">
+            <span>{{ plcTypeOptions[row.plcType] || '未定义的数据类型' }}</span>
+          </template>
+          <template #edit="{ row }">
+            <vxe-select v-model="row.plcType" transfer>
+              <vxe-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></vxe-option>
+            </vxe-select>
           </template>
         </vxe-column>
 
@@ -97,14 +107,6 @@
         'Total',
       ]">
       </vxe-pager>
-
-      <el-dialog title="新增" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-        这里是新增的表单
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-          <el-button type="success" size="small" @click="dialogVisible = false">新增</el-button>
-        </span>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -120,6 +122,7 @@ export default {
     return {
       tableData: [],
       formatOptions: this.$store.state.formatOptions || {},
+      plcTypeOptions: this.$store.state.plcTypeOptions || {},
       options: [
         { label: 'D', value: 'D' },
         { label: 'E', value: 'E' },
@@ -194,9 +197,6 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    },
-    format(key) {
-      return this.formatOptions[key] || '未定义的FORMAT';
     },
     handleClick() {
       console.log('handleClick');

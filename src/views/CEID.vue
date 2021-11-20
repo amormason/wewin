@@ -23,7 +23,7 @@
         <vxe-column type="checkbox" width="60"></vxe-column>
         <vxe-column sortable field="id" title="CEID" width="100" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="rptsStr" width="500" title="PRTID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="plcType" title="数据类型" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <!-- <vxe-column field="plcType" title="数据类型" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column> -->
         <vxe-column field="activeValue" title="触发方式" :edit-render="{name: '$select', options: wayList}"></vxe-column>
         <vxe-column width="300" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
           <!--使用#edit自定义编辑-->
@@ -38,6 +38,17 @@
                 <input type="text" v-model="row.plcvalue" class="vxe-default-input" size="small" @change="row.plcAddr = row.plcname +row.plcvalue" />
               </el-col>
             </el-row>
+          </template>
+        </vxe-column>
+
+        <vxe-column field="plcType" title="数据类型" :edit-render="{}">
+          <template #default="{ row }">
+            <span>{{ plcTypeOptions[row.plcType] || '未定义的数据类型' }}</span>
+          </template>
+          <template #edit="{ row }">
+            <vxe-select v-model="row.plcType" transfer>
+              <vxe-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></vxe-option>
+            </vxe-select>
           </template>
         </vxe-column>
 
@@ -88,6 +99,7 @@ export default {
   data() {
     return {
       tableData: [],
+      plcTypeOptions: this.$store.state.plcTypeOptions || {},
       wayList: [
         { label: '上升沿', value: 1 },
         { label: '下降沿', value: 0 },

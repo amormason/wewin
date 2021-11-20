@@ -5,6 +5,7 @@ export const login = (params) => http.post('/login/login', params);
 export const getCurrentUserInfo = () => http.post('/login/getCurrentUserInfo');
 export const logout = () => http.post('/logout');
 export const getFormatOptions = () => http.get('/conf/getFormatCodes');
+export const getPlcTypeOptions = () => http.get('/conf/getPlcTypes');
 
 export const getDeviceStatus = () => http.get('/status/getAllStatus');
 

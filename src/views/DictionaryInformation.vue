@@ -34,7 +34,7 @@
 
         <vxe-column field="format" title="FORMAT" :edit-render="{}">
           <template #default="{ row }">
-            <span>{{ format(row.format) }}</span>
+            <span>{{ this.formatOptions[row.format] || '未定义的FORMAT'}}</span>
           </template>
           <template #edit="{ row }">
             <vxe-select v-model="row.format" transfer>
@@ -124,9 +124,6 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    },
-    format(key) {
-      return this.formatOptions[key] || '未定义的FORMAT';
     },
     editClosedEvent({ row, column }) {
       const $table = this.$refs.xTable;

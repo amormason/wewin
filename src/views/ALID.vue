@@ -25,7 +25,7 @@
         <vxe-column sortable field="alId" title="ALID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="alcd" title="ALCD" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="altx" title="ALTX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="plcType" title="数据类型" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <!-- <vxe-column field="plcType" title="数据类型" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column> -->
         <vxe-column width="200" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
           <!--使用#edit自定义编辑-->
           <template #edit="{ row }">
@@ -41,6 +41,18 @@
             </el-row>
           </template>
         </vxe-column>
+
+        <vxe-column field="plcType" title="数据类型" :edit-render="{}">
+          <template #default="{ row }">
+            <span>{{ plcTypeOptions[row.plcType] || '未定义的数据类型' }}</span>
+          </template>
+          <template #edit="{ row }">
+            <vxe-select v-model="row.plcType" transfer>
+              <vxe-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></vxe-option>
+            </vxe-select>
+          </template>
+        </vxe-column>
+
         <vxe-column field="activeValue" title="触发方式" :edit-render="{name: '$select', options: wayList}"></vxe-column>
         <vxe-column type="html" :formatter="formatRole" field="value" title="当前值"></vxe-column>
         <vxe-column field="comments" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
@@ -94,6 +106,7 @@ export default {
         { label: '下降沿', value: 0 },
       ],
       options: this.GLOBAL.plcAddrOptions,
+      plcTypeOptions: this.$store.state.plcTypeOptions || {},
       loading: false,
       visible: false,
       dialogVisible: false,

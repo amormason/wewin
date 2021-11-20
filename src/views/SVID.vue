@@ -25,7 +25,7 @@
         <vxe-column sortable field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{}">
           <template #default="{ row }">
-            <span>{{ format(row.formatCodeType) }}</span>
+            <span>{{ plcTypeOptions[row.formatCodeType] || '未定义的FORMAT' }}</span>
           </template>
           <template #edit="{ row }">
             <vxe-select v-model="row.formatCodeType" transfer>
@@ -54,7 +54,17 @@
             </el-row>
           </template>
         </vxe-column>
-        <vxe-column field="plcType" title="数据类型" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+
+        <vxe-column field="plcType" title="数据类型" :edit-render="{}">
+          <template #default="{ row }">
+            <span>{{ plcTypeOptions[row.plcType] || '未定义的数据类型' }}</span>
+          </template>
+          <template #edit="{ row }">
+            <vxe-select v-model="row.plcType" transfer>
+              <vxe-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></vxe-option>
+            </vxe-select>
+          </template>
+        </vxe-column>
 
         <vxe-column field="comment" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
@@ -104,6 +114,7 @@ export default {
     return {
       tableData: [],
       formatOptions: this.$store.state.formatOptions || {},
+      plcTypeOptions: this.$store.state.plcTypeOptions || {},
       options: [
         { label: 'D', value: 'D' },
         { label: 'E', value: 'E' },
@@ -179,9 +190,6 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    },
-    format(key) {
-      return this.formatOptions[key] || '未定义的FORMAT';
     },
 
     // 按照NAME排序

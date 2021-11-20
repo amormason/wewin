@@ -52,6 +52,16 @@ export default {
     };
   },
   methods: {
+    afterLogin() {
+      this.$store.dispatch('getFormatOptions');
+      this.$store.dispatch('getPlcTypeOptions');
+      // getCurrentUserInfo().then((userInfo) => {
+      //   console.log(userInfo);
+      // });
+      setTimeout(() => {
+        this.$router.push(this.$route.query.redirect || '/deviceStatus');
+      }, 500);
+    },
     login() {
       if (!this.user.mobile || !this.user.vcode) {
         this.$message.error('请输入用户名和密码后登录');
@@ -67,13 +77,7 @@ export default {
               message: '登录成功',
               type: 'success',
             });
-            // getCurrentUserInfo().then((userInfo) => {
-            //   console.log(userInfo);
-            // });
-            this.$store.dispatch('getFormatOptions');
-            setTimeout(() => {
-              this.$router.push(this.$route.query.redirect || '/deviceStatus');
-            }, 500);
+            this.afterLogin();
           } else {
             this.$message.error(res.msg || '登录失败');
           }
