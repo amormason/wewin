@@ -4,8 +4,11 @@
     <div class="data-table">
       <el-row :gutter="100">
         <el-col :span="12">
-          <el-input placeholder="192.168.1.100" v-model="net1.ip" clearable maxlength="16">
+          <el-input placeholder="IPv4地址1" v-model="net1.ip" clearable maxlength="16">
             <template slot="prepend">IPv4地址1</template>
+          </el-input>
+          <el-input placeholder="端口" v-model="net1.hsmsPort" clearable maxlength="16">
+            <template slot="prepend">端口1</template>
           </el-input>
           <el-input placeholder="255.255.255.0" v-model="net1.mask" clearable maxlength="16">
             <template slot="prepend">子网掩码1</template>
@@ -20,6 +23,9 @@
         <el-col :span="12">
           <el-input placeholder="192.168.1.100" v-model="net2.ip" clearable maxlength="16">
             <template slot="prepend">IPv4地址2</template>
+          </el-input>
+          <el-input placeholder="端口" v-model="net2.hsmsPort" clearable maxlength="16">
+            <template slot="prepend">端口2</template>
           </el-input>
           <el-input placeholder="255.255.255.0" v-model="net2.mask" clearable maxlength="16">
             <template slot="prepend">子网掩码2</template>
