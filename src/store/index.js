@@ -49,7 +49,7 @@ export default new Vuex.Store({
       Object.keys(plcTypeOptions).forEach((key) => {
         ret[plcTypeOptions[key]] = key;
       });
-      state.formatOptions = ret;
+      state.plcTypeOptions = ret;
       storage.set('plcTypeOptions', ret);
     },
   },
@@ -59,7 +59,8 @@ export default new Vuex.Store({
       commit,
     }) {
       await getPlcTypeOptions().then((result) => {
-        commit('updateFormatOptions', result.data);
+        console.log(result.data);
+        commit('updatePlcTypeOptions', result.data);
       });
     },
 

@@ -41,7 +41,7 @@
           </template>
         </vxe-column>
 
-        <vxe-column field="plcType" title="数据类型" :edit-render="{}">
+        <vxe-column field="plcType" title="数据类型" :edit-render="{}" width="180">
           <template #default="{ row }">
             <span>{{ plcTypeOptions[row.plcType] || '未定义的数据类型' }}</span>
           </template>
