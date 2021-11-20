@@ -206,7 +206,7 @@ export default {
     margin-top: 0;
     line-height: 32px;
     .el-row {
-      margin: 0 0;
+      margin: 1rem 0;
       .label {
         line-height: 40px;
       }
