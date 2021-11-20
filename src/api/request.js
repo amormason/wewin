@@ -4,7 +4,7 @@ import http from './http';
 export const login = (params) => http.post('/login/login', params);
 export const getCurrentUserInfo = () => http.post('/login/getCurrentUserInfo');
 export const logout = () => http.post('/logout');
-export const getFormatOptions = () => http.get('/status/getAllStatus');
+export const getFormatOptions = () => http.get('/conf/getFormatCodes');
 
 export const getDeviceStatus = () => http.get('/status/getAllStatus');
 

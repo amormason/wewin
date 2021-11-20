@@ -7,7 +7,6 @@
         <el-input class="keyword" placeholder="请输入" clearable v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading">
         </el-input>
       </div>
-      {{formatOptions}}
       <!-- <el-row class="buttons-container">
       <el-col :span="24">
         <el-button type="primary" size="small" icon="el-icon-plus"
@@ -35,11 +34,11 @@
 
         <vxe-column field="format" title="FORMAT" :edit-render="{}">
           <template #default="{ row }">
-            <span>{{ format(row.formatOptions) }}</span>
+            <span>{{ format(row.format) }}</span>
           </template>
           <template #edit="{ row }">
             <vxe-select v-model="row.format" transfer>
-              <vxe-option v-for="item in formatOptions" :key="item.value" :value="item.value" :label="item.label"></vxe-option>
+              <vxe-option v-for="(value, name) in formatOptions" :key="value" :value="name" :label="value"></vxe-option>
             </vxe-select>
           </template>
         </vxe-column>
@@ -73,13 +72,7 @@ export default {
   data() {
     return {
       loading: false,
-      formatOptions: [
-        { label: 'D', value: 'D' },
-        { label: 'E', value: 'E' },
-        { label: 'C', value: 'C' },
-        { label: 'B', value: 'B' },
-        { label: 'A', value: 'A' },
-      ],
+      formatOptions: this.$store.state.formatOptions || {},
       page: {
         currentPage: 1,
         pageSize: 20,
@@ -120,18 +113,22 @@ export default {
             size: res.data.size,
             total: res.data.total,
           };
-          this.tableData = (res.data && res.data.result) || [];
+          this.tableData = ((res.data && res.data.result) || []).map((item) => {
+            const list = item;
+            list.format = JSON.stringify(item.format);
+            return {
+              ...list,
+            };
+          });
         })
         .finally(() => {
           this.loading = false;
         });
     },
     format(key) {
-      const fomatObject = {};
-      this.formatOptions.forEach((item) => {
-        fomatObject[item.label] = item.value || '未定义';
-      });
-      return fomatObject[key] || '未定义的FORMAT';
+      console.log('this.formatOptions:', this.formatOptions);
+      console.log(key);
+      return this.formatOptions[key] || '未定义的FORMAT';
     },
     editClosedEvent({ row, column }) {
       const $table = this.$refs.xTable;
@@ -210,8 +207,6 @@ export default {
 
   mounted() {
     this.getData();
-    this.$store.dispatch('getFormatOptions');
-    // this.formatOptions = this.$store.state.formatOptions;
   },
 
   components: {
