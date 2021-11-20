@@ -17,7 +17,7 @@
               </el-input>
             </el-col>
             <el-col :span="9">
-              <el-input placeholder="端口" v-model="hsms.port" clearable>
+              <el-input placeholder="端口" v-model="hsms.port" @input="e => (hsms.port = isnumber(e))" clearable maxlength="7">
               </el-input>
             </el-col>
           </el-row>
@@ -42,7 +42,7 @@
           <el-row :gutter="20">
             <el-col :span="3" class="label">DeviceID: </el-col>
             <el-col :span="12">
-              <el-input placeholder="Eq1001" v-model="hsms.comId" clearable>
+              <el-input type="number" placeholder="Eq1001" v-model="hsms.comId" clearable>
               </el-input>
             </el-col>
             <el-col :span="9"></el-col>
@@ -64,13 +64,13 @@
           <el-row :gutter="10">
             <el-col :span="3" class="label">T3: </el-col>
             <el-col :span="8">
-              <el-input placeholder="sec" oninput="value=value.replace(/[^\d]/g,'');" v-model="hsms.t3" clearable>
+              <el-input placeholder="sec" type="number" v-model="hsms.t3" clearable>
               </el-input>
             </el-col>
             <el-col :span="2" class="label">&nbsp; </el-col>
             <el-col :span="3" class="label">T5: </el-col>
             <el-col :span="8">
-              <el-input placeholder="sec" oninput="value=value.replace(/[^\d]/g,'');" v-model="hsms.t5" clearable>
+              <el-input placeholder="sec" type="number" v-model="hsms.t5" clearable>
               </el-input>
             </el-col>
           </el-row>
@@ -78,13 +78,13 @@
           <el-row :gutter="10">
             <el-col :span="3" class="label">T6: </el-col>
             <el-col :span="8">
-              <el-input placeholder="sec" oninput="value=value.replace(/[^\d]/g,'');" v-model="hsms.t6" clearable>
+              <el-input placeholder="sec" type="number" v-model="hsms.t6" clearable>
               </el-input>
             </el-col>
             <el-col :span="2" class="label">&nbsp; </el-col>
             <el-col :span="3" class="label">T7: </el-col>
             <el-col :span="8">
-              <el-input placeholder="sec" oninput="value=value.replace(/[^\d]/g,'');" v-model="hsms.t7" clearable>
+              <el-input placeholder="sec" type="number" v-model="hsms.t7" clearable>
               </el-input>
             </el-col>
           </el-row>
@@ -92,13 +92,13 @@
           <el-row :gutter="10">
             <el-col :span="3" class="label">T8: </el-col>
             <el-col :span="8">
-              <el-input placeholder="sec" oninput="value=value.replace(/[^\d]/g,'');" v-model="hsms.t8" clearable>
+              <el-input placeholder="sec" type="number" v-model="hsms.t8" clearable>
               </el-input>
             </el-col>
             <el-col :span="2" class="label">&nbsp; </el-col>
             <el-col :span="3" class="label">LinkTest: </el-col>
             <el-col :span="8">
-              <el-input placeholder="sec" v-model="hsms.linkTest" oninput="value=value.replace(/[^\d]/g,'');" clearable>
+              <el-input placeholder="sec" v-model="hsms.linkTest" type="number" clearable>
               </el-input>
             </el-col>
           </el-row>
@@ -159,21 +159,33 @@ export default {
     Header,
   },
   methods: {
+    isnumber(val) {
+      return val.replace(/[^0-9]/gi, '');
+    },
+    checkData() {
+      if (!this.GLOBAL.isValidIP(this.hsms.ip)) {
+        this.$message.error('请输入一个有效的IP地址');
+        return false;
+      }
+      return true;
+    },
     setHsmsInfoHandle() {
-      this.loading = true;
-      setHsmsInfo(this.hsms)
-        .then((res) => {
-          if (res.status === 200) {
-            this.$message({
-              message: res.msg || '恭喜你，这是一条成功消息',
-              type: 'success',
-            });
-            getHsmsInfo();
-          }
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      if (this.checkData()) {
+        this.loading = true;
+        setHsmsInfo(this.hsms)
+          .then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+              getHsmsInfo();
+            }
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
     },
     handleClear() {
       this.hsmsInfo = {
