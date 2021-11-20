@@ -231,9 +231,15 @@ export default {
     }
   }
   .header-warpper {
-    padding: 1rem;
+    padding: 1rem 0;
+    padding-bottom: 20px;
+    border-bottom: 1px #80808042 solid;
     .el-breadcrumb {
       line-height: 54px;
+      margin: 0 1rem;
+    }
+    .title {
+      margin: 0 1rem;
     }
   }
 }

@@ -34,8 +34,12 @@ export default new Vuex.Store({
     },
 
     updateFormatOptions(state, formatOptions) {
-      state.formatOptions = formatOptions;
-      storage.set('formatOptions', formatOptions);
+      const ret = {};
+      Object.keys(formatOptions).forEach((key) => {
+        ret[formatOptions[key]] = key;
+      });
+      state.formatOptions = ret;
+      storage.set('formatOptions', ret);
     },
   },
   actions: {
@@ -43,7 +47,6 @@ export default new Vuex.Store({
       commit,
     }) {
       await getFormatOptions().then((result) => {
-        console.log('data:', result);
         commit('updateFormatOptions', result.data);
       });
     },

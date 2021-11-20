@@ -2,46 +2,76 @@
   <div class="module-network-configuration-container">
     <Header breadcrumb="网络模块" title="模块网络配置" secondTitle="配置模块的网口IP信息，配置完成后将会重启模块。" />
     <div class="data-table">
-      <el-row :gutter="100">
-        <el-col :span="12">
-          <el-input placeholder="IPv4地址1" v-model="net1.ip" clearable maxlength="16">
-            <template slot="prepend">IPv4地址1</template>
-          </el-input>
-          <el-input placeholder="端口" v-model="net1.hsmsPort" clearable maxlength="16">
-            <template slot="prepend">端口1</template>
-          </el-input>
-          <el-input placeholder="255.255.255.0" v-model="net1.mask" clearable maxlength="16">
-            <template slot="prepend">子网掩码1</template>
-          </el-input>
-          <el-input placeholder="192.168.1.1" v-model="net1.gw" clearable maxlength="16">
-            <template slot="prepend">网关1</template>
-          </el-input>
-          <el-input placeholder="114.114.114.114" v-model="net1.dns" clearable maxlength="16">
-            <template slot="prepend">DNS1</template>
-          </el-input>
-        </el-col>
-        <el-col :span="12">
-          <el-input placeholder="192.168.1.100" v-model="net2.ip" clearable maxlength="16">
-            <template slot="prepend">IPv4地址2</template>
-          </el-input>
-          <el-input placeholder="端口" v-model="net2.hsmsPort" clearable maxlength="16">
-            <template slot="prepend">端口2</template>
-          </el-input>
-          <el-input placeholder="255.255.255.0" v-model="net2.mask" clearable maxlength="16">
-            <template slot="prepend">子网掩码2</template>
-          </el-input>
-          <el-input placeholder="192.168.1.1" v-model="net2.gw" clearable maxlength="16">
-            <template slot="prepend">网关2</template>
-          </el-input>
-          <el-input placeholder="114.114.114.114" v-model="net2.dns" clearable maxlength="16">
-            <template slot="prepend">DNS2</template>
-          </el-input>
-        </el-col>
-      </el-row>
       <el-row class="operation">
         <el-col :span="24">
           <el-button type="primary" icon="el-icon-check" :loading="loading" size="small" v-on:click="handleSubmit()">提交</el-button>
-          <el-button icon="el-icon-close" size="small" :loading="loading" v-on:click="handleClear()">重置</el-button>
+          <el-button icon="el-icon-refresh-right" size="small" :loading="loading" v-on:click="resetData()">重置</el-button>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="100">
+        <el-col :span="12">
+          <div class="demo-input-suffix">
+            <label>IPv4地址1：</label>
+            <el-input placeholder="IPv4地址1" v-model="net1.ip" clearable maxlength="16">
+            </el-input>
+          </div>
+          <div class="demo-input-suffix">
+            <label>子网掩码1：</label>
+            <el-input placeholder="子网掩码1" v-model="net1.mask" clearable maxlength="16">
+            </el-input>
+          </div>
+          <div class="demo-input-suffix">
+            <label>网关1：</label>
+            <el-input placeholder="网关1" v-model="net1.gw" clearable maxlength="16">
+            </el-input>
+          </div>
+          <div class="demo-input-suffix">
+            <label>DNS1：</label>
+            <el-input placeholder="DNS1" v-model="net1.dns" clearable maxlength="16">
+            </el-input>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="demo-input-suffix">
+            <label>IPv4地址2：</label>
+            <el-input placeholder="IPv4地址2" v-model="net2.ip" clearable maxlength="16">
+            </el-input>
+          </div>
+          <div class="demo-input-suffix">
+            <label>子网掩码2：</label>
+            <el-input placeholder="子网掩码2" v-model="net2.mask" clearable maxlength="16">
+            </el-input>
+          </div>
+          <div class="demo-input-suffix">
+            <label>网关2：</label>
+            <el-input placeholder="网关2" v-model="net2.gw" clearable maxlength="16">
+            </el-input>
+          </div>
+          <div class="demo-input-suffix">
+            <label>DNS2：</label>
+            <el-input placeholder="DNS2" v-model="net2.dns" clearable maxlength="16">
+            </el-input>
+          </div>
+        </el-col>
+      </el-row>
+
+      <h3>HSMS</h3>
+
+      <el-row :gutter="100">
+        <el-col :span="12">
+          <div class="demo-input-suffix">
+            <label>Passive Port1：</label>
+            <el-input placeholder="IPv4地址1" v-model="net1.hsmsPort" clearable maxlength="16">
+            </el-input>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="demo-input-suffix">
+            <label>Passive Port2：</label>
+            <el-input placeholder="IPv4地址2" v-model="net2.hsmsPort" clearable maxlength="16">
+            </el-input>
+          </div>
         </el-col>
       </el-row>
     </div>
@@ -57,16 +87,17 @@ export default {
   data() {
     return {
       loading: false,
+      dataCopy: {},
       net1: {
         ip: '',
         mask: '',
-        gw: '255.255.0.0',
+        gw: '',
         dns: '',
       },
       net2: {
         ip: '',
         mask: '',
-        gw: '255.255.0.0',
+        gw: '',
         dns: '',
       },
     };
@@ -107,23 +138,16 @@ export default {
           });
       }
     },
-    handleClear() {
-      this.net1 = {
-        ip: '',
-        mask: '',
-        gw: '',
-        dns: '',
-      };
-      this.net2 = {
-        ip: '',
-        mask: '',
-        gw: '',
-        dns: '',
-      };
+    resetData() {
+      const { net1, net2 } = this.dataCopy;
+      this.net1 = JSON.parse(JSON.stringify(net1));
+      this.net2 = JSON.parse(JSON.stringify(net2));
+      console.log(JSON.stringify(this.dataCopy, null, 4));
     },
   },
   mounted() {
     getNetworkInfo().then((res) => {
+      this.dataCopy = JSON.parse(JSON.stringify(res.data));
       this.net1 = res.data.net1;
       this.net2 = res.data.net2;
     });
@@ -135,20 +159,26 @@ export default {
 <style lang="scss">
 .module-network-configuration-container {
   .data-table {
-    width: 700px;
+    width: 900px;
     margin-top: 20px;
     line-height: 32px;
     .el-row {
-      .el-input-group__prepend {
-        width: 60px;
-      }
-      .el-input {
-        margin: 16px;
+      .demo-input-suffix {
+        margin: 1rem 0;
+        display: flex;
+        align-items: center;
+        label {
+          width: 120px;
+          text-align: right;
+        }
+        .el-input {
+          flex: 1;
+        }
       }
     }
     .operation {
       padding-left: 15px;
-      margin-top: 50px;
+      margin-top: 10px;
     }
   }
 }

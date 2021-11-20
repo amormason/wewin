@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { login, getCurrentUserInfo } from '@/api/request';
+import { login } from '@/api/request';
 
 export default {
   name: 'Login',
@@ -67,9 +67,10 @@ export default {
               message: '登录成功',
               type: 'success',
             });
-            getCurrentUserInfo().then((userInfo) => {
-              console.log(userInfo);
-            });
+            // getCurrentUserInfo().then((userInfo) => {
+            //   console.log(userInfo);
+            // });
+            this.$store.dispatch('getFormatOptions');
             setTimeout(() => {
               this.$router.push(this.$route.query.redirect || '/deviceStatus');
             }, 500);

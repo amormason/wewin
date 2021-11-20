@@ -25,10 +25,11 @@
           <el-row :gutter="20">
             <el-col :span="3" class="label">Protocol: </el-col>
             <el-col :span="12">
-              <el-select v-model="hsms.mode" clearable placeholder="HSMS / SECES-I" disabled>
+              <!-- <el-select v-model="hsms.mode" clearable placeholder="HSMS / SECES-I" disabled>
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
-              </el-select>
+              </el-select> -->
+              <el-input placeholder="HSMS / SECES-I" disabled> </el-input>
             </el-col>
             <el-col :span="9">
               <el-select v-model="hsms.mode" clearable placeholder="Active / Passtive">
@@ -202,9 +203,10 @@ export default {
 <style lang="scss" scoped>
 .upload-configuration-container {
   .data-table {
+    margin-top: 0;
     line-height: 32px;
     .el-row {
-      margin: 16px 0;
+      margin: 0 0;
       .label {
         line-height: 40px;
       }

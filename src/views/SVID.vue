@@ -14,15 +14,15 @@
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{sortMethod: sortNameMethod}" :edit-config="{
         trigger: 'dblclick',
         mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-actived="editActivedEvent" @edit-closed="editClosedEvent">
         <vxe-column type="checkbox" width="60" :disabled="true"></vxe-column>
-        <vxe-column sortable field="id" title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="id" title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column sortable field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="len" title="LEN" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="70"></vxe-column>
         <vxe-column field="units" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="90"></vxe-column>
@@ -120,6 +120,7 @@ export default {
       alertTitle: '',
       requestParamsObj: {
         name: '',
+        sort: {},
         page: {
           page: 1,
           size: 15,
@@ -167,6 +168,18 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+
+    // 按照NAME排序
+    sortNameMethod({ sortList }) {
+      const { property, order } = sortList[0];
+      // 取出第一个排序的列
+      this.requestParamsObj.sort = {
+        property,
+        order,
+      };
+      console.log(this.requestParamsObj);
+      this.getData();
     },
 
     // 编辑表格的规则

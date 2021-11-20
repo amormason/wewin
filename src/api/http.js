@@ -3,8 +3,6 @@ import {
   Message,
 } from 'element-ui';
 
-const token = sessionStorage.getItem('token');
-
 // 创建一个 axios 实例
 const service = axios.create({
   baseURL: '/api/', // url = base url + request url
@@ -27,7 +25,7 @@ const getFileNmaFromHeaders = (str) => {
 service.interceptors.request.use(
   (configP) => {
     const config = configP;
-    config.headers.Authorization = token;
+    config.headers.Authorization = sessionStorage.getItem('token') || '';
     return config;
   },
   (error) => {
@@ -71,7 +69,7 @@ const http = {
       timeout: 10000, // request timeout
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: token,
+        Authorization: sessionStorage.getItem('token') || '',
       },
     };
     return axios.post(url, formData, config);
