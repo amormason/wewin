@@ -23,6 +23,7 @@ const routes = [{
   component: () => import('../views/Login.vue'),
   meta: {
     requireAuth: false,
+    title: '登录页面',
   },
 },
 {
@@ -31,6 +32,7 @@ const routes = [{
   component: () => import('../views/DeviceStatus.vue'),
   meta: {
     requireAuth: true,
+    title: '登录页面',
   },
 },
 {
@@ -39,6 +41,7 @@ const routes = [{
   component: () => import('../views/ModuleNetworkConfiguration.vue'),
   meta: {
     requireAuth: true,
+    title: '模块网络',
   },
 },
 {
@@ -47,6 +50,7 @@ const routes = [{
   component: () => import('../views/UploadConfiguration.vue'),
   meta: {
     requireAuth: true,
+    title: '上行配置',
   },
 },
 {
@@ -55,6 +59,7 @@ const routes = [{
   component: () => import('../views/DictionaryInformation.vue'),
   meta: {
     requireAuth: true,
+    title: '字典信息',
   },
 },
 {
@@ -63,6 +68,7 @@ const routes = [{
   component: () => import('../views/DownloadConfiguration.vue'),
   meta: {
     requireAuth: true,
+    title: '下行配置',
   },
 },
 {
@@ -71,6 +77,7 @@ const routes = [{
   component: () => import('../views/SVID.vue'),
   meta: {
     requireAuth: true,
+    title: 'SVID',
   },
 },
 {
@@ -79,6 +86,7 @@ const routes = [{
   component: () => import('../views/ECID.vue'),
   meta: {
     requireAuth: true,
+    title: 'ECID',
   },
 },
 {
@@ -87,6 +95,7 @@ const routes = [{
   component: () => import('../views/CEID.vue'),
   meta: {
     requireAuth: true,
+    title: 'CEID',
   },
 },
 {
@@ -95,6 +104,7 @@ const routes = [{
   component: () => import('../views/RPTID.vue'),
   meta: {
     requireAuth: true,
+    title: 'RPTID',
   },
 },
 {
@@ -103,6 +113,7 @@ const routes = [{
   component: () => import('../views/ALID.vue'),
   meta: {
     requireAuth: true,
+    title: 'ALID',
   },
 },
 ];
@@ -114,6 +125,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  document.title = `${to.meta.title} - WeWin`;
   if (to.matched.some((r) => r.meta.requireAuth)) {
     if (store.state.token || sessionStorage.getItem('token')) {
       next(); // 有token,进行request请求，后台还会验证token
