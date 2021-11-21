@@ -14,7 +14,7 @@
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{sortMethod: sortNameMethod}" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{sortMethod: sortNameMethod}" @edit-disabled="editDisabledEvent" :edit-config="{
         trigger: 'dblclick',
         mode: 'row',
         showStatus: true,
@@ -71,21 +71,25 @@
         <vxe-column title="操作" width="150">
           <template #default="{ row }">
             <div class="operation-cell">
-              <el-link type="success" v-if="row.isNew" @click="saveData(row)">保存</el-link>
+              <el-link type="success" v-if="!checking && row.isNew" @click="saveData(row)">保存</el-link>
               <el-popover placement="top" width="180" v-model="row.visible">
                 <p>确定要删除这一行({{ row.id }})吗？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
                   <el-button type="primary" size="mini" @click="deleteButtonEvent([row]);row.visible = false;">确定</el-button>
                 </div>
-                <el-link slot="reference" type="danger">删除</el-link>
+                <el-link slot="reference" type="danger" v-if="!checking">删除</el-link>
               </el-popover>
             </div>
           </template>
         </vxe-column>
 
         <!-- <vxe-column type="html" :formatter="formatRole" field="CURRENTVALUE" title="当前值"></vxe-column> -->
-        <vxe-column field="value" title="当前值"></vxe-column>
+        <vxe-column field="value" title="当前值">
+          <template #default="{ row }">
+            <span v-html="row.value" :style="{'font-weight': checking ?'bold':'normal'}">{row.value}</span>
+          </template>
+        </vxe-column>
       </vxe-table>
 
       <vxe-pager background @page-change="handlePageChange" :current-page.sync="requestParamsObj.page.page" :page-size.sync="requestParamsObj.page.size" :total="requestParamsObj.page.total" :layouts="[
@@ -159,14 +163,16 @@ export default {
   },
 
   methods: {
-    getData() {
+    getData(isChecking) {
       this.alertTitle = null;
       this.$refs.xTable.clearCheckboxRow();
       const requestParamsObj = JSON.parse(
         JSON.stringify(this.requestParamsObj),
       );
       delete requestParamsObj.page.total;
-      this.loading = true;
+      if (!isChecking) {
+        this.loading = true;
+      }
       findSvidByName(requestParamsObj)
         .then((res) => {
           if (res.status === 200) {
@@ -207,6 +213,15 @@ export default {
     // 编辑表格的规则
     editActivedEvent({ row, rowIndex }) {
       console.log({ row, rowIndex });
+    },
+    editDisabledEvent({ row, column }) {
+      console.log(row, column);
+      // this.$XModal.message({ content: '禁止编辑', status: 'error' });
+      this.$message({
+        message: '监控状态下不能操作表格数据',
+        type: 'warning',
+        // duration: 999999,
+      });
     },
 
     saveData(row) {

@@ -110,7 +110,6 @@ export default {
     // 导出下载文件
     handelExportCSV() {
       exportCSV(this.exportUrl).then((res) => {
-        console.log(res);
         if (res && res.data) {
           const blob = new Blob([res.data], {
             type: 'text/csv;charset=utf-8;',
@@ -163,7 +162,7 @@ export default {
         this.$parent.checking = val;
         if (val) {
           this.timer = setInterval(() => {
-            this.$parent.getData();
+            this.$parent.getData(true);
           }, 1000);
         } else {
           clearInterval(this.timer);
