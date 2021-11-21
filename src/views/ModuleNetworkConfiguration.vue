@@ -13,77 +13,58 @@
         <el-col :span="12">
           <div class="demo-input-suffix">
             <label>IPv4地址1：</label>
-            <el-input placeholder="IPv4地址1" v-model="net1.ip" clearable maxlength="16">
+            <el-input placeholder="IPv4地址1" v-model="net1.ip" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
             </el-input>
           </div>
           <div class="demo-input-suffix">
             <label>子网掩码1：</label>
-            <el-input placeholder="子网掩码1" v-model="net1.mask" clearable maxlength="16">
+            <el-input placeholder="子网掩码1" v-model="net1.mask" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
             </el-input>
           </div>
           <div class="demo-input-suffix">
             <label>网关1：</label>
-            <el-input placeholder="网关1" v-model="net1.gw" clearable maxlength="16">
+            <el-input placeholder="网关1" v-model="net1.gw" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
             </el-input>
           </div>
           <div class="demo-input-suffix">
             <label>DNS1：</label>
-            <el-input placeholder="DNS1" v-model="net1.dns" clearable maxlength="16">
+            <el-input placeholder="DNS1" v-model="net1.dns" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
             </el-input>
           </div>
           <div class="demo-input-suffix">
             <label>本机端口号1：</label>
-            <el-input placeholder="DNS1" v-model="net1.hsmsPort" clearable maxlength="16">
+            <el-input placeholder="DNS1" v-model="net1.hsmsPort" clearable maxlength="5" oninput="value=value.replace(/[^\d]/g,'');">
             </el-input>
           </div>
         </el-col>
         <el-col :span="12">
           <div class="demo-input-suffix">
             <label>IPv4地址2：</label>
-            <el-input placeholder="IPv4地址2" v-model="net2.ip" clearable maxlength="16">
+            <el-input placeholder="IPv4地址2" v-model="net2.ip" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
             </el-input>
           </div>
           <div class="demo-input-suffix">
             <label>子网掩码2：</label>
-            <el-input placeholder="子网掩码2" v-model="net2.mask" clearable maxlength="16">
+            <el-input placeholder="子网掩码2" v-model="net2.mask" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
             </el-input>
           </div>
           <div class="demo-input-suffix">
             <label>网关2：</label>
-            <el-input placeholder="网关2" v-model="net2.gw" clearable maxlength="16">
+            <el-input placeholder="网关2" v-model="net2.gw" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
             </el-input>
           </div>
           <div class="demo-input-suffix">
             <label>DNS2：</label>
-            <el-input placeholder="DNS2" v-model="net2.dns" clearable maxlength="16">
+            <el-input placeholder="DNS2" v-model="net2.dns" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
             </el-input>
           </div>
           <div class="demo-input-suffix">
             <label>本机端口号2：</label>
-            <el-input placeholder="DNS1" v-model="net2.hsmsPort" clearable maxlength="16">
+            <el-input placeholder="DNS1" v-model="net2.hsmsPort" clearable maxlength="5" oninput="value=value.replace(/[^\d]/g,'');">
             </el-input>
           </div>
         </el-col>
       </el-row>
-
-      <!-- <h3>HSMS</h3>
-
-      <el-row :gutter="100">
-        <el-col :span="12">
-          <div class="demo-input-suffix">
-            <label>Passive Port1：</label>
-            <el-input placeholder="IPv4地址1" v-model="net1.hsmsPort" clearable maxlength="16">
-            </el-input>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="demo-input-suffix">
-            <label>Passive Port2：</label>
-            <el-input placeholder="IPv4地址2" v-model="net2.hsmsPort" clearable maxlength="16">
-            </el-input>
-          </div>
-        </el-col>
-      </el-row> -->
     </div>
   </div>
 </template>
@@ -117,14 +98,20 @@ export default {
   },
   methods: {
     checkData() {
-      if (!this.net1.ip || !this.net2.ip) {
-        this.$message.error('IPv4地址1或者IPv4地址2不能为空');
-        return false;
-      }
       if (this.net1.ip === this.net2.ip) {
         this.$message.error('IPv4地址1和IPv4地址2不能相同');
         return false;
       }
+
+      if (this.net1.ip && !this.GLOBAL.isValidIP(this.net1.ip)) {
+        this.$message.error('IPv4地址1必须是有效的IP地址');
+        return false;
+      }
+      if (this.net2.ip && !this.GLOBAL.isValidIP(this.net2.ip)) {
+        this.$message.error('IPv4地址2必须是有效的IP地址');
+        return false;
+      }
+
       return true;
     },
     handleSubmit() {

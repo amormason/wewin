@@ -5,11 +5,11 @@
       <el-row :gutter="20">
         <el-col :span="4" class="label">PLC IP: </el-col>
         <el-col :span="12">
-          <el-input placeholder="192.168.1.100" v-model="hsms.plcCommAddr" clearable>
+          <el-input placeholder="192.168.1.100" v-model="hsms.plcCommAddr" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
           </el-input>
         </el-col>
         <el-col :span="6">
-          <el-input placeholder="端口" v-model="hsms.plcCommPort" clearable>
+          <el-input placeholder="端口" v-model="hsms.plcCommPort" clearable maxlength="5" oninput="value=value.replace(/[^\d]/g,'');">
           </el-input>
         </el-col>
       </el-row>
@@ -122,21 +122,34 @@ export default {
           this.loading = false;
         });
     },
+    checkData() {
+      if (!this.GLOBAL.isValidIP(this.hsms.plcCommAddr)) {
+        this.$message.error('IPv4地址1必须是有效的IP地址');
+        return false;
+      }
+      if (!this.hsms.plcCommPort) {
+        this.$message.error('端口必须是有效的数字');
+        return false;
+      }
+      return true;
+    },
     saveHandle() {
-      this.loading = true;
-      setPlcConf(this.hsms)
-        .then((res) => {
-          if (res.status === 200) {
-            this.getData();
-            this.$message({
-              message: res.msg || '恭喜你，这是一条成功消息',
-              type: 'success',
-            });
-          }
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      if (this.checkData()) {
+        this.loading = true;
+        setPlcConf(this.hsms)
+          .then((res) => {
+            if (res.status === 200) {
+              this.getData();
+              this.$message({
+                message: res.msg || '恭喜你，这是一条成功消息',
+                type: 'success',
+              });
+            }
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
