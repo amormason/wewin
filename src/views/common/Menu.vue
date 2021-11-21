@@ -44,6 +44,7 @@
         <el-menu-item index="CEID">CEID</el-menu-item>
         <el-menu-item index="RPTID">RPTID</el-menu-item>
         <el-menu-item index="ALID">ALID</el-menu-item>
+        <el-menu-item index="Log">Log</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>

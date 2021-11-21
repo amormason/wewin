@@ -116,6 +116,16 @@ const routes = [{
     title: 'ALID',
   },
 },
+{
+  path: '/Log',
+  name: 'Log',
+  component: () => import('../views/Log.vue'),
+  meta: {
+    requireAuth: true,
+    title: 'Log',
+  },
+},
+
 ];
 
 const router = new VueRouter({
