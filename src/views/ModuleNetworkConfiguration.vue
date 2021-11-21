@@ -31,6 +31,11 @@
             <el-input placeholder="DNS1" v-model="net1.dns" clearable maxlength="16">
             </el-input>
           </div>
+          <div class="demo-input-suffix">
+            <label>本机端口号1：</label>
+            <el-input placeholder="DNS1" v-model="net1.hsmsPort" clearable maxlength="16">
+            </el-input>
+          </div>
         </el-col>
         <el-col :span="12">
           <div class="demo-input-suffix">
@@ -53,10 +58,15 @@
             <el-input placeholder="DNS2" v-model="net2.dns" clearable maxlength="16">
             </el-input>
           </div>
+          <div class="demo-input-suffix">
+            <label>本机端口号2：</label>
+            <el-input placeholder="DNS1" v-model="net2.hsmsPort" clearable maxlength="16">
+            </el-input>
+          </div>
         </el-col>
       </el-row>
 
-      <h3>HSMS</h3>
+      <!-- <h3>HSMS</h3>
 
       <el-row :gutter="100">
         <el-col :span="12">
@@ -73,7 +83,7 @@
             </el-input>
           </div>
         </el-col>
-      </el-row>
+      </el-row> -->
     </div>
   </div>
 </template>
