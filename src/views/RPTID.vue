@@ -114,12 +114,14 @@ export default {
     // console.log(this.$store.state);
   },
   methods: {
-    getData() {
+    getData(isChecking) {
       const requestParamsObj = JSON.parse(
         JSON.stringify(this.requestParamsObj),
       );
       delete requestParamsObj.page.total;
-      this.loading = true;
+      if (!isChecking) {
+        this.loading = true;
+      }
       this.alertTitle = null;
       this.$refs.xTable.clearCheckboxRow();
       findRptidByName(requestParamsObj)

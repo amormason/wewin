@@ -54,7 +54,11 @@
         </vxe-column>
 
         <vxe-column field="activeValue" title="触发方式" :edit-render="{name: '$select', options: wayList}"></vxe-column>
-        <vxe-column type="html" :formatter="formatRole" field="value" title="当前值"></vxe-column>
+        <vxe-column field="value" title="当前值">
+          <template #default="{ row }">
+            <span v-html="row.value" :style="{'font-weight': checking ?'bold':'normal'}">{row.value}</span>
+          </template>
+        </vxe-column>
         <vxe-column field="comments" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
         <vxe-column title="操作" width="150">
@@ -67,7 +71,7 @@
                   <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
                   <el-button type="primary" size="mini" @click="deleteButtonEvent([row]);row.visible = false;">确定</el-button>
                 </div>
-                <el-link slot="reference" type="danger">删除</el-link>
+                <el-link slot="reference" type="danger" v-if="!checking">删除</el-link>
               </el-popover>
             </div>
           </template>
@@ -142,12 +146,14 @@ export default {
     this.getData();
   },
   methods: {
-    getData() {
+    getData(isChecking) {
       const requestParamsObj = JSON.parse(
         JSON.stringify(this.requestParamsObj),
       );
       delete requestParamsObj.page.total;
-      this.loading = true;
+      if (!isChecking) {
+        this.loading = true;
+      }
       this.alertTitle = null;
       this.$refs.xTable.clearCheckboxRow();
       findAlarmByName(requestParamsObj)

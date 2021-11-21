@@ -83,8 +83,6 @@
             </div>
           </template>
         </vxe-column>
-
-        <!-- <vxe-column type="html" :formatter="formatRole" field="CURRENTVALUE" title="当前值"></vxe-column> -->
         <vxe-column field="value" title="当前值">
           <template #default="{ row }">
             <span v-html="row.value" :style="{'font-weight': checking ?'bold':'normal'}">{row.value}</span>
