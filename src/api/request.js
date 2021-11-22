@@ -42,6 +42,9 @@ export const testPLC = () => http.get('/conf/testPLC');
 export const getPlcConf = () => http.get('/conf/getPlcConf');
 export const setPlcConf = (params) => http.post('/conf/setPlcConf', params);
 
+export const setLogInfo = (params) => http.post('/conf/setLogInfo', params);
+export const getLogInfo = () => http.get('/conf/getLogInfo');
+
 export const exportCSV = (params) => http.get(params);
 
 export const uploadFile = (url, file) => http.uploadFile(url, file);
