@@ -2,9 +2,9 @@
   <div class="upload-configuration-container">
     <Header breadcrumb="上行配置" title="上行配置" secondTitle="配置HOST的相关信息，配置完成后，模块不会重启，但是业务系统会进行重启，5s内请暂时不要操任何。" />
     <div class="data-table">
-      <el-row :gutter="100">
+      <el-row class="wapper" :gutter="100">
         <el-col :span="12">
-          <el-row>
+          <el-row class="noMargin">
             <el-col :span="24">
               <h3>HSMS</h3>
             </el-col>
@@ -44,14 +44,14 @@
             <el-col :span="9"></el-col>
           </el-row>
 
-          <el-row class="operation">
+          <!-- <el-row class="operation">
             <el-col :span="24">
               <el-button type="primary" size="small" icon="el-icon-check" :loading="loading" @click="setHsmsInfoHandle">提交HSMS</el-button>
             </el-col>
-          </el-row>
+          </el-row> -->
         </el-col>
         <el-col :span="12">
-          <el-row>
+          <el-row class="noMargin">
             <el-col :span="24">
               <h3>Timeout</h3>
             </el-col>
@@ -98,12 +98,78 @@
               </el-input>
             </el-col>
           </el-row>
+        </el-col>
+      </el-row>
 
-          <!-- <el-row class="operation">
+      <el-row :gutter="100" class="plc">
+        <el-col :span="15">
+          <el-row>
             <el-col :span="24">
-              <el-button type="primary" size="small" :loading="loading" icon="el-icon-check">提交Timeout</el-button>
+              <h3>Status PLC Addr</h3>
             </el-col>
-          </el-row> -->
+          </el-row>
+
+          <el-row :gutter="20">
+            <el-col :span="6" class="label">CommStatus1 Ctrl Addr: </el-col>
+            <el-col :span="6">
+              <el-input placeholder="CommStatus1 Ctrl Addr" v-model="hsms.commStatus1Addr" clearable maxlength="15">
+              </el-input>
+            </el-col>
+            <el-col :span="7">
+              <el-select v-model="hsms.commStatus1Type" clearable maxlength="10" placeholder="Active / Passtive">
+                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="parseInt(name)" :label="value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="20">
+            <el-col :span="6" class="label">Wait For Host or Equ Ctrl Addr: </el-col>
+            <el-col :span="6">
+              <el-input placeholder="Wait For Host or Equ Ctrl Addr" v-model="hsms.waitForHEAddr" clearable maxlength="15">
+              </el-input>
+            </el-col>
+            <el-col :span="7">
+              <el-select v-model="hsms.waitForHEType" clearable maxlength="10" placeholder="Active / Passtive">
+                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="parseInt(name)" :label="value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="20">
+            <el-col :span="6" class="label">Attempt or Equ Ctrl Addr: </el-col>
+            <el-col :span="6">
+              <el-input placeholder="Wait For Host or Equ Ctrl Addr" v-model="hsms.attOrEquAddr" clearable maxlength="15">
+              </el-input>
+            </el-col>
+            <el-col :span="7">
+              <el-select v-model="hsms.attOrEquType" clearable maxlength="10" placeholder="Active / Passtive">
+                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="parseInt(name)" :label="value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="20">
+            <el-col :span="6" class="label">Local/Remote Ctrl Addr: </el-col>
+            <el-col :span="6">
+              <el-input placeholder="Wait For Host or Equ Ctrl Addr" v-model="hsms.localRemoteAddr" clearable maxlength="15">
+              </el-input>
+            </el-col>
+            <el-col :span="7">
+              <el-select v-model="hsms.localRemoteType" clearable maxlength="10" placeholder="Active / Passtive">
+                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="parseInt(name)" :label="value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+
+          <el-row class="operation">
+            <el-col :span="24">
+              <el-button type="primary" size="small" icon="el-icon-check" :loading="loading" @click="setHsmsInfoHandle">提交HSMS</el-button>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
     </div>
@@ -132,7 +198,9 @@ export default {
         t6: '',
         t7: '',
         t8: '',
+        commStatus1Type: 1,
       },
+      plcTypeOptions: this.$store.state.plcTypeOptions || {},
       activeOptions: [
         {
           value: 'active',
@@ -245,14 +313,24 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+.wapper {
+  margin-top: 0 !important;
+}
+.noMargin {
+  margin: 0 !important;
+}
 .upload-configuration-container {
+  h3 {
+    margin-bottom: 0;
+  }
   .data-table {
-    margin-top: 0;
+    margin: 0 1rem;
     line-height: 32px;
     .el-row {
       margin: 1rem 0;
       .label {
         line-height: 40px;
+        text-align: right;
       }
       .required::before {
         content: '*';
