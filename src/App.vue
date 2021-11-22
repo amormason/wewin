@@ -34,6 +34,11 @@ export default {
     window.addEventListener('beforeunload', () => {
       sessionStorage.setItem('state', JSON.stringify(this.$store.state));
     });
+
+    setInterval(() => {
+      this.$store.dispatch('getDeviceStatus');
+      this.$store.dispatch('getHsmsInfo');
+    }, 1000);
   },
   // watch: {
   //   '$route.path': {

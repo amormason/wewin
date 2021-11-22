@@ -56,10 +56,6 @@ export default {
       this.$store.dispatch('getFormatOptions');
       this.$store.dispatch('getPlcTypeOptions');
 
-      setInterval(() => {
-        this.$store.dispatch('getDeviceStatus');
-        this.$store.dispatch('getHsmsInfo');
-      }, 1000);
       // getCurrentUserInfo().then((userInfo) => {
       //   console.log(userInfo);
       // });
