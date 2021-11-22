@@ -23,7 +23,7 @@
 
       <!-- <el-alert title="成功提示的文案" type="success" effect="dark"> </el-alert> -->
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell', defaultSort: {field: 'name', order: 'asc'},orders: ['asc','desc', '']}" @header-cell-click="headerCellClickEvent" :edit-config="{
         trigger: 'dblclick',
         mode: 'cell',
         showStatus: true,
@@ -80,6 +80,10 @@ export default {
       },
       requestParamsObj: {
         name: '',
+        orderBy: {
+          fieldName: 'name',
+          fieldOrderType: 'asc',
+        },
         page: {
           page: 1,
           size: 15,
@@ -97,6 +101,25 @@ export default {
     };
   },
   methods: {
+    headerCellClickEvent({
+      column,
+      // triggerResizable,
+      // triggerSort,
+      // triggerFilter,
+    }) {
+      // 如果触发了列的其他功能按钮
+      if (column.sortable) {
+        if (column.order) {
+          this.requestParamsObj.orderBy = {
+            fieldName: column.property,
+            fieldOrderType: column.order,
+          };
+        } else {
+          delete this.requestParamsObj.orderBy;
+        }
+        this.getData();
+      }
+    },
     getData() {
       this.loading = true;
       const requestParamsObj = JSON.parse(

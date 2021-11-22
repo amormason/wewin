@@ -14,14 +14,15 @@
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{sortMethod: sortNameMethod}" @edit-disabled="editDisabledEvent" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell',showIcon: true, defaultSort: {field: 'id', order: 'asc'},orders: [ 'asc', 'desc','']}" @header-cell-click=" headerCellClickEvent" @edit-disabled="editDisabledEvent" :edit-config="{
         trigger: 'dblclick',
         mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-actived="editActivedEvent" @edit-closed="editClosedEvent">
         <vxe-column type="checkbox" width="60" :disabled="true"></vxe-column>
-        <vxe-column field="id" title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="id" sortable title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        </vxe-column>
         <vxe-column sortable field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{}">
           <template #default="{ row }">
@@ -143,7 +144,10 @@ export default {
       alertTitle: '',
       requestParamsObj: {
         name: '',
-        sort: {},
+        orderBy: {
+          fieldName: 'id',
+          fieldOrderType: 'asc',
+        },
         page: {
           page: 1,
           size: 15,
@@ -196,16 +200,24 @@ export default {
         });
     },
 
-    // 按照NAME排序
-    sortNameMethod({ sortList }) {
-      const { property, order } = sortList[0];
-      // 取出第一个排序的列
-      this.requestParamsObj.sort = {
-        property,
-        order,
-      };
-      console.log(this.requestParamsObj);
-      this.getData();
+    headerCellClickEvent({
+      column,
+      // triggerResizable,
+      // triggerSort,
+      // triggerFilter,
+    }) {
+      // 如果触发了列的其他功能按钮
+      if (column.sortable) {
+        if (column.order) {
+          this.requestParamsObj.orderBy = {
+            fieldName: column.property,
+            fieldOrderType: column.order,
+          };
+        } else {
+          delete this.requestParamsObj.orderBy;
+        }
+        this.getData();
+      }
     },
 
     // 编辑表格的规则

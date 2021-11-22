@@ -15,14 +15,15 @@
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell', defaultSort: {field: 'alId', order: 'asc'},orders: ['asc','desc', '']}" @header-cell-click="headerCellClickEvent" :edit-config="{
         trigger: 'dblclick',
         mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-actived="editActivedEvent" @edit-closed="editClosedEvent">
         <vxe-column type="checkbox" width="60"></vxe-column>
-        <vxe-column sortable field="alId" title="ALID" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column sortable field="alId" title="ALID" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        </vxe-column>
         <vxe-column field="alcd" title="ALCD" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <vxe-column field="altx" title="ALTX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
         <!-- <vxe-column field="plcType" title="数据类型" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column> -->
@@ -130,6 +131,10 @@ export default {
       alertTitle: '',
       requestParamsObj: {
         name: '',
+        orderBy: {
+          fieldName: 'alId',
+          fieldOrderType: 'asc',
+        },
         page: {
           page: 1,
           size: 15,
@@ -146,6 +151,26 @@ export default {
     this.getData();
   },
   methods: {
+    // 按照NAME排序
+    headerCellClickEvent({
+      column,
+      // triggerResizable,
+      // triggerSort,
+      // triggerFilter,
+    }) {
+      // 如果触发了列的其他功能按钮
+      if (column.sortable) {
+        if (column.order) {
+          this.requestParamsObj.orderBy = {
+            fieldName: column.property,
+            fieldOrderType: column.order,
+          };
+        } else {
+          delete this.requestParamsObj.orderBy;
+        }
+        this.getData();
+      }
+    },
     getData(isChecking) {
       const requestParamsObj = JSON.parse(
         JSON.stringify(this.requestParamsObj),

@@ -14,7 +14,7 @@
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :edit-config="{
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell', defaultSort: {field: 'id', order: 'asc'},orders: ['asc','desc', '']}" @header-cell-click="headerCellClickEvent" :edit-config="{
         trigger: 'dblclick',
         mode: 'row',
         showStatus: true,
@@ -96,13 +96,16 @@ export default {
       alertTitle: '',
       requestParamsObj: {
         name: '',
+        orderBy: {
+          fieldName: 'id',
+          fieldOrderType: 'asc',
+        },
         page: {
           page: 1,
           size: 15,
           total: 0,
         },
       },
-      currentPage4: 2,
     };
   },
   components: {
@@ -114,6 +117,25 @@ export default {
     // console.log(this.$store.state);
   },
   methods: {
+    headerCellClickEvent({
+      column,
+      // triggerResizable,
+      // triggerSort,
+      // triggerFilter,
+    }) {
+      // 如果触发了列的其他功能按钮
+      if (column.sortable) {
+        if (column.order) {
+          this.requestParamsObj.orderBy = {
+            fieldName: column.property,
+            fieldOrderType: column.order,
+          };
+        } else {
+          delete this.requestParamsObj.orderBy;
+        }
+        this.getData();
+      }
+    },
     getData(isChecking) {
       const requestParamsObj = JSON.parse(
         JSON.stringify(this.requestParamsObj),
