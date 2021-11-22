@@ -5,53 +5,84 @@
       <el-row>
         <el-col :span="8" class="label-container">连接模式:</el-col>
         <el-col :span="16" class="value-container">
-          {{ info.commStatus }}
-          <!-- <el-link type="danger" icon="el-icon-error" v-if="!info.commStatus">获取连接模式失败</el-link> -->
-          <!-- <el-button-group>
-            <el-button
-              :type="info.mode === 'active' ? 'success' : ''"
-              size="small"
-              >Active</el-button
-            >
-            <el-button
-              :type="info.mode === 'passtive' ? 'success' : ''"
-              size="small"
-              >Passtive</el-button
-            >
-          </el-button-group> -->
+          <el-button-group>
+            <el-button :type="mode=='active' ?'primary':'default'" size="small">Active</el-button>
+            <el-button :type="mode=='passive' ?'primary':'default'" size="small">Passtive</el-button>
+          </el-button-group>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" class="label-container">Active状态:</el-col>
+        <el-col :span="8" class="label-container">TCP/IP状态:</el-col>
         <el-col :span="16" class="value-container">
-          {{ info.dataStatus }}
-          <!-- <el-link type="danger" icon="el-icon-error" v-if="!info.active">获取Active状态失败
-          </el-link> -->
+          <el-button-group>
+            <el-button :type="info.tcpStatus==0 ?'primary':'default'" size="small">Conned</el-button>
+            <el-button :type="info.tcpStatus==1 ?'primary':'default'" size="small">No Con</el-button>
+          </el-button-group>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" class="label-container">业务状态:</el-col>
+        <el-col :span="8" class="label-container">Hsms状态:</el-col>
         <el-col :span="16" class="value-container">
-          {{ info.hsmsStatus }}
-          <!-- <el-link type="danger" icon="el-icon-error" v-if="!info.hsmsStatus">获取业务状态失败
-          </el-link> -->
+          <el-button-group>
+            <el-button :type="info.hsmsStatus==0 ?'primary':'default'" size="small">Select</el-button>
+            <el-button :type="info.hsmsStatus==1 ?'primary':'default'" size="small">NotSelect</el-button>
+          </el-button-group>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" class="label-container">PLC状态:</el-col>
+        <el-col :span="8" class="label-container">Communicatiomg1:</el-col>
         <el-col :span="16" class="value-container">
-          {{ info.lineStatus }}
-          <!-- <el-link type="danger" icon="el-icon-error" v-if="!info.lineStatus">获取PLC状态失败
-          </el-link> -->
+          <el-button-group>
+            <el-button :type="info.commStatus==0 ?'primary':'default'" size="small">Disable</el-button>
+            <el-button :type="info.commStatus==1 ?'primary':'default'" size="small">Enable</el-button>
+          </el-button-group>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" class="label-container">数据状态:</el-col>
+        <el-col :span="8" class="label-container">Communicatiomg2:</el-col>
         <el-col :span="16" class="value-container">
-          <!-- <i class="el-icon-loading"></i> -->
-          {{ info.tcpStatus }}
-          <!-- <el-link type="danger" icon="el-icon-error" v-if="!info.tcpStatus">获取数据状态失败
-          </el-link> -->
+          <el-button-group>
+            <el-button :type="info.commStatus2==1 ?'primary':'default'" size="small">Comm</el-button>
+            <el-button :type="info.commStatus2==0 ?'primary':'default'" size="small">No Comm</el-button>
+          </el-button-group>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8" class="label-container">Not Comm:</el-col>
+        <el-col :span="16" class="value-container">
+          <el-button-group>
+            <el-button :type="info.noCommStatus==0 ?'primary':'default'" size="small">Wait CR Fr Host</el-button>
+            <el-button :type="info.noCommStatus==1 ?'primary':'default'" size="small">Wait Delay</el-button>
+            <el-button :type="info.noCommStatus==2 ?'primary':'default'" size="small">No Comm</el-button>
+          </el-button-group>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8" class="label-container">Control:</el-col>
+        <el-col :span="16" class="value-container">
+          <el-button-group>
+            <el-button :type="info.ctrlStatus==0 ?'primary':'default'" size="small">OFF</el-button>
+            <el-button :type="info.ctrlStatus==1 ?'primary':'default'" size="small">ON</el-button>
+          </el-button-group>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8" class="label-container">Off-Line:</el-col>
+        <el-col :span="16" class="value-container">
+          <el-button-group>
+            <el-button :type="info.offLineStatus==1 ?'primary':'default'" size="small">Att On</el-button>
+            <el-button :type="info.offLineStatus==0 ?'primary':'default'" size="small">Host Off</el-button>
+            <el-button :type="info.offLineStatus==2 ?'primary':'default'" size="small">Equ Off</el-button>
+          </el-button-group>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8" class="label-container">On-Line:</el-col>
+        <el-col :span="16" class="value-container">
+          <el-button-group>
+            <el-button :type="info.ctrlStatus==0 ?'primary':'default'" size="small">Local</el-button>
+            <el-button :type="info.ctrlStatus==1 ?'primary':'default'" size="small">Remote</el-button>
+          </el-button-group>
         </el-col>
       </el-row>
     </div>
@@ -60,19 +91,14 @@
 
 <script>
 import Header from './common/Header.vue';
-import { getDeviceStatus } from '@/api/request';
+import { getHsmsInfo, getDeviceStatus } from '@/api/request';
 
 export default {
   name: 'DeviceStatus',
   data() {
     return {
-      info: {
-        commStatus: 0,
-        dataStatus: 0,
-        hsmsStatus: 0,
-        lineStatus: 0,
-        tcpStatus: 0,
-      },
+      info: {},
+      mode: '',
     };
   },
   components: {
@@ -84,6 +110,16 @@ export default {
       .then((res) => {
         if (res.status === 200) {
           this.info = res.data;
+        }
+      })
+      .catch(() => {
+        this.info = {};
+      });
+    getHsmsInfo()
+      .then((res) => {
+        if (res.status === 200) {
+          this.mode = res.data.mode;
+          console.log(this.info);
         }
       })
       .catch(() => {
