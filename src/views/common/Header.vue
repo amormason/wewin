@@ -15,11 +15,11 @@
           <label>{{{0:'Select',1:'NotSelect'}[info.hsmsStatus]}}</label>
         </li>
          <li>
-           <div>Communicatiomg1</div>
+           <div>Communicating1</div>
           <label>{{{0:'Disable',1:'Enable'}[info.commStatus]}}</label>
         </li>
          <li>
-           <div>Communicatiomg2</div>
+           <div>Communicating2</div>
           <label>{{{1:'Comm',0:'No Comm'}[info.commStatus2]}}</label>
         </li>
         <li>

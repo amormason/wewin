@@ -30,7 +30,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" class="label-container">Communicatiomg1:</el-col>
+        <el-col :span="8" class="label-container">Communicating1:</el-col>
         <el-col :span="16" class="value-container">
           <el-button-group>
             <el-button :type="info.commStatus==0 ?'primary':'default'" size="small">Disable</el-button>
@@ -39,7 +39,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" class="label-container">Communicatiomg2:</el-col>
+        <el-col :span="8" class="label-container">Communicating2:</el-col>
         <el-col :span="16" class="value-container">
           <el-button-group>
             <el-button :type="info.commStatus2==1 ?'primary':'default'" size="small">Comm</el-button>
