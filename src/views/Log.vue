@@ -16,7 +16,7 @@
       </div>
       <div class="item buttons">
         <el-button type="primary" size="small" icon="el-icon-check" :loading="loading" @click="submit">保存设置</el-button>
-        <el-button type="default" size="small" icon="el-icon-paperclip" :loading="loading" @click="getLog">下载日志</el-button>
+        <el-button type="default" size="small" icon="el-icon-paperclip" :loading="loading" @click="downLog">下载日志</el-button>
       </div>
     </div>
   </div>
@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       loading: false,
-      exportUrl: '/svid/exportCSV',
+      exportUrl: '/conf/downLog',
       options: [
         {
           value: 1,
@@ -72,7 +72,7 @@ export default {
         this.log = res.data;
       });
     },
-    getLog() {
+    downLog() {
       this.loading = true;
       exportCSV(this.exportUrl)
         .then((res) => {
