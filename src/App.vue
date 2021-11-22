@@ -35,10 +35,11 @@ export default {
       sessionStorage.setItem('state', JSON.stringify(this.$store.state));
     });
 
-    setInterval(() => {
+    const timer = setInterval(() => {
       this.$store.dispatch('getDeviceStatus');
       this.$store.dispatch('getHsmsInfo');
     }, 1000);
+    sessionStorage.setItem('timer', timer);
   },
   // watch: {
   //   '$route.path': {

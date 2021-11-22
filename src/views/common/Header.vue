@@ -110,6 +110,7 @@ export default {
         .finally(() => {
           this.$store.commit('delToken');
           this.$router.push('/login');
+          clearInterval(sessionStorage.getItem('timer'));
           this.$message({
             message: '您已退出登录',
             type: 'success',
