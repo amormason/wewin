@@ -15,8 +15,8 @@
         <el-col :span="8" class="label-container">TCP/IP状态:</el-col>
         <el-col :span="16" class="value-container">
           <el-button-group>
-            <el-button :type="info.tcpStatus==0 ?'primary':'default'" size="small">Conned</el-button>
-            <el-button :type="info.tcpStatus==1 ?'primary':'default'" size="small">No Con</el-button>
+            <el-button :type="info.tcpStatus==1 ?'primary':'default'" size="small">Conned</el-button>
+            <el-button :type="info.tcpStatus==0 ?'primary':'default'" size="small">No Con</el-button>
           </el-button-group>
         </el-col>
       </el-row>
@@ -24,8 +24,8 @@
         <el-col :span="8" class="label-container">Hsms状态:</el-col>
         <el-col :span="16" class="value-container">
           <el-button-group>
-            <el-button :type="info.hsmsStatus==0 ?'primary':'default'" size="small">Select</el-button>
-            <el-button :type="info.hsmsStatus==1 ?'primary':'default'" size="small">NotSelect</el-button>
+            <el-button :type="info.hsmsStatus==1 ?'primary':'default'" size="small">Select</el-button>
+            <el-button :type="info.hsmsStatus==0 ?'primary':'default'" size="small">NotSelect</el-button>
           </el-button-group>
         </el-col>
       </el-row>

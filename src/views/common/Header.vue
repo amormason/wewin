@@ -8,11 +8,11 @@
         </li>
         <li>
            <div>TCP/IP状态</div>
-          <label>{{{0:'Conned',1:'No Con'}[info.tcpStatus]}}</label>
+          <label>{{{1:'Conned',0:'No Con'}[info.tcpStatus]}}</label>
         </li>
          <li>
            <div>Hsms状态</div>
-          <label>{{{0:'Select',1:'NotSelect'}[info.hsmsStatus]}}</label>
+          <label>{{{1:'Select',0:'NotSelect'}[info.hsmsStatus]}}</label>
         </li>
          <li>
            <div>Communicating1</div>
