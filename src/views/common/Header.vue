@@ -7,7 +7,7 @@
           <label>{{{'passive':'Passtive','active':'Active'}[mode]}}</label>
         </li>
         <li>
-           <div>TCP/IP状态{{info.tcpStatus}}</div>
+           <div>TCP/IP状态</div>
           <label>{{{0:'Conned',1:'No Con'}[info.tcpStatus]}}</label>
         </li>
          <li>
