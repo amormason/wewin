@@ -3,82 +3,40 @@
     <div class="user-container">
       <ul class="status">
         <li>
-          <div class="status-item success-status" v-if="status1">
-            <i class="iconfont icon-connection"></i>Connected
-          </div>
-          <div class="status-item danger-status" v-if="!status1">
-            <i class="iconfont icon-disconnect"></i>Not Connected
-          </div>
-          <div @click="status1=!status1">TCP/IP通讯状态</div>
+          <div>连接模式</div>
+          <label>{{{'passive':'Passtive','active':'Active'}[mode]}}</label>
         </li>
         <li>
-          <div class="status-item success-status" v-if="status2">
-            <i class="iconfont icon-duoxuanxuanzhong"></i>SELECTED
-          </div>
-          <div class="status-item danger-status" v-if="!status2">
-            <i class="iconfont icon-duoxuanweixuanzhong"></i>NOT SELECTED
-          </div>
-          <div @click="status2=!status2">HSMS通讯状态</div>
+           <div>TCP/IP状态{{info.tcpStatus}}</div>
+          <label>{{{0:'Conned',1:'No Con'}[info.tcpStatus]}}</label>
+        </li>
+         <li>
+           <div>Hsms状态</div>
+          <label>{{{0:'Select',1:'NotSelect'}[info.hsmsStatus]}}</label>
+        </li>
+         <li>
+           <div>Communicatiomg1</div>
+          <label>{{{0:'Disable',1:'Enable'}[info.commStatus]}}</label>
+        </li>
+         <li>
+           <div>Communicatiomg2</div>
+          <label>{{{1:'Comm',0:'No Comm'}[info.commStatus2]}}</label>
         </li>
         <li>
-          <div class="status-item success-status" v-if="status3">
-            <i class="iconfont icon-gps-location-symbol"></i>DISABLED
-          </div>
-          <div class="status-item danger-status" v-if="!status3">
-            <i class="iconfont icon-gps-location-disabled"></i>ENABLED
-          </div>
-          <div @click="status3=!status3">COMMUNICATING状态1</div>
+           <div>Not Comm</div>
+          <label>{{{0:'Wait CR Fr Host',1:'Wait Delay',2:'No Comm'}[info.noCommStatus]}}</label>
         </li>
-        <li>
-          <div class="status-item success-status" v-if="status4">
-            <i class="iconfont icon-communitygreen"></i>COMMUNICATING
-          </div>
-          <div class="status-item danger-status" v-if="!status4">
-            <i class="iconfont icon-disconnect"></i>NOT COMMUNICATING
-          </div>
-          <div @click="status4=!status4">COMMUNICATING状态2</div>
+          <li>
+           <div>Control</div>
+          <label>{{{0:'OFF',1:'ON'}[info.ctrlStatus]}}</label>
         </li>
-        <li>
-          <div class="status-item danger-status" v-if="status2">
-            <i class="iconfont icon-Wifi-Delay"></i>WAIT CR FROM HOST
-          </div>
-          <!-- <div class="status-item danger-status" v-if="!status2">
-          <i class="iconfont icon-Wifi-Delay"></i>WAIT DELAY
-        </div> -->
-          <div class="status-item danger-status" v-if="!status2">
-            <i class="iconfont icon-Wifi-Delay"></i>WAIT CRA
-          </div>
-          <div>NOT COMMUNICATING子状态</div>
+          <li>
+           <div>Off-Line</div>
+          <label>{{{1:'Att On',0:'Host Off',2:'Equ Off'}[info.offLineStatus]}}</label>
         </li>
-        <li>
-          <div class="status-item success-status" v-if="status6">
-            <i class="iconfont icon-communitygreen"></i>ON-LINE
-          </div>
-          <div class="status-item danger-status" v-if="!status6">
-            <i class="iconfont icon-offline"></i>OFF-LINE
-          </div>
-          <div @click="status6=!status6">CONTROL状态</div>
-        </li>
-        <li>
-          <div class="status-item success-status" v-if="status7">
-            <i class="iconfont icon-lianjiezhong"></i>Attempt ON-LINE
-          </div>
-          <div class="status-item danger-status" v-if="!status7">
-            <i class="iconfont icon-tongxunshibai"></i>Equipment OFF-LINE
-          </div>
-          <!-- <div class="status-item danger-status" v-if="!status2">
-          <i class="iconfont icon-disconnect"></i>Host OFF-LINE
-        </div> -->
-          <div @click="status7=!status7">OFF-LINE子状态</div>
-        </li>
-        <li>
-          <div class="status-item danger-status" v-if="status8">
-            <i class="iconfont icon-jurassic_pc"></i>LOCAL
-          </div>
-          <div class="status-item success-status" v-if="!status8">
-            <i class="iconfont icon-remote-control-line"></i>REMOTE
-          </div>
-          <div @click="status8=!status8">ON-LINE子状态</div>
+          <li>
+           <div>On-Line</div>
+          <label>{{{0:'Local',1:'Remote'}[info.ctrlStatus]}}</label>
         </li>
       </ul>
       <div class="user-info">
@@ -116,14 +74,8 @@ export default {
       user: {
         mobile: '',
       },
-      status1: false,
-      status2: true,
-      status3: false,
-      status4: true,
-      status5: true,
-      status6: true,
-      status7: true,
-      status8: true,
+      info: this.$store.state.deviceInfo || {},
+      mode: this.$store.state.deviceMode || '',
     };
   },
   props: {
@@ -210,7 +162,7 @@ export default {
     }
     .user-info {
       margin: 0 1rem 0 2rem;
-      width: 200px;
+      width: 100px;
       line-height: 83px;
       display: flex;
       align-items: center;

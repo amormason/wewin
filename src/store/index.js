@@ -4,6 +4,8 @@ import storage from './storage';
 import {
   getFormatOptions,
   getPlcTypeOptions,
+  getDeviceStatus,
+  getHsmsInfo,
 } from '@/api/request';
 
 Vue.use(Vuex);
@@ -15,6 +17,8 @@ export default new Vuex.Store({
     plcTypeOptions: {},
     user: {},
     authenticated: false,
+    deviceInfo: {},
+    deviceMode: '',
   },
   mutations: {
     // 修改token，并将token存入sessionStorage
@@ -52,6 +56,17 @@ export default new Vuex.Store({
       state.plcTypeOptions = ret;
       storage.set('plcTypeOptions', ret);
     },
+
+    setDeviceInfo(state, data) {
+      state.deviceInfo = data;
+      storage.set('deviceInfo', data);
+    },
+
+    setDeviceMode(state, data) {
+      state.deviceMode = data;
+      storage.set('deviceMode', data);
+    },
+
   },
   actions: {
 
@@ -59,7 +74,6 @@ export default new Vuex.Store({
       commit,
     }) {
       await getPlcTypeOptions().then((result) => {
-        console.log(result.data);
         commit('updatePlcTypeOptions', result.data);
       });
     },
@@ -69,6 +83,22 @@ export default new Vuex.Store({
     }) {
       await getFormatOptions().then((result) => {
         commit('updateFormatOptions', result.data);
+      });
+    },
+
+    async getDeviceStatus({
+      commit,
+    }) {
+      await getDeviceStatus().then((result) => {
+        commit('setDeviceInfo', result.data || {});
+      });
+    },
+
+    async getHsmsInfo({
+      commit,
+    }) {
+      await getHsmsInfo().then((result) => {
+        commit('setDeviceMode', result.data.mode || '');
       });
     },
   },

@@ -55,6 +55,9 @@ export default {
     afterLogin() {
       this.$store.dispatch('getFormatOptions');
       this.$store.dispatch('getPlcTypeOptions');
+
+      this.$store.dispatch('getDeviceStatus');
+      this.$store.dispatch('getHsmsInfo');
       // getCurrentUserInfo().then((userInfo) => {
       //   console.log(userInfo);
       // });

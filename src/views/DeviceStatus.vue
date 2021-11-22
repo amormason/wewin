@@ -91,41 +91,20 @@
 
 <script>
 import Header from './common/Header.vue';
-import { getHsmsInfo, getDeviceStatus } from '@/api/request';
 
 export default {
   name: 'DeviceStatus',
   data() {
     return {
-      info: {},
-      mode: '',
+      info: this.$store.state.deviceInfo || {},
+      mode: this.$store.state.deviceMode || '',
     };
   },
   components: {
     Header,
   },
   methods: {},
-  mounted() {
-    getDeviceStatus()
-      .then((res) => {
-        if (res.status === 200) {
-          this.info = res.data;
-        }
-      })
-      .catch(() => {
-        this.info = {};
-      });
-    getHsmsInfo()
-      .then((res) => {
-        if (res.status === 200) {
-          this.mode = res.data.mode;
-          console.log(this.info);
-        }
-      })
-      .catch(() => {
-        this.info = {};
-      });
-  },
+  mounted() {},
 };
 </script>
 
