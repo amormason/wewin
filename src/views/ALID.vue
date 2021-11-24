@@ -60,6 +60,8 @@
             <span v-html="row.value" :style="{'font-weight': checking ?'bold':'normal'}">{row.value}</span>
           </template>
         </vxe-column>
+
+        <vxe-column field="isEn" title="启用" :edit-render="{name: '$select', options: isEnList}"></vxe-column>
         <vxe-column field="comments" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
         <vxe-column title="操作" width="150">
@@ -106,6 +108,10 @@ export default {
   data() {
     return {
       tableData: [],
+      isEnList: [
+        { label: '启用', value: true },
+        { label: '禁用', value: false },
+      ],
       wayList: [
         { label: '上升沿', value: 1 },
         { label: '下降沿', value: 0 },
@@ -220,6 +226,7 @@ export default {
         alId: row.alId,
         alcd: row.alcd,
         altx: row.altx,
+        isEn: row.isEn,
         comments: row.comments,
         plcAddr: row.plcname + row.plcvalue,
         plcType: row.plcType,
@@ -243,6 +250,7 @@ export default {
         activeValue: 1,
         alId: '9901',
         alcd: '',
+        isEn: true,
         altx: 'AlarmID0001',
         comments: 'XXXX',
         plcAddr: 'B1001',
@@ -295,6 +303,7 @@ export default {
           activeValue: row.activeValue,
           alId: row.alId,
           alcd: row.alcd,
+          isEn: row.isEn,
           altx: row.altx,
           comments: row.comments,
           plcAddr: row.plcname + row.plcvalue,
