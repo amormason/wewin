@@ -328,11 +328,11 @@ export default {
 
     // 分页参数改变
     handlePageChange(page) {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 1000);
-      console.log(page);
+      this.requestParamsObj.page = {
+        page: page.currentPage,
+        size: page.pageSize,
+      };
+      this.getData();
     },
 
     selectAllEvent({ records }) {
