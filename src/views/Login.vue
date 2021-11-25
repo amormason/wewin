@@ -61,15 +61,9 @@ export default {
     afterLogin() {
       this.$store.dispatch('getFormatOptions');
       this.$store.dispatch('getPlcTypeOptions');
-      this.$store.dispatch('getDeviceStatus');
-      this.$store.dispatch('getHsmsInfo');
-
-      // getCurrentUserInfo().then((userInfo) => {
-      //   console.log(userInfo);
-      // });
-      setTimeout(() => {
-        this.$router.push(this.$route.query.redirect || '/deviceStatus');
-      }, 600);
+      // this.$store.dispatch('getDeviceStatus');
+      // this.$store.dispatch('getHsmsInfo');
+      this.$router.push(this.$route.query.redirect || '/deviceStatus');
     },
     login() {
       if (!this.user.mobile || !this.user.vcode) {
