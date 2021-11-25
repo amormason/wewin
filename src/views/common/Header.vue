@@ -65,17 +65,11 @@
 </template>
 
 <script>
-import { logout } from '@/api/request';
-
 export default {
   name: 'Header',
   data() {
     return {
-      user: {
-        mobile: '',
-      },
-      info: this.$store.state.deviceInfo || {},
-      mode: this.$store.state.deviceMode || '',
+      user: this.$store.state.user || {},
     };
   },
   props: {
@@ -84,38 +78,29 @@ export default {
     secondTitle: String,
   },
   components: {},
-  computed: {},
+  computed: {
+    // user() {
+    //   return this.$store.state.user || {};
+    // },
+    mode() {
+      return this.$store.state.deviceMode || '';
+    },
+    info() {
+      return this.$store.state.deviceInfo || '';
+    },
+  },
   mounted() {
     this.user = this.$store.state.user;
   },
   methods: {
     singOut() {
-      logout()
-        .then((res) => {
-          console.log(res);
-          if (res.status === 200) {
-            this.$store.commit('delToken');
-            this.$router.push('/login');
-            this.$message({
-              message: '您已退出登录',
-              type: 'success',
-            });
-          } else {
-            this.$message({
-              message: '登出系统失败',
-              type: 'error',
-            });
-          }
-        })
-        .finally(() => {
-          this.$store.commit('delToken');
-          this.$router.push('/login');
-          clearInterval(sessionStorage.getItem('timer'));
-          this.$message({
-            message: '您已退出登录',
-            type: 'success',
-          });
-        });
+      this.$store.commit('singOut');
+      this.$message({
+        message: '您已退出登录',
+        type: 'success',
+      });
+      clearInterval(sessionStorage.getItem('timer'));
+      this.$router.push('/login');
     },
   },
 };
@@ -163,7 +148,8 @@ export default {
     }
     .user-info {
       margin: 0 1rem 0 2rem;
-      width: 100px;
+      padding-right: 1rem;
+      // width: 100px;
       line-height: 83px;
       display: flex;
       align-items: center;
@@ -178,6 +164,7 @@ export default {
         display: flex;
         align-items: center;
         .el-avatar {
+          margin-left: 1rem;
           margin-right: 0.5rem;
         }
       }

@@ -15,8 +15,9 @@ export default new Vuex.Store({
     token: '',
     formatOptions: {},
     plcTypeOptions: {},
-    user: {},
-    authenticated: false,
+    user: {
+      mobile: '',
+    },
     deviceInfo: {},
     deviceMode: '',
   },
@@ -26,12 +27,20 @@ export default new Vuex.Store({
       state.token = token;
       storage.set('token', token);
     },
-    delToken(state) {
+    singOut(state) {
       state.token = '';
+      state.formatOptions = {};
+      state.plcTypeOptions = {};
       state.user = {};
+      state.deviceInfo = {};
+      state.deviceMode = '';
       storage.remove('token');
+      storage.remove('formatOptions');
+      storage.remove('plcTypeOptions');
       storage.remove('user');
-      storage.remove('state');
+      storage.remove('deviceInfo');
+      storage.remove('deviceMode');
+      storage.remove('timer');
     },
     // 可选
     setUser(state, user) {
@@ -90,7 +99,9 @@ export default new Vuex.Store({
       commit,
     }) {
       await getDeviceStatus().then((result) => {
-        commit('setDeviceInfo', result.data || {});
+        if (result && result.data) {
+          commit('setDeviceInfo', result.data || {});
+        }
       });
     },
 
@@ -98,7 +109,9 @@ export default new Vuex.Store({
       commit,
     }) {
       await getHsmsInfo().then((result) => {
-        commit('setDeviceMode', result.data.mode || '');
+        if (result && result.data) {
+          commit('setDeviceMode', result.data.mode || '');
+        }
       });
     },
   },

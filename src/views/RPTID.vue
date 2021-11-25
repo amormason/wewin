@@ -114,7 +114,14 @@ export default {
   },
   mounted() {
     this.getData();
-    // console.log(this.$store.state);
+  },
+  computed: {
+    formatOptions() {
+      return this.$store.state.formatOptions || {};
+    },
+    plcTypeOptions() {
+      return this.$store.state.plcTypeOptions || {};
+    },
   },
   methods: {
     headerCellClickEvent({

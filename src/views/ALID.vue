@@ -117,7 +117,6 @@ export default {
         { label: '下降沿', value: 0 },
       ],
       options: this.GLOBAL.plcAddrOptions,
-      plcTypeOptions: this.$store.state.plcTypeOptions || {},
       loading: false,
       visible: false,
       dialogVisible: false,
@@ -155,6 +154,11 @@ export default {
   },
   mounted() {
     this.getData();
+  },
+  computed: {
+    plcTypeOptions() {
+      return this.$store.state.plcTypeOptions || {};
+    },
   },
   methods: {
     // 按照NAME排序

@@ -123,8 +123,6 @@ export default {
   data() {
     return {
       tableData: [],
-      formatOptions: this.$store.state.formatOptions || {},
-      plcTypeOptions: this.$store.state.plcTypeOptions || {},
       options: [
         { label: 'D', value: 'D' },
         { label: 'E', value: 'E' },

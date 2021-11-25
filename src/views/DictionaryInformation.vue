@@ -72,7 +72,6 @@ export default {
   data() {
     return {
       loading: false,
-      formatOptions: this.$store.state.formatOptions || {},
       page: {
         currentPage: 1,
         pageSize: 20,
@@ -99,6 +98,11 @@ export default {
       },
       tableData: [],
     };
+  },
+  computed: {
+    formatOptions() {
+      return this.$store.state.formatOptions || {};
+    },
   },
   methods: {
     headerCellClickEvent({

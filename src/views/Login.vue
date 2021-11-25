@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="!isLogined">
     <div class="login">
       <el-row>
         <el-col :span="24" class="login-form">
@@ -45,11 +45,17 @@ export default {
   data() {
     return {
       loading: false,
+      isLogined: false,
       user: {
         mobile: '',
         vcode: '',
       },
     };
+  },
+  computedI: {
+    isLogined() {
+      return Boolean(this.$store.state.token);
+    },
   },
   methods: {
     afterLogin() {
@@ -80,9 +86,10 @@ export default {
               message: '登录成功',
               type: 'success',
             });
+            this.$store.commit('setUser', this.user);
             this.afterLogin();
           } else {
-            this.$message.error(res.msg || '登录失败');
+            // this.$message.error((res && res.msg) || '登录失败');
           }
         })
         .finally(() => {

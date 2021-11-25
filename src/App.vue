@@ -14,12 +14,7 @@ export default {
   components: { Menu },
   name: 'App',
   data() {
-    return {
-      isLogined: this.$store.state.token,
-    };
-  },
-  updated() {
-    this.isLogined = this.$store.state.token;
+    return {};
   },
   created() {
     // 在页面加载时读取sessionStorage里的状态信息
@@ -36,10 +31,17 @@ export default {
     });
 
     const timer = setInterval(() => {
-      this.$store.dispatch('getDeviceStatus');
-      this.$store.dispatch('getHsmsInfo');
+      if (this.$store.state.token) {
+        this.$store.dispatch('getDeviceStatus');
+        this.$store.dispatch('getHsmsInfo');
+      }
     }, 1000);
     sessionStorage.setItem('timer', timer);
+  },
+  computed: {
+    isLogined() {
+      return Boolean(this.$store.state.token);
+    },
   },
   // watch: {
   //   '$route.path': {

@@ -95,15 +95,20 @@ import Header from './common/Header.vue';
 export default {
   name: 'DeviceStatus',
   data() {
-    return {
-      info: this.$store.state.deviceInfo || {},
-      mode: this.$store.state.deviceMode || '',
-    };
+    return {};
   },
   components: {
     Header,
   },
   methods: {},
+  computed: {
+    info() {
+      return this.$store.state.deviceInfo || {};
+    },
+    mode() {
+      return this.$store.state.deviceMode || '';
+    },
+  },
   mounted() {},
 };
 </script>

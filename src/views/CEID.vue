@@ -102,7 +102,6 @@ export default {
   data() {
     return {
       tableData: [],
-      plcTypeOptions: this.$store.state.plcTypeOptions || {},
       wayList: [
         { label: '上升沿', value: 1 },
         { label: '下降沿', value: 0 },
@@ -144,6 +143,11 @@ export default {
         },
       },
     };
+  },
+  computed: {
+    plcTypeOptions() {
+      return this.$store.state.plcTypeOptions || {};
+    },
   },
   components: {
     Header,
