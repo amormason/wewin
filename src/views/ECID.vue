@@ -400,17 +400,12 @@ export default {
       return '';
     },
   },
-  watch: {
-    'req.name': {
-      handler() {
-        if (this.timer) {
-          clearTimeout(this.timer);
-        }
-        this.timer = setTimeout(() => {
-          this.getData();
-        }, 1000);
-      },
-      deep: true,
+  computed: {
+    formatOptions() {
+      return this.$store.state.formatOptions || {};
+    },
+    plcTypeOptions() {
+      return this.$store.state.plcTypeOptions || {};
     },
   },
 };
