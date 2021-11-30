@@ -9,15 +9,6 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter);
 
 const routes = [{
-  path: '/',
-  name: 'Home',
-  redirect: '/login',
-  // 某些页面规定必须登录后才能查看 ，可以在router中配置meta，将需要登录的requireAuth设为true，
-  meta: {
-    requireAuth: true,
-  },
-},
-{
   path: '/login',
   name: 'Login',
   component: () => import('../views/Login.vue'),
@@ -125,7 +116,15 @@ const routes = [{
     title: 'Log',
   },
 },
-
+{
+  path: '*',
+  redirect: '/deviceStatus',
+  // 某些页面规定必须登录后才能查看 ，可以在router中配置meta，将需要登录的requireAuth设为true，
+  meta: {
+    requireAuth: true,
+    title: '',
+  },
+},
 ];
 
 const router = new VueRouter({
