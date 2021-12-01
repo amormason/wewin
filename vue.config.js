@@ -1,7 +1,7 @@
 module.exports = {
   devServer: {
     disableHostCheck: true,
-    host: '192.168.1.242', // host改成自己的IP,
+    host: 'localhost', // host改成自己的IP,
     bonjour: true,
     open: true, // 配置后自动启动浏览器
     port: 8080, // 端口号

@@ -1,42 +1,24 @@
 <template>
   <div class="upload-configuration-container">
-    <Header title="下行配置" secondTitle="配置PLC的相关信息，配置完成后，模块不会重启，但是业务系统会进行重启，5s内请暂时不要操任何。" />
+    <Header title="下行配置" breadcrumb="下行配置" secondTitle="配置PLC的相关信息，配置完成后，模块不会重启，但是业务系统会进行重启，5s内请暂时不要操任何。" />
     <div class="data-table">
       <el-row :gutter="20">
-        <el-col :span="4" class="label">PLC IP: </el-col>
+        <el-col :span="4" class="label">PLC IP:</el-col>
         <el-col :span="12">
-          <el-input placeholder="192.168.1.100" v-model="hsms.plcCommAddr" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');">
-          </el-input>
+          <el-input placeholder="192.168.1.100" v-model="hsms.plcCommAddr" clearable maxlength="15" oninput="value=value.replace(/[^\d^\.]+/g,'');"></el-input>
         </el-col>
         <el-col :span="6">
-          <el-input placeholder="端口" v-model="hsms.plcCommPort" clearable maxlength="5" oninput="value=value.replace(/[^\d]/g,'');">
-          </el-input>
+          <el-input placeholder="端口" v-model="hsms.plcCommPort" clearable maxlength="5" oninput="value=value.replace(/[^\d]/g,'');"></el-input>
         </el-col>
       </el-row>
 
       <el-row :gutter="20">
-        <el-col :span="4" class="label">Protocol: </el-col>
+        <el-col :span="4" class="label">Protocol:</el-col>
         <el-col :span="12">
           <el-select v-model="hsms.prol" clearable placeholder="HSMS / SECES-I">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-col>
-        <!-- <el-col :span="6">
-          <el-select
-            v-model="hsms.active"
-            clearable
-            placeholder="Active / Passtive"
-          >
-            <el-option
-              v-for="item in activeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-        </el-col> -->
       </el-row>
 
       <el-row class="operation">
@@ -48,12 +30,10 @@
 
       <el-row>
         <el-col :span="24">
-          <el-alert v-if="res.success === true" :title="res.msg" type="success" effect="dark">
-          </el-alert>
+          <el-alert v-if="res.success === true" :title="res.msg" type="success" effect="dark"></el-alert>
         </el-col>
 
-        <el-alert v-if="res.success === false" :title="res.msg" type="error" effect="dark">
-        </el-alert>
+        <el-alert v-if="res.success === false" :title="res.msg" type="error" effect="dark"></el-alert>
       </el-row>
     </div>
   </div>
@@ -71,7 +51,7 @@ export default {
       hsms: {
         plcCommAddr: '',
         plcCommPort: '',
-        prol: '',
+        prol: 'mc',
       },
       res: {},
       activeOptions: [
@@ -116,7 +96,11 @@ export default {
       this.loading = true;
       getPlcConf()
         .then((res) => {
-          this.hsms = res.data;
+          if (res && res.data) {
+            this.hsms = res.data;
+          } else {
+            this.$message.error('获取数据失败');
+          }
         })
         .finally(() => {
           this.loading = false;
