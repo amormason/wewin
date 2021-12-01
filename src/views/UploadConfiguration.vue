@@ -9,7 +9,7 @@
               <h3>HSMS</h3>
             </el-col>
           </el-row>
-
+          {{hsms}}
           <el-row :gutter="20">
             <el-col :span="3" class="label">Host IP: </el-col>
             <el-col :span="12">
@@ -117,7 +117,7 @@
             </el-col>
             <el-col :span="7">
               <el-select v-model="hsms.commStatus1Type" clearable maxlength="10" placeholder="Active / Passtive">
-                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="parseInt(name)" :label="value">
+                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value">
                 </el-option>
               </el-select>
             </el-col>
@@ -131,7 +131,7 @@
             </el-col>
             <el-col :span="7">
               <el-select v-model="hsms.waitForHEType" clearable maxlength="10" placeholder="Active / Passtive">
-                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="parseInt(name)" :label="value">
+                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value">
                 </el-option>
               </el-select>
             </el-col>
@@ -145,7 +145,7 @@
             </el-col>
             <el-col :span="7">
               <el-select v-model="hsms.attOrEquType" clearable maxlength="10" placeholder="Active / Passtive">
-                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="parseInt(name)" :label="value">
+                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value">
                 </el-option>
               </el-select>
             </el-col>
@@ -159,7 +159,7 @@
             </el-col>
             <el-col :span="7">
               <el-select v-model="hsms.localRemoteType" clearable maxlength="10" placeholder="Active / Passtive">
-                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="parseInt(name)" :label="value">
+                <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value">
                 </el-option>
               </el-select>
             </el-col>
@@ -198,7 +198,10 @@ export default {
         t6: '',
         t7: '',
         t8: '',
-        commStatus1Type: 1,
+        commStatus1Type: '',
+        waitForHEAddr: '',
+        attOrEquType: '',
+        localRemoteType: '',
       },
       plcTypeOptions: this.$store.state.plcTypeOptions || {},
       activeOptions: [
