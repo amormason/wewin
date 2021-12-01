@@ -51,7 +51,7 @@
             </vxe-select>
           </template>
         </vxe-column>
-        <vxe-column field="isEn" title="启用" :edit-render="{name: '$select', options: isEnList}"></vxe-column>
+        <vxe-column field="en" title="启用" :edit-render="{name: '$select', options: isEnList}"></vxe-column>
         <vxe-column field="comment" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
 
         <vxe-column title="操作" width="150">
@@ -226,7 +226,7 @@ export default {
         def: '10',
         min: '10',
         max: '100',
-        isEn: true,
+        en: true,
         plcType: null,
         plcAddr: null,
         units: 'V',
@@ -251,7 +251,6 @@ export default {
         comment: row.comment || '',
         activeValue: row.activeValueShow,
         data: row.data,
-        isEn: row.isEn,
         en: row.en,
         rptsStr: row.rptsStr || '',
         title: row.title || '',
@@ -328,7 +327,6 @@ export default {
           comment: row.comment || '',
           activeValue: Number.parseInt(row.activeValue, 10),
           data: row.data,
-          isEn: row.isEn,
           en: row.en,
           rptsStr: row.rptsStr || '',
           title: row.title || '',
