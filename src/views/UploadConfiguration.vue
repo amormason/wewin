@@ -9,7 +9,6 @@
               <h3>HSMS</h3>
             </el-col>
           </el-row>
-          {{hsms}}
           <el-row :gutter="20">
             <el-col :span="3" class="label">Host IP: </el-col>
             <el-col :span="12">
