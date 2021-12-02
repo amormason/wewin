@@ -28,7 +28,7 @@ export const delEcids = (params) => http.post('/ecid/delEcids/', params);
 
 export const findAlarmByName = (params) => http.post('/alarm/findAlarmByName', params);
 export const setAlarm = (params) => http.post('/alarm/setAlarm', params);
-export const delAlarm = (params) => http.post('/alarm/del/alarms', params);
+export const delAlarm = (params) => http.post('/alarm/delAlarms', params);
 
 export const findRptidByName = (params) => http.post('/rptid/findRptidByName', params);
 export const setRptid = (params) => http.post('/rptid/setRptid', params);

@@ -95,7 +95,7 @@
 <script>
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
-import { findCeidByName, setCeid, delEcids } from '@/api/request';
+import { findCeidByName, setCeid, delCeids } from '@/api/request';
 
 export default {
   name: 'CEID',
@@ -293,7 +293,7 @@ export default {
       // this.$refs.xTable.removeCheckboxRow();
       if (remoteData.length) {
         this.loading = true;
-        delEcids(remoteData)
+        delCeids(remoteData)
           .then((res) => {
             if (res.status === 200) {
               this.$message({
