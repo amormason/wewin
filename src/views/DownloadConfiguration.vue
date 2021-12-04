@@ -54,16 +54,6 @@ export default {
         prol: 'mc',
       },
       res: {},
-      activeOptions: [
-        {
-          value: '1',
-          label: 'Active',
-        },
-        {
-          value: '0',
-          label: 'Passtive',
-        },
-      ],
       options: [
         {
           value: 'mc',

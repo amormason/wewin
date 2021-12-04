@@ -31,7 +31,7 @@
             <el-row>
               <el-col :span="12">
                 <el-select v-model="row.plcname" size="small" @change="row.plcAddr = row.plcname +row.plcvalue">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                  <el-option v-for="item in plcAddrOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
               </el-col>
               <el-col :span="12">
@@ -110,13 +110,7 @@ export default {
         { label: '上升沿', value: 1 },
         { label: '下降沿', value: 0 },
       ],
-      options: [
-        { label: 'D', value: 'D' },
-        { label: 'E', value: 'E' },
-        { label: 'C', value: 'C' },
-        { label: 'B', value: 'B' },
-        { label: 'A', value: 'A' },
-      ],
+      plcAddrOptions: this.GLOBAL.getPlcAddrOptions() || [],
       loading: false,
       visible: false,
       dialogVisible: false,
@@ -364,17 +358,6 @@ export default {
       this.multipleSelection = records;
       this.deleteButton.length = records.length;
       this.alertTitle = `已经选择 ${records.length} 了项`;
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-      this.alertTitle = `已经选择 ${val.length} 了项`;
-      this.deleteButton.length = val.length;
     },
     // 格式化输出表格值
     formatRole({ cellValue }) {

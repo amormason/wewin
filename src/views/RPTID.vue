@@ -288,7 +288,7 @@ export default {
 
     // 表格编辑
     editRowEvent(row) {
-      console.log(row);
+      // console.log(row);
       const $grid = this.$refs.xTable;
       $grid.setActiveRow(null);
       this.tableData[0].PLC_Address = row.p1 + row.p2;
@@ -303,17 +303,6 @@ export default {
       this.multipleSelection = records;
       this.deleteButton.length = records.length;
       this.alertTitle = `已经选择 ${records.length} 了项`;
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-      this.alertTitle = `已经选择 ${val.length} 了项`;
-      this.deleteButton.length = val.length;
     },
     // 格式化输出表格值
     formatRole({ cellValue }) {

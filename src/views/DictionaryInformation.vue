@@ -7,21 +7,6 @@
         <el-input class="keyword" placeholder="请输入" clearable v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading">
         </el-input>
       </div>
-      <!-- <el-row class="buttons-container">
-      <el-col :span="24">
-        <el-button type="primary" size="small" icon="el-icon-plus"
-          >新建</el-button
-        >
-        <el-button type="warning" icon="el-icon-s-operation" size="small"
-          >批量编辑</el-button
-        >
-        <el-button type="danger" icon="el-icon-s-operation" size="small"
-          >批量删除</el-button
-        >
-      </el-col>
-    </el-row> -->
-
-      <!-- <el-alert title="成功提示的文案" type="success" effect="dark"> </el-alert> -->
 
       <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell', defaultSort: {field: 'name', order: 'asc'},orders: ['asc','desc', '']}" @header-cell-click="headerCellClickEvent" :edit-config="{
         trigger: 'dblclick',
@@ -88,13 +73,6 @@ export default {
           size: 15,
           total: 0,
         },
-      },
-      deleteButton: {
-        event: this.deleteButtonEvent,
-        length: 0,
-      },
-      newButton: {
-        event: this.newButtonEvent,
       },
       tableData: [],
     };
@@ -199,20 +177,11 @@ export default {
     //  新建的操作
     newButtonEvent() {
       this.tableData.unshift({
-        p1: '',
-        p2: '',
-        SVID: '',
-        NAME: '',
-        FORMAT: '',
-        LEN: 0,
-        UNITS: '0',
-        DEF: 0,
-        MIN: 0,
-        MAX: 0,
-        PLC_TYPE: '',
-        PLC_Address: '',
-        REMARK: '',
-        CURRENTVALUE: '',
+        comment: '',
+        format: 0,
+        len: 0,
+        name: '0',
+        value: 0,
       });
     },
     // 删除表格数据

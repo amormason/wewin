@@ -52,7 +52,7 @@
             <el-row>
               <el-col :span="12">
                 <el-select v-model="row.plcname" size="small" @change="row.plcAddr = row.plcname +row.plcvalue">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                  <el-option v-for="item in plcAddrOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
               </el-col>
               <el-col :span="12">
@@ -123,13 +123,7 @@ export default {
   data() {
     return {
       tableData: [],
-      options: [
-        { label: 'D', value: 'D' },
-        { label: 'E', value: 'E' },
-        { label: 'C', value: 'C' },
-        { label: 'B', value: 'B' },
-        { label: 'A', value: 'A' },
-      ],
+      plcAddrOptions: this.GLOBAL.getPlcAddrOptions() || [],
       loading: false,
       visible: false,
       dialogVisible: false,
@@ -360,15 +354,6 @@ export default {
           });
       }
     },
-
-    // // 表格编辑
-    // editRowEvent(row) {
-    //   console.log(row);
-    //   const $grid = this.$refs.xTable1;
-    //   $grid.setActiveRow(null);
-    //   this.tableData[0].PLC_Address = row.p1 + row.p2;
-    // },
-
     selectAllEvent({ records }) {
       this.multipleSelection = records;
       this.deleteButton.length = records.length;
@@ -378,17 +363,6 @@ export default {
       this.multipleSelection = records;
       this.deleteButton.length = records.length;
       this.alertTitle = `已经选择 ${records.length} 了项`;
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-      this.alertTitle = `已经选择 ${val.length} 了项`;
-      this.deleteButton.length = val.length;
     },
     // 格式化输出表格值
     formatRole({ cellValue }) {
