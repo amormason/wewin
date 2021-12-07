@@ -53,7 +53,7 @@
           <el-button-group>
             <el-button :type="info.noCommStatus==0 ?'primary':'default'" size="small">Wait CR Fr Host</el-button>
             <el-button :type="info.noCommStatus==1 ?'primary':'default'" size="small">Wait Delay</el-button>
-            <el-button :type="info.noCommStatus==2 ?'primary':'default'" size="small">No Comm</el-button>
+            <el-button :type="info.noCommStatus==2 ?'primary':'default'" size="small">Wait CR</el-button>
           </el-button-group>
         </el-col>
       </el-row>

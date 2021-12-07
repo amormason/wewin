@@ -24,7 +24,7 @@
         </li>
         <li>
            <div>Not Comm</div>
-          <label>{{{0:'Wait CR Fr Host',1:'Wait Delay',2:'No Comm'}[info.noCommStatus]}}</label>
+          <label>{{{0:'Wait CR Fr Host',1:'Wait Delay',2:'Wait CR'}[info.noCommStatus]}}</label>
         </li>
           <li>
            <div>Control</div>
