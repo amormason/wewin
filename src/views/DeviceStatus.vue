@@ -80,8 +80,8 @@
         <el-col :span="8" class="label-container">On-Line:</el-col>
         <el-col :span="16" class="value-container">
           <el-button-group>
-            <el-button :type="info.ctrlStatus==0 ?'primary':'default'" size="small">Local</el-button>
-            <el-button :type="info.ctrlStatus==1 ?'primary':'default'" size="small">Remote</el-button>
+            <el-button :type="info.onLineStatus==0 ?'primary':'default'" size="small">Local</el-button>
+            <el-button :type="info.onLineStatus==1 ?'primary':'default'" size="small">Remote</el-button>
           </el-button-group>
         </el-col>
       </el-row>

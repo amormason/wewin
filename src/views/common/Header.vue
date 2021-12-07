@@ -36,7 +36,7 @@
         </li>
           <li>
            <div>On-Line</div>
-          <label>{{{0:'Local',1:'Remote'}[info.ctrlStatus]}}</label>
+          <label>{{{0:'Local',1:'Remote'}[info.onLineStatus]}}</label>
         </li>
       </ul>
       <div class="user-info">
