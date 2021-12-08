@@ -21,10 +21,60 @@
         </el-col>
       </el-row>
 
+      <el-row :gutter="20">
+        <el-col :span="4" class="label">时间:</el-col>
+        <el-col :span="5">
+          <el-select v-model="hsms.temp_plcTimeAddr1" @change="hsms.plcTimeAddr = hsms.temp_plcTimeAddr1 +hsms.temp_plcTimeAddr2">
+            <el-option v-for="item in plcAddrOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="7">
+          <el-input type="text" v-model="hsms.temp_plcTimeAddr2" class="vxe-default-input" @change="hsms.plcTimeAddr = hsms.temp_plcTimeAddr1 +hsms.temp_plcTimeAddr2" />
+        </el-col>
+        <el-col :span="6">
+          <el-select v-model="hsms.plcTimeValue">
+            <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="4" class="label">TID:</el-col>
+        <el-col :span="5">
+          <el-select v-model="hsms.temp_plcTidAddr1" @change="hsms.plcTidAddr = hsms.temp_plcTidAddr1 +hsms.temp_plcTidAddr2">
+            <el-option v-for="item in plcAddrOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="7">
+          <el-input type="text" v-model="hsms.temp_plcTidAddr2" class="vxe-default-input" @change="hsms.plcTidAddr = hsms.temp_plcTidAddr1 +hsms.temp_plcTidAddr2" />
+        </el-col>
+        <el-col :span="6">
+          <el-select v-model="hsms.plcTidValue">
+            <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="4" class="label">TEXT:</el-col>
+        <el-col :span="5">
+          <el-select v-model="hsms.temp_plcTextAddr1" @change="hsms.plcTextAddr = hsms.temp_plcTextAddr1 +hsms.temp_plcTextAddr2">
+            <el-option v-for="item in plcAddrOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="7">
+          <el-input type="text" v-model="hsms.temp_plcTextAddr2" class="vxe-default-input" @change="hsms.plcTextAddr = hsms.temp_plcTextAddr1 +hsms.temp_plcTextAddr2" />
+        </el-col>
+        <el-col :span="6">
+          <el-select v-model="hsms.plcTextValue">
+            <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
       <el-row class="operation">
         <el-col :span="24">
-          <el-button type="primary" size="small" icon="el-icon-check" @click="saveHandle()" :disabled="loading" :loading="loading" :closable="true">提交</el-button>
-          <el-button type="warning" size="small" icon="el-icon-s-claim" @click="handldTest()" :disabled="loading" :loading="loading">测试</el-button>
+          <el-button type="primary" icon="el-icon-check" @click="saveHandle()" :disabled="loading" :loading="loading" :closable="true">提交</el-button>
+          <el-button type="warning" icon="el-icon-s-claim" @click="handldTest()" :disabled="loading" :loading="loading">测试</el-button>
         </el-col>
       </el-row>
 
@@ -32,7 +82,6 @@
         <el-col :span="24">
           <el-alert v-if="res.success === true" :title="res.msg" type="success" effect="dark"></el-alert>
         </el-col>
-
         <el-alert v-if="res.success === false" :title="res.msg" type="error" effect="dark"></el-alert>
       </el-row>
     </div>
@@ -48,9 +97,23 @@ export default {
   data() {
     return {
       loading: false,
+      plcTypeOptions: this.$store.state.plcTypeOptions || {},
+      plcAddrOptions: this.GLOBAL.getPlcAddrOptions() || [],
       hsms: {
         plcCommAddr: '',
         plcCommPort: '',
+        plcTimeAddr: '',
+        plcTimeType: '',
+        plcTidAddr: '',
+        plcTidType: '',
+        plcTextAddr: '',
+        plcTextType: '',
+        temp_plcTextAddr1: '',
+        temp_plcTextAddr2: '',
+        temp_plcTidAddr1: '',
+        temp_plcTidAddr2: '',
+        temp_plcTimeAddr1: '',
+        temp_plcTimeAddr2: '',
         prol: 'mc',
       },
       res: {},
@@ -87,7 +150,31 @@ export default {
       getPlcConf()
         .then((res) => {
           if (res && res.data) {
-            this.hsms = res.data;
+            const data = res && res.data;
+            const plcData = {};
+            if (data.plcTimeAddr) {
+              const { plcname, plcvalue } = this.GLOBAL.getPLC(
+                data.plcTimeAddr,
+              );
+              plcData.temp_plcTimeAddr1 = plcname;
+              plcData.temp_plcTimeAddr2 = plcvalue;
+            }
+            if (data.plcTidAddr) {
+              const { plcname, plcvalue } = this.GLOBAL.getPLC(data.plcTidAddr);
+              plcData.temp_plcTidAddr1 = plcname;
+              plcData.temp_plcTidAddr2 = plcvalue;
+            }
+            if (data.plcTextAddr) {
+              const { plcname, plcvalue } = this.GLOBAL.getPLC(
+                data.plcTextAddr,
+              );
+              plcData.temp_plcTextAddr1 = plcname;
+              plcData.temp_plcTextAddr2 = plcvalue;
+            }
+            this.hsms = {
+              ...data,
+              ...plcData,
+            };
           } else {
             this.$message.error('获取数据失败');
           }
@@ -98,7 +185,7 @@ export default {
     },
     checkData() {
       if (!this.GLOBAL.isValidIP(this.hsms.plcCommAddr)) {
-        this.$message.error('IPv4地址1必须是有效的IP地址');
+        this.$message.error('PLC IP必须是有效的IP地址');
         return false;
       }
       if (!this.hsms.plcCommPort) {
@@ -110,7 +197,16 @@ export default {
     saveHandle() {
       if (this.checkData()) {
         this.loading = true;
-        setPlcConf(this.hsms)
+        const data = {};
+        const hsms = JSON.parse(JSON.stringify(this.hsms));
+        console.log(JSON.stringify(hsms, null, 4));
+        Object.keys(hsms).forEach((key) => {
+          if (!key.startsWith('temp_')) {
+            data[key] = hsms[key];
+          }
+        });
+        console.log(data);
+        setPlcConf(data)
           .then((res) => {
             if (res.status === 200) {
               this.getData();
