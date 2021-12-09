@@ -116,7 +116,7 @@ export default {
         { label: '上升沿', value: 1 },
         { label: '下降沿', value: 0 },
       ],
-      plcAddrOptions: this.GLOBAL.plcAddrOptions,
+      plcAddrOptions: this.GLOBAL.getPlcAddrOptions() || [],
       loading: false,
       visible: false,
       dialogVisible: false,

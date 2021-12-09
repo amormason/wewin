@@ -83,7 +83,7 @@ export default {
             this.$store.commit('setUser', this.user);
             this.afterLogin();
           } else {
-            // this.$message.error((res && res.msg) || '登录失败');
+            this.$message.error((res && res.msg) || '登录失败');
           }
         })
         .finally(() => {
