@@ -14,13 +14,30 @@
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell',showIcon: true, defaultSort: {field: 'id', order: 'asc'},orders: [ 'asc', 'desc','']}" @header-cell-click="headerCellClickEvent" @edit-disabled="editDisabledEvent" :edit-config="{
+      <vxe-table border ref="xTable2" height="300" :row-config="{isCurrent: true, isHover: true}" :data="tableData2" @current-change="currentChangeEvent">
+        <vxe-column field="name" title="Name"></vxe-column>
+        <vxe-column field="sex" title="Sex"></vxe-column>
+        <vxe-column field="age" title="Age"></vxe-column>
+        <vxe-column field="address" title="Address" show-overflow></vxe-column>
+      </vxe-table>
+      <vxe-toolbar>
+        <template #buttons>
+          <vxe-button @click="$refs2.xTable.setCurrentRow(tableData[1])">设置第二行选中</vxe-button>
+          <vxe-button @click="$refs2.xTable.clearCurrentRow()">取消选中</vxe-button>
+        </template>
+      </vxe-toolbar>
+      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell',showIcon: true, defaultSort: {field: 'id', order: 'asc'},orders: [ 'asc', 'desc','']}" @toggle-row-expand="toggleExpandChangeEvent" @header-cell-click="headerCellClickEvent" @edit-disabled="editDisabledEvent" :edit-config="{
         trigger: 'dblclick',
         mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
-      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
+      }" :row-config="{isCurrent: true, isHover: true}" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
         <vxe-column type="checkbox" width="60" :disabled="true"></vxe-column>
+        <vxe-column type="expand" width="60">
+          <template #content="{ row, rowIndex }">
+            <CMDson :row="row" :rowIndex="rowIndex"></CMDson>
+          </template>
+        </vxe-column>
         <vxe-column field="id" sortable title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
         </vxe-column>
         <vxe-column sortable field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
@@ -103,7 +120,6 @@
       ]">
       </vxe-pager>
     </div>
-    <CMDson></CMDson>
   </div>
 </template>
 
@@ -125,6 +141,40 @@ export default {
       checking: false,
       alertTitle: '',
       tableData: [],
+      tableData2: [
+        {
+          id: 10001,
+          name: 'Test1',
+          role: 'Develop',
+          sex: 'Man',
+          age: 28,
+          address: 'test abc',
+        },
+        {
+          id: 10002,
+          name: 'Test2',
+          role: 'Test',
+          sex: 'Women',
+          age: 22,
+          address: 'Guangzhou',
+        },
+        {
+          id: 10003,
+          name: 'Test3',
+          role: 'PM',
+          sex: 'Man',
+          age: 32,
+          address: 'Shanghai',
+        },
+        {
+          id: 10004,
+          name: 'Test4',
+          role: 'Designer',
+          sex: 'Women',
+          age: 24,
+          address: 'Shanghai',
+        },
+      ],
       requestParamsObj: {
         name: '',
         orderBy: {
@@ -133,7 +183,7 @@ export default {
         },
         page: {
           page: 1,
-          size: 5,
+          size: 15,
           total: 0,
         },
       },
@@ -285,6 +335,17 @@ export default {
           });
       }
     },
+    // 展开行的切换
+    toggleExpandChangeEvent({ rowIndex }) {
+      console.log('====================================');
+      console.log(rowIndex);
+      console.log('====================================');
+      this.$refs.xTable.setCurrentRow(this.tableData[rowIndex]);
+      // this.$refs.xTable.clearRowExpand();
+      // setTimeout(() => {
+      //   this.$refs.xTable.toggleRowExpand(this.tableData[1]);
+      // }, 100);
+    },
   },
   computed: {
     formatOptions() {
@@ -308,6 +369,12 @@ export default {
       display: inline-block;
       margin-left: 0.5rem;
     }
+  }
+  /deep/ .vxe-body--expanded-column {
+    background-color: #8080807a;
+  }
+  .vxe-table .vxe-table--body .vxe-body--row.row--current {
+    background-color: #009def;
   }
 }
 </style>

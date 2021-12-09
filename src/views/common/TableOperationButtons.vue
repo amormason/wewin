@@ -175,7 +175,7 @@ export default {
 
 <style scoped lang="scss">
 .table-operation-buttons-container {
-  margin: 2rem 0;
+  margin: 1rem 0;
   button {
     margin: 0 20px 0 0;
   }

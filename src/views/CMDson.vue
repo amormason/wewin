@@ -3,12 +3,12 @@
     <div class="CMD-container">
       <el-row :gutter="20" class="form">
         <el-col :span="7">
-          CMD/备注:
+          CPNAME/备注:
           <el-input placeholder="请输入CMD/备注" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
       </el-row>
-
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV"></TableOperationButtons>
+      <!-- {{row}} -->
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV" :noChecking="true"></TableOperationButtons>
 
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
@@ -145,6 +145,9 @@ export default {
         clicked: false,
       },
     };
+  },
+  props: {
+    row: Object,
   },
   components: {
     // Header,
@@ -296,6 +299,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .CMD-container {
+  font-size: 80%;
   padding: 1rem;
   .form {
     // margin: 1rem 0;

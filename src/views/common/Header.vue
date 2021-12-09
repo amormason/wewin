@@ -54,7 +54,7 @@
         <el-breadcrumb-item>{{ breadcrumb }}</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="title">
-        <h2>{{ title }}</h2>
+        <div class="h2">{{ title }}</div>
         <div class="second-title" v-if="secondTitle">
           <i>{{ secondTitle }}</i>
         </div>
@@ -180,6 +180,12 @@ export default {
     }
     .title {
       margin: 0 1rem;
+      .h2 {
+        display: block;
+        font-size: 1.5em;
+        margin: 0;
+        font-weight: bold;
+      }
     }
   }
 }
