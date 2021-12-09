@@ -32,8 +32,8 @@ export default {
 
     const timer = setInterval(() => {
       if (this.$store.state.token) {
-        this.$store.dispatch('getDeviceStatus');
-        this.$store.dispatch('getHsmsInfo');
+        // this.$store.dispatch('getDeviceStatus');
+        // this.$store.dispatch('getHsmsInfo');
       }
     }, 1000);
     sessionStorage.setItem('timer', timer);

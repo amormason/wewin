@@ -1,11 +1,10 @@
 <template>
   <div>
-    <Header breadcrumb="SVID" title="SVID" />
-    <div class="dictionary-information-container">
-      <el-row :gutter="0" class="form">
+    <div class="CMD-container">
+      <el-row :gutter="20" class="form">
         <el-col :span="7">
-          VID/NAME备注:
-          <el-input placeholder="请输入" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
+          CMD/备注:
+          <el-input placeholder="请输入CMD/备注" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
       </el-row>
 
@@ -19,7 +18,7 @@
         mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
-      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" @edit-actived="editActivedEvent" @edit-closed="editClosedEvent">
+      }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
         <vxe-column type="checkbox" width="60" :disabled="true"></vxe-column>
         <vxe-column field="id" sortable title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
         </vxe-column>
@@ -107,34 +106,22 @@
 </template>
 
 <script>
-import Header from './common/Header.vue';
+// import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
-import { findSvidByName, setSvid, delSvids } from '@/api/request';
+import {
+  findCmdByName,
+  // setCmd,
+  delCmds,
+} from '@/api/request';
 
 export default {
-  name: 'SVID',
+  name: 'CMDson',
   data() {
     return {
-      tableData: [],
-      formatOptions: this.$store.state.formatOptions || {},
-      plcTypeOptions: this.$store.state.plcTypeOptions || {},
-      plcAddrOptions: this.GLOBAL.getPlcAddrOptions() || [],
       loading: false,
-      visible: false,
-      dialogVisible: false,
-      multipleSelection: [],
-      deleteButton: {
-        event: this.deleteButtonEvent,
-        length: 0,
-      },
-      newButton: {
-        event: this.newButtonEvent,
-      },
-      testButton: {
-        clicked: false,
-      },
       checking: false,
       alertTitle: '',
+      tableData: [],
       requestParamsObj: {
         name: '',
         orderBy: {
@@ -143,20 +130,29 @@ export default {
         },
         page: {
           page: 1,
-          size: 15,
+          size: 5,
           total: 0,
         },
+      },
+      newButton: {
+        event: this.newButtonEvent,
+      },
+      deleteButton: {
+        event: this.deleteButtonEvent,
+        length: 0,
+      },
+      testButton: {
+        clicked: false,
       },
     };
   },
   components: {
-    Header,
+    // Header,
     TableOperationButtons,
   },
   mounted() {
     this.getData();
   },
-
   methods: {
     getData(isChecking) {
       this.alertTitle = null;
@@ -168,7 +164,7 @@ export default {
       if (!isChecking) {
         this.loading = true;
       }
-      findSvidByName(requestParamsObj)
+      findCmdByName(requestParamsObj)
         .then((res) => {
           if (res.status === 200) {
             this.requestParamsObj.page = {
@@ -192,7 +188,7 @@ export default {
           this.loading = false;
         });
     },
-
+    // 切换表格排序的规则
     headerCellClickEvent({
       column,
       // triggerResizable,
@@ -212,11 +208,6 @@ export default {
         this.getData();
       }
     },
-
-    // 编辑表格的规则
-    editActivedEvent({ row, rowIndex }) {
-      console.log({ row, rowIndex });
-    },
     editDisabledEvent({ row, column }) {
       console.log(row, column);
       // this.$XModal.message({ content: '禁止编辑', status: 'error' });
@@ -226,42 +217,26 @@ export default {
         // duration: 999999,
       });
     },
-
-    saveData(row) {
-      const savaObj = {
-        id: row.id || '',
-        name: row.name || '',
-        formatCodeType: row.formatCodeType
-          ? parseInt(row.formatCodeType, 10)
-          : 0,
-        len: row.len ? parseInt(row.len, 10) : 0,
-        def: row.def || '',
-        min: row.min || '',
-        max: row.max || '',
-        plcType: row.plcType || '',
-        plcAddr: row.plcname + row.plcvalue,
-        units: row.units || '',
-        comment: row.comment || '',
+    // 全选事件
+    selectAllEvent({ records }) {
+      this.multipleSelection = records;
+      this.deleteButton.length = records.length;
+      this.alertTitle = `已经选择 ${records.length} 了项`;
+    },
+    // 勾选事件
+    selectChangeEvent({ records }) {
+      this.multipleSelection = records;
+      this.deleteButton.length = records.length;
+      this.alertTitle = `已经选择 ${records.length} 了项`;
+    },
+    // 分页参数改变
+    handlePageChange(page) {
+      this.requestParamsObj.page = {
+        page: page.currentPage,
+        size: page.pageSize,
       };
-
-      setSvid(savaObj).then((res) => {
-        if (res.status === 200) {
-          this.getData();
-          this.$message({
-            message: res.msg || '恭喜你，这是一条成功消息',
-            type: 'success',
-          });
-        }
-      });
+      this.getData();
     },
-
-    handleClick() {
-      console.log('handleClick');
-    },
-    handleClose() {
-      console.log('handleClose');
-    },
-
     //  新建的操作
     async newButtonEvent() {
       const $table = this.$refs.xTable;
@@ -284,7 +259,6 @@ export default {
       const { row: newRow } = await $table.insertAt(record);
       await $table.setActiveCell(newRow, 'id');
     },
-
     // 删除表格数据
     deleteButtonEvent(rows) {
       const list = rows || this.multipleSelection;
@@ -292,7 +266,7 @@ export default {
       // this.$refs.xTable.removeCheckboxRow();
       if (remoteData.length) {
         this.loading = true;
-        delSvids(remoteData)
+        delCmds(remoteData)
           .then((res) => {
             if (res.status === 200) {
               this.$message({
@@ -307,75 +281,13 @@ export default {
           });
       }
     },
-
-    // 分页参数改变
-    handlePageChange(page) {
-      this.requestParamsObj.page = {
-        page: page.currentPage,
-        size: page.pageSize,
-      };
-      this.getData();
+  },
+  computed: {
+    formatOptions() {
+      return this.$store.state.formatOptions || {};
     },
-
-    // 表格编辑完
-    editClosedEvent({ row, column }) {
-      const $table = this.$refs.xTable;
-      const field = column.property;
-      // const cellValue = row[field];
-      // 判断单元格值是否被修改
-      if ($table.isUpdateByRow(row, field)) {
-        if (row.isNew) {
-          return;
-        }
-        const savaObj = {
-          id: row.id || '',
-          name: row.name || '',
-          formatCodeType: row.formatCodeType
-            ? parseInt(row.formatCodeType, 10)
-            : 0,
-          len: row.len ? parseInt(row.len, 10) : 0,
-          def: row.def || '',
-          min: row.min || '',
-          max: row.max || '',
-          plcType: row.plcType || '',
-          plcAddr: row.plcname + row.plcvalue,
-          units: row.units || '',
-          comment: row.comment || '',
-        };
-        this.loading = true;
-        setSvid(savaObj)
-          .then((res) => {
-            if (res && res.status === 200) {
-              this.$message({
-                message: res.msg || '恭喜你，这是一条成功消息',
-                type: 'success',
-              });
-            }
-          })
-          .finally(() => {
-            this.getData();
-          });
-      }
-    },
-
-    selectAllEvent({ records }) {
-      this.multipleSelection = records;
-      this.deleteButton.length = records.length;
-      this.alertTitle = `已经选择 ${records.length} 了项`;
-    },
-    selectChangeEvent({ records }) {
-      this.multipleSelection = records;
-      this.deleteButton.length = records.length;
-      this.alertTitle = `已经选择 ${records.length} 了项`;
-    },
-    // 格式化输出表格值
-    formatRole({ cellValue }) {
-      if (this.testButton.clicked) {
-        return cellValue
-          ? `<el-link type="success">${cellValue}</el-link>`
-          : '<el-link type="danger">测试失败</el-link>';
-      }
-      return '';
+    plcTypeOptions() {
+      return this.$store.state.plcTypeOptions || {};
     },
   },
 };
@@ -383,41 +295,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.dictionary-information-container {
-  margin: 1rem;
+.CMD-container {
+  padding: 1rem;
   .form {
-    .el-input,
-    .el-select {
+    // margin: 1rem 0;
+    .el-input {
       width: 200px;
       display: inline-block;
       margin-left: 0.5rem;
     }
-    .label {
-      line-height: 40px;
-      text-align: center;
-    }
-  }
-  .buttons-container {
-    margin: 20px 20px;
-  }
-  .vxe-table {
-    margin: 20px 0;
-    input {
-      height: 32px;
-    }
-  }
-  .el-table {
-    margin: 20px 0;
-    .el-link {
-      margin: 0 5px;
-    }
-  }
-}
-.operation-cell {
-  display: flex;
-  justify-content: center;
-  a {
-    margin-right: 0.5rem;
   }
 }
 </style>

@@ -108,6 +108,15 @@ const routes = [{
   },
 },
 {
+  path: '/CMD',
+  name: 'CMD',
+  component: () => import('../views/CMD.vue'),
+  meta: {
+    requireAuth: true,
+    title: 'CMD',
+  },
+},
+{
   path: '/Log',
   name: 'Log',
   component: () => import('../views/Log.vue'),
