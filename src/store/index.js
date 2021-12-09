@@ -12,7 +12,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: '',
+    token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDAyLFBDIiwiYXV0aCI6IkFDQ09VTlRfTk9STE1BTCIsImV4cCI6MTg5ODI2MjI3NH0.2rwt-QhLGxL4sXlS14HoUNqBvYcJV8IXgWvNprF0jzUkW26w8gjsJLs7wWi9sYGp2z120mCv4hp-EcNRaEyrSg',
     formatOptions: {},
     plcTypeOptions: {},
     user: {

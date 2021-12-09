@@ -42,17 +42,17 @@
       <div class="user-info">
         <i class="el-icon-bell"></i>
         <div @click="singOut" class="username">
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+            <img class="avatar" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" alt="头像">
           {{ user.mobile }}
         </div>
       </div>
     </div>
 
     <div class="header-warpper">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>{{ breadcrumb }}</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="breadcrumb">
+        <router-link to="/deviceStatus">首页</router-link>
+        <span>/</span>{{breadcrumb}}
+      </div>
       <div class="title">
         <div class="h2">{{ title }}</div>
         <div class="second-title" v-if="secondTitle">
@@ -66,7 +66,7 @@
 
 <script>
 export default {
-  name: 'Header',
+  name: "Header",
   data() {
     return {
       user: this.$store.state.user || {},
@@ -83,10 +83,10 @@ export default {
     //   return this.$store.state.user || {};
     // },
     mode() {
-      return this.$store.state.deviceMode || '';
+      return this.$store.state.deviceMode || "";
     },
     info() {
-      return this.$store.state.deviceInfo || '';
+      return this.$store.state.deviceInfo || "";
     },
   },
   mounted() {
@@ -94,13 +94,13 @@ export default {
   },
   methods: {
     singOut() {
-      this.$store.commit('singOut');
+      this.$store.commit("singOut");
       this.$message({
-        message: '您已退出登录',
-        type: 'success',
+        message: "您已退出登录",
+        type: "success",
       });
-      clearInterval(sessionStorage.getItem('timer'));
-      this.$router.push('/login');
+      clearInterval(sessionStorage.getItem("timer"));
+      this.$router.push("/login");
     },
   },
 };
@@ -174,9 +174,12 @@ export default {
     padding: 1rem 0;
     padding-bottom: 20px;
     border-bottom: 1px #80808042 solid;
-    .el-breadcrumb {
+    .breadcrumb {
       line-height: 54px;
       margin: 0 1rem;
+      span{
+        margin: 0 1rem;
+      }
     }
     .title {
       margin: 0 1rem;
@@ -188,5 +191,19 @@ export default {
       }
     }
   }
+}
+.avatar {
+  display: inline-block;
+  box-sizing: border-box;
+  text-align: center;
+  overflow: hidden;
+  color: #fff;
+  background: #c0c4cc;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  border-radius: 50%;
+  margin-right: 1rem;
 }
 </style>

@@ -161,7 +161,7 @@ export default {
       this.alertTitle = null;
       this.$refs.xTable.clearCheckboxRow();
       const requestParamsObj = JSON.parse(
-        JSON.stringify(this.requestParamsObj),
+        JSON.stringify(this.requestParamsObj)
       );
       delete requestParamsObj.page.total;
       if (!isChecking) {

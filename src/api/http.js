@@ -1,8 +1,5 @@
 import axios from 'axios';
-import {
-  Message,
-} from 'element-ui';
-
+import VXETable from 'vxe-table'
 // 创建一个 axios 实例
 const service = axios.create({
   baseURL: '/api/', // url = base url + request url
@@ -46,7 +43,10 @@ service.interceptors.response.use((response) => {
   }
   return response.data;
 }, (error) => {
-  Message.error(error.message || '网络请求异常，请稍后重试!' || error);
+  VXETable.modal.message({
+    content: error.message || '网络请求异常，请稍后重试!',
+    status: 'error'
+  })
 });
 
 // 按照请求类型对axios进行封装

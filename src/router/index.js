@@ -9,131 +9,131 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter);
 
 const routes = [{
-  path: '/login',
-  name: 'Login',
-  component: () => import('../views/Login.vue'),
-  meta: {
-    requireAuth: false,
-    title: '登录页面',
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/Login.vue'),
+    meta: {
+      requireAuth: false,
+      title: '登录页面',
+    },
   },
-},
-{
-  path: '/deviceStatus',
-  name: 'DeviceStatus',
-  component: () => import('../views/DeviceStatus.vue'),
-  meta: {
-    requireAuth: true,
-    title: '设备状态',
+  {
+    path: '/deviceStatus',
+    name: 'DeviceStatus',
+    component: () => import('../views/DeviceStatus.vue'),
+    meta: {
+      requireAuth: true,
+      title: '设备状态',
+    },
   },
-},
-{
-  path: '/moduleNetworkConfiguration',
-  name: 'ModuleNetworkConfiguration',
-  component: () => import('../views/ModuleNetworkConfiguration.vue'),
-  meta: {
-    requireAuth: true,
-    title: '模块网络',
+  {
+    path: '/moduleNetworkConfiguration',
+    name: 'ModuleNetworkConfiguration',
+    component: () => import('../views/ModuleNetworkConfiguration.vue'),
+    meta: {
+      requireAuth: true,
+      title: '模块网络',
+    },
   },
-},
-{
-  path: '/uploadConfiguration',
-  name: 'UploadConfiguration',
-  component: () => import('../views/UploadConfiguration.vue'),
-  meta: {
-    requireAuth: true,
-    title: '上行配置',
+  {
+    path: '/uploadConfiguration',
+    name: 'UploadConfiguration',
+    component: () => import('../views/UploadConfiguration.vue'),
+    meta: {
+      requireAuth: true,
+      title: '上行配置',
+    },
   },
-},
-{
-  path: '/dictionaryInformation',
-  name: 'DictionaryInformation',
-  component: () => import('../views/DictionaryInformation.vue'),
-  meta: {
-    requireAuth: true,
-    title: '字典信息',
+  {
+    path: '/dictionaryInformation',
+    name: 'DictionaryInformation',
+    component: () => import('../views/DictionaryInformation.vue'),
+    meta: {
+      requireAuth: true,
+      title: '字典信息',
+    },
   },
-},
-{
-  path: '/downloadConfiguration',
-  name: 'DownloadConfiguration',
-  component: () => import('../views/DownloadConfiguration.vue'),
-  meta: {
-    requireAuth: true,
-    title: '下行配置',
+  {
+    path: '/downloadConfiguration',
+    name: 'DownloadConfiguration',
+    component: () => import('../views/DownloadConfiguration.vue'),
+    meta: {
+      requireAuth: true,
+      title: '下行配置',
+    },
   },
-},
-{
-  path: '/SVID',
-  name: 'SVID',
-  component: () => import('../views/SVID.vue'),
-  meta: {
-    requireAuth: true,
-    title: 'SVID',
+  {
+    path: '/SVID',
+    name: 'SVID',
+    component: () => import('../views/SVID.vue'),
+    meta: {
+      requireAuth: true,
+      title: 'SVID',
+    },
   },
-},
-{
-  path: '/ECID',
-  name: 'ECID',
-  component: () => import('../views/ECID.vue'),
-  meta: {
-    requireAuth: true,
-    title: 'ECID',
+  {
+    path: '/ECID',
+    name: 'ECID',
+    component: () => import('../views/ECID.vue'),
+    meta: {
+      requireAuth: true,
+      title: 'ECID',
+    },
   },
-},
-{
-  path: '/CEID',
-  name: 'CEID',
-  component: () => import('../views/CEID.vue'),
-  meta: {
-    requireAuth: true,
-    title: 'CEID',
+  {
+    path: '/CEID',
+    name: 'CEID',
+    component: () => import('../views/CEID.vue'),
+    meta: {
+      requireAuth: true,
+      title: 'CEID',
+    },
   },
-},
-{
-  path: '/RPTID',
-  name: 'RPTID',
-  component: () => import('../views/RPTID.vue'),
-  meta: {
-    requireAuth: true,
-    title: 'RPTID',
+  {
+    path: '/RPTID',
+    name: 'RPTID',
+    component: () => import('../views/RPTID.vue'),
+    meta: {
+      requireAuth: true,
+      title: 'RPTID',
+    },
   },
-},
-{
-  path: '/ALID',
-  name: 'ALID',
-  component: () => import('../views/ALID.vue'),
-  meta: {
-    requireAuth: true,
-    title: 'ALID',
+  {
+    path: '/ALID',
+    name: 'ALID',
+    component: () => import('../views/ALID.vue'),
+    meta: {
+      requireAuth: true,
+      title: 'ALID',
+    },
   },
-},
-{
-  path: '/CMD',
-  name: 'CMD',
-  component: () => import('../views/CMD.vue'),
-  meta: {
-    requireAuth: true,
-    title: 'CMD',
+  {
+    path: '/CMD',
+    name: 'CMD',
+    component: () => import('../views/CMD.vue'),
+    meta: {
+      requireAuth: true,
+      title: 'CMD',
+    },
   },
-},
-{
-  path: '/Log',
-  name: 'Log',
-  component: () => import('../views/Log.vue'),
-  meta: {
-    requireAuth: true,
-    title: 'Log',
+  {
+    path: '/Log',
+    name: 'Log',
+    component: () => import('../views/Log.vue'),
+    meta: {
+      requireAuth: true,
+      title: 'Log',
+    },
   },
-},
-{
-  path: '*',
-  redirect: '/deviceStatus',
-  // 某些页面规定必须登录后才能查看 ，可以在router中配置meta，将需要登录的requireAuth设为true，
-  meta: {
-    requireAuth: true,
-    title: '',
+  {
+    path: '*',
+    redirect: '/deviceStatus',
+    // 某些页面规定必须登录后才能查看 ，可以在router中配置meta，将需要登录的requireAuth设为true，
+    meta: {
+      requireAuth: true,
+      title: '',
+    },
   },
-},
 ];
 
 const router = new VueRouter({

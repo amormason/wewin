@@ -1,4 +1,8 @@
 module.exports = {
+  publicPath: '/wewin',
+  outputDir: 'wewin',
+  runtimeCompiler: true,
+  productionSourceMap: false,
   devServer: {
     disableHostCheck: true,
     host: 'localhost', // host改成自己的IP,
@@ -19,7 +23,6 @@ module.exports = {
       },
     },
   },
-
   css: {
     loaderOptions: {
       sass: {
@@ -28,9 +31,4 @@ module.exports = {
     },
     sourceMap: true,
   },
-
-  publicPath: '/wewin',
-  runtimeCompiler: true,
-  outputDir: 'wewin',
-  lintOnSave: false,
-};
+}

@@ -2,98 +2,62 @@
   <div class="device-status-container">
     <Header breadcrumb="设备状态" title="设备状态" />
     <div class="data-table">
-      <el-row>
-        <el-col :span="8" class="label-container">连接模式:</el-col>
-        <el-col :span="16" class="value-container">
-          <el-button-group>
-            <el-button :type="mode=='active' ?'primary':'default'" size="small">Active</el-button>
-            <el-button :type="mode=='passive' ?'primary':'default'" size="small">Passtive</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8" class="label-container">TCP/IP状态:</el-col>
-        <el-col :span="16" class="value-container">
-          <el-button-group>
-            <el-button :type="info.tcpStatus==1 ?'primary':'default'" size="small">Conned</el-button>
-            <el-button :type="info.tcpStatus==0 ?'primary':'default'" size="small">No Con</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8" class="label-container">Hsms状态:</el-col>
-        <el-col :span="16" class="value-container">
-          <el-button-group>
-            <el-button :type="info.hsmsStatus==1 ?'primary':'default'" size="small">Select</el-button>
-            <el-button :type="info.hsmsStatus==0 ?'primary':'default'" size="small">NotSelect</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8" class="label-container">Communicating1:</el-col>
-        <el-col :span="16" class="value-container">
-          <el-button-group>
-            <el-button :type="info.commStatus==0 ?'primary':'default'" size="small">Disable</el-button>
-            <el-button :type="info.commStatus==1 ?'primary':'default'" size="small">Enable</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8" class="label-container">Communicating2:</el-col>
-        <el-col :span="16" class="value-container">
-          <el-button-group>
-            <el-button :type="info.commStatus2==1 ?'primary':'default'" size="small">Comm</el-button>
-            <el-button :type="info.commStatus2==0 ?'primary':'default'" size="small">No Comm</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8" class="label-container">Not Comm:</el-col>
-        <el-col :span="16" class="value-container">
-          <el-button-group>
-            <el-button :type="info.noCommStatus==0 ?'primary':'default'" size="small">Wait CR Fr Host</el-button>
-            <el-button :type="info.noCommStatus==1 ?'primary':'default'" size="small">Wait Delay</el-button>
-            <el-button :type="info.noCommStatus==2 ?'primary':'default'" size="small">Wait CR</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8" class="label-container">Control:</el-col>
-        <el-col :span="16" class="value-container">
-          <el-button-group>
-            <el-button :type="info.ctrlStatus==0 ?'primary':'default'" size="small">OFF</el-button>
-            <el-button :type="info.ctrlStatus==1 ?'primary':'default'" size="small">ON</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8" class="label-container">Off-Line:</el-col>
-        <el-col :span="16" class="value-container">
-          <el-button-group>
-            <el-button :type="info.offLineStatus==1 ?'primary':'default'" size="small">Att On</el-button>
-            <el-button :type="info.offLineStatus==0 ?'primary':'default'" size="small">Host Off</el-button>
-            <el-button :type="info.offLineStatus==2 ?'primary':'default'" size="small">Equ Off</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8" class="label-container">On-Line:</el-col>
-        <el-col :span="16" class="value-container">
-          <el-button-group>
-            <el-button :type="info.onLineStatus==0 ?'primary':'default'" size="small">Local</el-button>
-            <el-button :type="info.onLineStatus==1 ?'primary':'default'" size="small">Remote</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
+      <div class="flex">
+        <div class="label-container">连接模式:</div>
+        <vxe-button :status="mode=='active' ?'primary':'default'" >Active</vxe-button>
+        <vxe-button :status="mode=='passive' ?'primary':'default'" >Passtive</vxe-button>
+      </div>
+      <div class="flex">
+        <div class="label-container">TCP/IP状态:</div>
+        <vxe-button :status="info.tcpStatus==1 ?'primary':'default'" >Conned</vxe-button>
+        <vxe-button :status="info.tcpStatus==0 ?'primary':'default'" >No Con</vxe-button>
+      </div>
+      <div class="flex">
+        <div class="label-container">Hsms状态:</div>
+        <vxe-button :status="info.hsmsStatus==1 ?'primary':'default'" >Select</vxe-button>
+        <vxe-button :status="info.hsmsStatus==0 ?'primary':'default'" >NotSelect</vxe-button>
+      </div>
+      <div class="flex">
+        <div class="label-container">Communicating1:</div>
+        <vxe-button :status="info.commStatus==0 ?'primary':'default'" >Disable</vxe-button>
+        <vxe-button :status="info.commStatus==1 ?'primary':'default'" >Enable</vxe-button>
+      </div>
+      <div class="flex">
+        <div class="label-container">Communicating2:</div>
+        <vxe-button :status="info.commStatus2==1 ?'primary':'default'" >Comm</vxe-button>
+        <vxe-button :status="info.commStatus2==0 ?'primary':'default'" >No Comm</vxe-button>
+      </div>
+      <div class="flex">
+        <div class="label-container">Not Comm:</div>
+        <vxe-button :status="info.noCommStatus==0 ?'primary':'default'" >Wait CR Fr Host</vxe-button>
+        <vxe-button :status="info.noCommStatus==1 ?'primary':'default'" >Wait Delay</vxe-button>
+        <vxe-button :status="info.noCommStatus==2 ?'primary':'default'" >Wait CR</vxe-button>
+      </div>
+      <div class="flex">
+        <div class="label-container">Control:</div>
+        <vxe-button :status="info.ctrlStatus==0 ?'primary':'default'" >OFF</vxe-button>
+        <vxe-button :status="info.ctrlStatus==1 ?'primary':'default'" >ON</vxe-button>
+      </div>
+      <div class="flex">
+        <div class="label-container">Off-Line:</div>
+        <vxe-button :status="info.offLineStatus==1 ?'primary':'default'" >Att On</vxe-button>
+        <vxe-button :status="info.offLineStatus==0 ?'primary':'default'" >Host Off</vxe-button>
+        <vxe-button :status="info.offLineStatus==2 ?'primary':'default'" >Equ Off</vxe-button>
+      </div>
+      <div class="flex">
+        <div class="label-container">On-Line:</div>
+        <vxe-button :status="info.onLineStatus==0 ?'primary':'default'" >Local</vxe-button>
+        <vxe-button :status="info.onLineStatus==1 ?'primary':'default'" >Remote</vxe-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Header from './common/Header.vue';
+import Header from "./common/Header.vue";
 
 export default {
-  name: 'DeviceStatus',
+  name: "DeviceStatus",
   data() {
     return {};
   },
@@ -106,7 +70,7 @@ export default {
       return this.$store.state.deviceInfo || {};
     },
     mode() {
-      return this.$store.state.deviceMode || '';
+      return this.$store.state.deviceMode || "";
     },
   },
   mounted() {},
@@ -116,21 +80,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .device-status-container {
-  .data-table {
-    width: 500px;
-    margin-top: 20px;
-    margin-left: 100px;
-    line-height: 32px;
-    .el-row {
-      margin: 16px 0;
-      i {
-        margin-right: 5px;
-        color: $success-text-color;
-      }
-      .label-container {
-        text-align: right;
-        padding-right: 20px;
-      }
+  .flex {
+    display: flex;
+    margin: 1rem 0;
+    .label-container {
+      margin-right: 1rem;
+      line-height: 34px;
+    }
+    .vxe-button {
+      margin-left: 0;
     }
   }
 }

@@ -1,25 +1,18 @@
-import Vue from 'vue';
-import ElementUI from 'element-ui';
-import 'xe-utils';
-import VXETable from 'vxe-table';
-import VXETablePluginElement from 'vxe-table-plugin-element';
-import 'vxe-table/lib/style.css';
-import router from './router';
-import store from './store';
-import 'element-ui/lib/theme-chalk/index.css';
-import App from './App.vue';
+import Vue from 'vue'
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+import App from './App.vue'
+import router from './router'
+import store from './store'
 import global from './util/index';
-
-VXETable.setup({
-  keepSource: true,
-});
-Vue.use(ElementUI);
-Vue.use(VXETable);
-VXETable.use(VXETablePluginElement);
-Vue.config.productionTip = false;
-Vue.prototype.GLOBAL = global;
+console.log(VXETable);
+Vue.use(VXETable)
+Vue.config.productionTip = false
+Vue.prototype.GLOBAL = global
+Vue.prototype.$XModal = VXETable.modal
 new Vue({
   router,
   store,
-  render: (h) => h(App),
-}).$mount('#app');
+  render: h => h(App)
+}).$mount('#app')

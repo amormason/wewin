@@ -70,8 +70,6 @@ body {
     display: flex;
     .view-container {
       flex: 1;
-      min-width: 1664px;
-      overflow-x: hidden;
     }
   }
   .data-table {

@@ -3,61 +3,79 @@
     <div class="logo-container">
       <h1>weWin</h1>
     </div>
-    <el-menu :default-active="defaultActive" :default-openeds="openeds" class="el-menu-vertical" @open="handleOpen" @close="handleClose" text-color="white" background-color="rgba(0, 21, 41, 1)" router>
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-odometer"></i>
-          <span>首页</span>
-        </template>
-        <!-- <el-menu-item index="login">登录</el-menu-item> -->
-        <el-menu-item index="deviceStatus">设备状态</el-menu-item>
-        <!-- <el-menu-item index="1-3">草稿</el-menu-item> -->
-      </el-submenu>
-
-      <!-- <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-office-building"></i>
-            <span>架构设计图</span>
-          </template>
-          <el-menu-item index="2-1">系统架构图</el-menu-item>
-          <el-menu-item index="2-2">逻辑单元原理</el-menu-item>
-        </el-submenu> -->
-
-      <el-submenu index="3">
-        <template slot="title">
-          <i class="el-icon-edit-outline"></i>
-          <span>基本配置</span>
-        </template>
-        <el-menu-item index="moduleNetworkConfiguration">模块网络</el-menu-item>
-      </el-submenu>
-
-      <el-submenu index="4">
-        <template slot="title">
-          <i class="el-icon-edit-outline"></i>
-          <span>业务配置</span>
-        </template>
-        <el-menu-item index="uploadConfiguration">上行配置</el-menu-item>
-        <el-menu-item index="downloadConfiguration">下行配置</el-menu-item>
-        <el-menu-item index="dictionaryInformation">字典信息</el-menu-item>
-        <el-menu-item index="ECID">ECID</el-menu-item>
-        <el-menu-item index="SVID">SVID</el-menu-item>
-        <el-menu-item index="CEID">CEID</el-menu-item>
-        <el-menu-item index="RPTID">RPTID</el-menu-item>
-        <el-menu-item index="ALID">ALID</el-menu-item>
-        <el-menu-item index="CMD">CMD</el-menu-item>
-        <el-menu-item index="Log">Log</el-menu-item>
-      </el-submenu>
-    </el-menu>
+    <ul class="firstLevel">
+      <li>
+        <div class="title">
+          首页
+        </div>
+        <ul class="items">
+          <li>
+            <router-link to="/deviceStatus">设备状态</router-link>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="firstLevel">
+      <li>
+        <div class="title">
+          基本配置
+        </div>
+        <ul class="items">
+          <li>
+            <router-link to="/moduleNetworkConfiguration">模块网络</router-link>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="firstLevel">
+      <li>
+        <div class="title">
+          业务配置
+        </div>
+        <ul class="items">
+          <li>
+            <router-link to="/uploadConfiguration">上行配置</router-link>
+          </li>
+          <li>
+            <router-link to="/downloadConfiguration">下行配置</router-link>
+          </li>
+          <li>
+            <router-link to="/dictionaryInformation">字典信息</router-link>
+          </li>
+          <li>
+            <router-link to="/SVID">SVID</router-link>
+          </li>
+          <li>
+            <router-link to="/ECID">ECID</router-link>
+          </li>
+          <li>
+            <router-link to="/CEID">CEID</router-link>
+          </li>
+          <li>
+            <router-link to="/RPTID">RPTID</router-link>
+          </li>
+          <li>
+            <router-link to="/ALID">ALID</router-link>
+          </li>
+          <li>
+            <router-link to="/CMD">CMD</router-link>
+          </li>
+          <li>
+            <router-link to="/Log">Log</router-link>
+          </li>
+        </ul>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Menu',
+  name: "Menu",
   data() {
     return {
-      openeds: ['1', '2', '3', '4'],
-      defaultActive: '',
+      routes: this.$router.options.routes,
+      defaultActive: "",
     };
   },
   methods: {
@@ -68,17 +86,14 @@ export default {
       console.log(key, keyPath);
     },
   },
-  mounted() {
-    // console.log(`/${window.location.href.split('/')[4]}`);
-    this.defaultActive = `/${window.location.href.split('/')[4]}`;
-  },
+  mounted() {},
 };
 </script>
 
-<style  lang="scss">
+<style  lang="scss" scoped>
 .left-menu {
   background-color: rgba(0, 21, 41, 1);
-  width: 256px;
+  min-width: 256px;
   .logo-container {
     background-color: white;
     text-align: center;
@@ -89,28 +104,30 @@ export default {
       margin: 0;
     }
   }
-  .el-menu {
-    border-right: none;
-    .el-menu-item {
-      height: 40px;
-      line-height: 40px;
-      background-color: #333333 !important;
-      &.is-active {
-        background-color: rgba(24, 144, 255, 1) !important;
-        color: white !important;
-      }
+  ul,
+  li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    list-style: none;
+    a {
+      color: white;
+      text-decoration: none;
     }
-    .el-submenu__title {
-      padding-left: 10px !important;
+  }
+  .items {
+    li {
+      margin: 1rem 0;
+      padding-left: 3rem;
     }
-    .el-menu-item {
-      padding-left: 45px !important;
-    }
-    .el-submenu__icon-arrow {
-      font-size: 21px;
-    }
-    .menuitem {
-      background-color: red !important;
+  }
+  .firstLevel {
+    margin: 1rem 0 2rem;
+    li {
+      padding-left: 2rem;
+      color: white;
     }
   }
 }
