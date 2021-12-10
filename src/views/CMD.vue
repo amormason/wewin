@@ -4,7 +4,7 @@
     <div class="CMD-container">
       <el-row :gutter="20" class="form">
         <el-col :span="7">
-          CMD/备注:
+          CMD/备注{{tableHeight}}:
           <el-input placeholder="请输入CMD/备注" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
       </el-row>
@@ -14,7 +14,7 @@
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell',showIcon: true, defaultSort: {field: 'id', order: 'asc'},orders: [ 'asc', 'desc','']}" @toggle-row-expand="toggleExpandChangeEvent" @header-cell-click="headerCellClickEvent" @edit-disabled="editDisabledEvent" :edit-config="{
+      <vxe-table :height="tableHeight" keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell',showIcon: true, defaultSort: {field: 'id', order: 'asc'},orders: [ 'asc', 'desc','']}" @toggle-row-expand="toggleExpandChangeEvent" @header-cell-click="headerCellClickEvent" @edit-disabled="editDisabledEvent" :edit-config="{
         trigger: 'dblclick',
         mode: 'row',
         showStatus: true,
@@ -128,6 +128,7 @@ export default {
       loading: false,
       checking: false,
       alertTitle: '',
+      tableHeight: 500,
       tableData: [],
       tableData2: [
         {
@@ -194,8 +195,21 @@ export default {
   },
   mounted() {
     this.getData();
+    this.resize();
+    const that = this;
+    window.onresize = () => {
+      that.resize();
+    };
   },
   methods: {
+    resize() {
+      const heightArray = Object.values(this.$store.state.height);
+      let heights = 0;
+      heightArray.forEach((item) => {
+        heights += item;
+      });
+      this.tableHeight = document.documentElement.clientHeight - heights - 112;
+    },
     getData(isChecking) {
       this.alertTitle = null;
       this.$refs.xTable.clearCheckboxRow();

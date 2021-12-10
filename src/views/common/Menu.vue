@@ -78,7 +78,7 @@ export default {
 <style  lang="scss">
 .left-menu {
   background-color: rgba(0, 21, 41, 1);
-  width: 256px;
+  min-width: 256px;
   .logo-container {
     background-color: white;
     text-align: center;

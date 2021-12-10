@@ -1,5 +1,5 @@
 <template>
-  <el-row class="table-operation-buttons-container">
+  <el-row class="table-operation-buttons-container" ref="operate">
     <el-col :span="24">
       <el-button type="success" size="small" icon="el-icon-plus" :loading="loading" :disabled="checking" @click="newButton.event" v-if="!noNew">新建</el-button>
 
@@ -68,7 +68,12 @@ export default {
   },
   components: {},
   computed: {},
-  mounted() {},
+  mounted() {
+    const operate = this.$refs.operate.$el.offsetHeight;
+    this.$store.commit('setHeight', {
+      operate,
+    });
+  },
   methods: {
     selectFile(event) {
       event.preventDefault();
@@ -175,9 +180,9 @@ export default {
 
 <style scoped lang="scss">
 .table-operation-buttons-container {
-  margin: 1rem 0;
+  padding: 1rem 0;
   button {
-    margin: 0 20px 0 0;
+    margin: 0 1rem 0 0;
   }
   .import-btn {
     display: inline-block;

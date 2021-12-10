@@ -1,5 +1,5 @@
 <template>
-  <div class="header-container">
+  <div class="header-container" ref="header">
     <div class="user-container">
       <ul class="status">
         <li>
@@ -91,6 +91,10 @@ export default {
   },
   mounted() {
     this.user = this.$store.state.user;
+    const header = this.$refs.header.offsetHeight;
+    this.$store.commit('setHeight', {
+      header,
+    });
   },
   methods: {
     singOut() {

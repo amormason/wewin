@@ -52,11 +52,6 @@ export default {
       },
     };
   },
-  computedI: {
-    isLogined() {
-      return Boolean(this.$store.state.token);
-    },
-  },
   methods: {
     afterLogin() {
       this.$store.dispatch('getFormatOptions');
@@ -102,6 +97,9 @@ export default {
       //   // login(this.loginInfo);
       // }, 1500);
     },
+  },
+  mounted() {
+    this.$store.dispatch('singOut');
   },
 };
 </script>

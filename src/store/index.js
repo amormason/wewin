@@ -9,38 +9,36 @@ import {
 } from '@/api/request';
 
 Vue.use(Vuex);
+const getDefaultState = () => ({
+  token: '',
+  formatOptions: {},
+  plcTypeOptions: {},
+  user: {
+    mobile: '',
+  },
+  deviceInfo: {},
+  deviceMode: '',
+  height: {},
+});
 
 export default new Vuex.Store({
-  state: {
-    token: '',
-    formatOptions: {},
-    plcTypeOptions: {},
-    user: {
-      mobile: '',
-    },
-    deviceInfo: {},
-    deviceMode: '',
-  },
+  state: getDefaultState(),
   mutations: {
     // 修改token，并将token存入sessionStorage
     setToken(state, token) {
       state.token = token;
       storage.set('token', token);
     },
+    setHeight(state, heightObj) {
+      state.height = {
+        ...state.height,
+        ...heightObj,
+      };
+      storage.set('height', state.height);
+    },
     singOut(state) {
-      state.token = '';
-      state.formatOptions = {};
-      state.plcTypeOptions = {};
-      state.user = {};
-      state.deviceInfo = {};
-      state.deviceMode = '';
-      storage.remove('token');
-      storage.remove('formatOptions');
-      storage.remove('plcTypeOptions');
-      storage.remove('user');
-      storage.remove('deviceInfo');
-      storage.remove('deviceMode');
-      storage.remove('timer');
+      Object.assign(state, getDefaultState());
+      sessionStorage.clear();
     },
     // 可选
     setUser(state, user) {
@@ -78,6 +76,11 @@ export default new Vuex.Store({
 
   },
   actions: {
+    singOut({
+      commit,
+    }) {
+      commit('singOut', {});
+    },
 
     async getPlcTypeOptions({
       commit,
