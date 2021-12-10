@@ -14,18 +14,6 @@
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table border ref="xTable2" height="300" :row-config="{isCurrent: true, isHover: true}" :data="tableData2" @current-change="currentChangeEvent">
-        <vxe-column field="name" title="Name"></vxe-column>
-        <vxe-column field="sex" title="Sex"></vxe-column>
-        <vxe-column field="age" title="Age"></vxe-column>
-        <vxe-column field="address" title="Address" show-overflow></vxe-column>
-      </vxe-table>
-      <vxe-toolbar>
-        <template #buttons>
-          <vxe-button @click="$refs2.xTable.setCurrentRow(tableData[1])">设置第二行选中</vxe-button>
-          <vxe-button @click="$refs2.xTable.clearCurrentRow()">取消选中</vxe-button>
-        </template>
-      </vxe-toolbar>
       <vxe-table keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell',showIcon: true, defaultSort: {field: 'id', order: 'asc'},orders: [ 'asc', 'desc','']}" @toggle-row-expand="toggleExpandChangeEvent" @header-cell-click="headerCellClickEvent" @edit-disabled="editDisabledEvent" :edit-config="{
         trigger: 'dblclick',
         mode: 'row',
@@ -371,10 +359,7 @@ export default {
     }
   }
   /deep/ .vxe-body--expanded-column {
-    background-color: #8080807a;
-  }
-  .vxe-table .vxe-table--body .vxe-body--row.row--current {
-    background-color: #009def;
+    background-color: #e6f7ff;
   }
 }
 </style>

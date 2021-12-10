@@ -46,6 +46,7 @@ service.interceptors.response.use((response) => {
   }
   return response.data;
 }, (error) => {
+  console.error(error);
   Message.error(error.message || '网络请求异常，请稍后重试!' || error);
 });
 
