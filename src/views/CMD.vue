@@ -20,7 +20,7 @@
         showStatus: true,
         icon: 'el-icon-s-tools',
       }" :row-config="{isCurrent: true, isHover: true}" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
-        <vxe-column type="checkbox" width="60" :disabled="true"></vxe-column>
+        <vxe-column type="checkbox" width="40" :disabled="true"></vxe-column>
         <vxe-column type="expand" width="40">
           <template #content="{ row, rowIndex }">
             <CMDson :row="row" :rowIndex="rowIndex" v-if="row.id"></CMDson>

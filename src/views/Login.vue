@@ -47,8 +47,8 @@ export default {
       loading: false,
       isLogined: false,
       user: {
-        mobile: 'admin',
-        vcode: 'admin',
+        mobile: '',
+        vcode: '',
       },
     };
   },
