@@ -38,9 +38,13 @@ export const findCeidByName = (params) => http.post('/ceid/findCeidByName', para
 export const setCeid = (params) => http.post('/ceid/setCeid', params);
 export const delCeids = (params) => http.post('/ceid/delCeids', params);
 
-export const findCmdByName = (params) => http.post('/ceid/findCeidByName', params);
-export const setCmd = (params) => http.post('/ceid/setCeid', params);
-export const delCmds = (params) => http.post('/ceid/delCeids', params);
+export const findHCmdByName = (params) => http.post('/hcmd/findHCmdByName', params);
+export const setHCmd = (params) => http.post('/hcmd/setHCmd', params);
+export const delHCmds = (params) => http.post('/hcmd/delHCmds', params);
+
+export const findHCPByName = (params) => http.post('/hcp/findHCPByName', params);
+export const setHCP = (params) => http.post('/hcp/setHCP', params);
+export const delHCPs = (id, params) => http.post(`/hcp/delHCPs/${id}`, params);
 
 export const testPLC = () => http.get('/conf/testPLC');
 export const getPlcConf = () => http.get('/conf/getPlcConf');

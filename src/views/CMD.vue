@@ -4,77 +4,87 @@
     <div class="CMD-container">
       <el-row :gutter="20" class="form">
         <el-col :span="7">
-          CMD/备注{{tableHeight}}:
+          CMD/备注:
           <el-input placeholder="请输入CMD/备注" v-model="requestParamsObj.name" @change="getData()" @keyup.enter="getData" :disabled="loading || checking"> </el-input>
         </el-col>
       </el-row>
 
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV"></TableOperationButtons>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV" improtUrlDisabled exportUrlDisabled></TableOperationButtons>
 
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
 
-      <vxe-table :height="tableHeight" keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell',showIcon: true, defaultSort: {field: 'id', order: 'asc'},orders: [ 'asc', 'desc','']}" @toggle-row-expand="toggleExpandChangeEvent" @header-cell-click="headerCellClickEvent" @edit-disabled="editDisabledEvent" :edit-config="{
+      <vxe-table :height="tableHeight" keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell',showIcon: true, defaultSort: {field: 'id', order: 'asc'},orders: [ 'asc', 'desc','']}" @toggle-row-expand="toggleExpandChangeEvent" @edit-closed="editClosedEvent" @header-cell-click="headerCellClickEvent" @edit-disabled="editDisabledEvent" :edit-config="{
         trigger: 'dblclick',
         mode: 'row',
         showStatus: true,
         icon: 'el-icon-s-tools',
       }" :row-config="{isCurrent: true, isHover: true}" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
         <vxe-column type="checkbox" width="60" :disabled="true"></vxe-column>
-        <vxe-column type="expand" width="60">
+        <vxe-column type="expand" width="40">
           <template #content="{ row, rowIndex }">
-            <CMDson :row="row" :rowIndex="rowIndex"></CMDson>
+            <CMDson :row="row" :rowIndex="rowIndex" v-if="row.id"></CMDson>
           </template>
         </vxe-column>
-        <vxe-column field="id" sortable title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        <vxe-column field="id" sortable title="CMD" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
         </vxe-column>
-        <vxe-column sortable field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{}">
+        <vxe-column field="rplcDataType" title="rPLC_TYPE" :edit-render="{}" width="180">
           <template #default="{ row }">
-            <span>{{ formatOptions[row.formatCodeType] || '未定义的FORMAT' }}</span>
+            <span>{{ plcTypeOptions[row.rplcDataType] || '未定义的数据类型' }}</span>
           </template>
           <template #edit="{ row }">
-            <vxe-select v-model="row.formatCodeType" transfer>
-              <vxe-option v-for="(value, name) in formatOptions" :key="value" :value="name" :label="value"></vxe-option>
-            </vxe-select>
-          </template>
-        </vxe-column>
-        <vxe-column field="len" title="LENGHT" width="100" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="units" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="90"></vxe-column>
-        <vxe-column field="def" title="DEFAULT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="min" title="MIN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="max" title="MAX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-
-        <vxe-column width="200" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
-          <!--使用#edit自定义编辑-->
-          <template #edit="{ row }">
-            <el-row>
-              <el-col :span="12">
-                <el-select v-model="row.plcname" size="small" @change="row.plcAddr = row.plcname +row.plcvalue">
-                  <el-option v-for="item in plcAddrOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="12">
-                <input type="text" v-model="row.plcvalue" class="vxe-default-input" size="small" @change="row.plcAddr = row.plcname +row.plcvalue" />
-              </el-col>
-            </el-row>
-          </template>
-        </vxe-column>
-
-        <vxe-column field="plcType" title="数据类型" :edit-render="{}" width="180">
-          <template #default="{ row }">
-            <span>{{ plcTypeOptions[row.plcType] || '未定义的数据类型' }}</span>
-          </template>
-          <template #edit="{ row }">
-            <vxe-select v-model="row.plcType" transfer>
+            <vxe-select v-model="row.rplcDataType" transfer>
               <vxe-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></vxe-option>
             </vxe-select>
           </template>
         </vxe-column>
 
-        <vxe-column field="comment" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column width="200" field="rplcAddr" title="rPLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+          <!--使用#edit自定义编辑-->
+          <template #edit="{ row }">
+            <el-row>
+              <el-col :span="12">
+                <el-select v-model="row.rplcname" size="small" @change="row.rplcAddr = row.rplcname +row.rplcvalue">
+                  <el-option v-for="item in plcAddrOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="12">
+                <input type="text" v-model="row.rplcvalue" class="vxe-default-input" size="small" @change="row.rplcAddr = row.rplcname +row.rplcvalue" />
+              </el-col>
+            </el-row>
+          </template>
+        </vxe-column>
 
-        <vxe-column title="操作" width="150">
+        <vxe-column field="qplcDataType" title="qPLC_TYPE" :edit-render="{}" width="180">
+          <template #default="{ row }">
+            <span>{{ plcTypeOptions[row.qplcDataType] || '未定义的数据类型' }}</span>
+          </template>
+          <template #edit="{ row }">
+            <vxe-select v-model="row.qplcDataType" transfer>
+              <vxe-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></vxe-option>
+            </vxe-select>
+          </template>
+        </vxe-column>
+
+        <vxe-column width="200" field="qplcAddr" title="qPLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+          <!--使用#edit自定义编辑-->
+          <template #edit="{ row }">
+            <el-row>
+              <el-col :span="12">
+                <el-select v-model="row.qplcname" size="small" @change="row.qplcAddr = row.qplcname +row.qplcvalue">
+                  <el-option v-for="item in plcAddrOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="12">
+                <input type="text" v-model="row.qplcvalue" class="vxe-default-input" size="small" @change="row.qplcAddr = row.qplcname +row.qplcvalue" />
+              </el-col>
+            </el-row>
+          </template>
+        </vxe-column>
+
+        <vxe-column field="rvalue" title="rValue" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="qvalue" title="qValue" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column title="操作">
           <template #default="{ row }">
             <div class="operation-cell">
               <el-link type="success" v-if="!checking && row.isNew" @click="saveData(row)">保存</el-link>
@@ -89,9 +99,10 @@
             </div>
           </template>
         </vxe-column>
-        <vxe-column field="value" title="当前值">
+        <vxe-column field="comments" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="uvalue" title="当前值">
           <template #default="{ row }">
-            <span v-html="row.value" :style="{'font-weight': checking ?'bold':'normal'}">{row.value}</span>
+            <span v-html="row.uvalue" :style="{'font-weight': checking ?'bold':'normal'}">{row.uvalue}</span>
           </template>
         </vxe-column>
       </vxe-table>
@@ -115,11 +126,7 @@
 import Header from './common/Header.vue';
 import CMDson from './CMDson.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
-import {
-  findCmdByName,
-  // setCmd,
-  delCmds,
-} from '@/api/request';
+import { findHCmdByName, setHCP, delHCmds } from '@/api/request';
 
 export default {
   name: 'CMD',
@@ -220,7 +227,7 @@ export default {
       if (!isChecking) {
         this.loading = true;
       }
-      findCmdByName(requestParamsObj)
+      findHCmdByName(requestParamsObj)
         .then((res) => {
           if (res.status === 200) {
             this.requestParamsObj.page = {
@@ -230,10 +237,13 @@ export default {
             };
             this.tableData = res.data.result.map((item) => {
               const temp = item;
-              const { plcname, plcvalue } = this.GLOBAL.getPLC(item.plcAddr);
-              temp.plcname = plcname;
-              temp.plcvalue = plcvalue;
-              temp.formatCodeType = `${item.formatCodeType}`;
+
+              temp.qplcname = this.GLOBAL.getPLC(item.qplcAddr).plcname;
+              temp.qplcvalue = this.GLOBAL.getPLC(item.qplcAddr).plcvalue;
+
+              temp.rplcname = this.GLOBAL.getPLC(item.rplcAddr).plcname;
+              temp.rplcvalue = this.GLOBAL.getPLC(item.rplcAddr).plcvalue;
+
               return {
                 ...temp,
               };
@@ -243,6 +253,46 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+
+    // 表格编辑完
+    editClosedEvent({ row, column }) {
+      const $table = this.$refs.xTable;
+      const field = column.property;
+      // const cellValue = row[field];
+      // 判断单元格值是否被修改
+      if ($table.isUpdateByRow(row, field)) {
+        if (row.isNew) {
+          return;
+        }
+        this.saveData(row);
+      }
+    },
+
+    //  保存数据
+    saveData(row) {
+      const savaObj = {
+        id: row.id || '',
+        name: row.name || '',
+        rplcAddr: row.rplcAddr || '',
+        rplcDataType: row.rplcDataType || '',
+        rvalue: row.rvalue || '',
+        qvalue: row.qvalue || '',
+        qplcAddr: row.qplcAddr || '',
+        qplcDataType: row.qplcDataType || '',
+        comments: row.comments || '',
+        title: row.title || '',
+      };
+
+      setHCP(savaObj).then((res) => {
+        if (res.status === 200) {
+          this.getData();
+          this.$message({
+            message: res.msg || '恭喜你，这是一条成功消息',
+            type: 'success',
+          });
+        }
+      });
     },
     // 切换表格排序的规则
     headerCellClickEvent({
@@ -298,19 +348,20 @@ export default {
       const $table = this.$refs.xTable;
       const record = {
         isNew: true,
-        id: '10',
-        name: 'SVID0',
-        formatCodeType: 104,
-        len: 10,
-        def: '2',
-        min: '1',
-        max: '9',
-        plcType: 'C',
-        plcAddr: 'A',
-        units: '014',
-        comment: '备注信息',
-        plcname: 'D',
-        plcvalue: '999',
+        comments: '',
+        id: '',
+        qplcAddr: 'A00',
+        qplcDataType: 'int',
+        qvalue: '',
+        rplcAddr: 'A00',
+        rplcDataType: 'int',
+        rvalue: '',
+        title: '',
+        uvalue: '',
+        qplcname: 'A',
+        qplcvalue: '00',
+        rplcname: 'A',
+        rplcvalue: '00',
       };
       const { row: newRow } = await $table.insertAt(record);
       await $table.setActiveCell(newRow, 'id');
@@ -322,7 +373,7 @@ export default {
       // this.$refs.xTable.removeCheckboxRow();
       if (remoteData.length) {
         this.loading = true;
-        delCmds(remoteData)
+        delHCmds(remoteData)
           .then((res) => {
             if (res.status === 200) {
               this.$message({
@@ -338,15 +389,14 @@ export default {
       }
     },
     // 展开行的切换
-    toggleExpandChangeEvent({ rowIndex }) {
-      console.log('====================================');
-      console.log(rowIndex);
-      console.log('====================================');
-      this.$refs.xTable.setCurrentRow(this.tableData[rowIndex]);
-      // this.$refs.xTable.clearRowExpand();
-      // setTimeout(() => {
-      //   this.$refs.xTable.toggleRowExpand(this.tableData[1]);
-      // }, 100);
+    toggleExpandChangeEvent({ row }) {
+      if (!row || !row.id) {
+        this.$message({
+          message: '保存成功本条数据后才能展开子表',
+          type: 'error',
+        });
+      }
+      return true;
     },
   },
   computed: {
@@ -355,6 +405,9 @@ export default {
     },
     plcTypeOptions() {
       return this.$store.state.plcTypeOptions || {};
+    },
+    plcAddrOptions() {
+      return this.GLOBAL.getPlcAddrOptions() || [];
     },
   },
 };

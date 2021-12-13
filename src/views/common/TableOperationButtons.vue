@@ -15,7 +15,7 @@
         <el-button slot="reference" type="danger" icon="el-icon-delete" size="small" :loading="loading" :disabled="checking||!deleteBtn.length">批量删除({{ deleteBtn.length }})</el-button>
       </el-popover>
 
-      <el-button type="primary" icon="el-icon-receiving" size="small" :loading="loading" :disabled="checking" @click="selectFile($event)" v-if="improtUrl">导入</el-button>
+      <el-button type="primary" icon="el-icon-receiving" size="small" :loading="loading" :disabled="checking|| improtUrlDisabled" @click="selectFile($event)" v-if="improtUrl">导入</el-button>
       <input type="file" name="" id="uploadEventFile" style="display:none" @change="getFile($event)" v-if="improtUrl" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 
       <el-popover class="Popover" placement="top" width="160" v-model="exportVisible">
@@ -24,7 +24,7 @@
           <el-button size="mini" type="text" @click="exportVisible = false">取消</el-button>
           <el-button type="primary" size="mini" :loading="loading" @click="handelExportCSV();">确认</el-button>
         </div>
-        <el-button slot="reference" type="primary" icon="el-icon-paperclip" size="small" :loading="loading" :disabled="checking" v-if="exportUrl">导出</el-button>
+        <el-button slot="reference" type="primary" icon="el-icon-paperclip" size="small" :loading="loading" :disabled="checking|| exportUrlDisabled" v-if="exportUrl">导出</el-button>
       </el-popover>
 
       <el-switch v-model="checking" active-color="#13ce66" inactive-color="gray" active-text="正在监控" inactive-text="停止监控" v-if="!noChecking" @change="changeChcek(checking)"> </el-switch>
@@ -65,6 +65,8 @@ export default {
     improtUrl: String,
     exportUrl: String,
     noChecking: Boolean,
+    improtUrlDisabled: Boolean,
+    exportUrlDisabled: Boolean,
   },
   components: {},
   computed: {},

@@ -8,7 +8,7 @@
         </el-col>
       </el-row>
       <!-- {{row}} -->
-      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV" :noChecking="true"></TableOperationButtons>
+      <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" :noChecking="true" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV" improtUrlDisabled exportUrlDisabled></TableOperationButtons>
 
       <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
       </el-alert>
@@ -20,72 +20,19 @@
         icon: 'el-icon-s-tools',
       }" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
         <vxe-column type="checkbox" width="60" :disabled="true"></vxe-column>
-        <vxe-column field="id" sortable title="SVID" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        <vxe-column field="hcmdId" title="CMD" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
         </vxe-column>
-        <vxe-column sortable field="name" title="NAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="formatCodeType" title="FORMAT" :edit-render="{}">
+        <vxe-column field="name" title="CNAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="rplcDataType" title="rPLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="rplcAddr" title="rPLC_Address" width="200" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="qplcDataType" title="qPLC_TYPE" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="qplcAddr" title="qPLC_Address" width="150" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="rvalue" title="rValue" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="qvalue" title="qValue" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="comments" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
+        <vxe-column field="uvalue" title="当前值">
           <template #default="{ row }">
-            <span>{{ formatOptions[row.formatCodeType] || '未定义的FORMAT' }}</span>
-          </template>
-          <template #edit="{ row }">
-            <vxe-select v-model="row.formatCodeType" transfer>
-              <vxe-option v-for="(value, name) in formatOptions" :key="value" :value="name" :label="value"></vxe-option>
-            </vxe-select>
-          </template>
-        </vxe-column>
-        <vxe-column field="len" title="LENGHT" width="100" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="units" title="UNITS" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="90"></vxe-column>
-        <vxe-column field="def" title="DEFAULT" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="min" title="MIN" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-        <vxe-column field="max" title="MAX" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-
-        <vxe-column width="200" field="plcAddr" title="PLC_Address" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
-          <!--使用#edit自定义编辑-->
-          <template #edit="{ row }">
-            <el-row>
-              <el-col :span="12">
-                <el-select v-model="row.plcname" size="small" @change="row.plcAddr = row.plcname +row.plcvalue">
-                  <el-option v-for="item in plcAddrOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="12">
-                <input type="text" v-model="row.plcvalue" class="vxe-default-input" size="small" @change="row.plcAddr = row.plcname +row.plcvalue" />
-              </el-col>
-            </el-row>
-          </template>
-        </vxe-column>
-
-        <vxe-column field="plcType" title="数据类型" :edit-render="{}" width="180">
-          <template #default="{ row }">
-            <span>{{ plcTypeOptions[row.plcType] || '未定义的数据类型' }}</span>
-          </template>
-          <template #edit="{ row }">
-            <vxe-select v-model="row.plcType" transfer>
-              <vxe-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></vxe-option>
-            </vxe-select>
-          </template>
-        </vxe-column>
-
-        <vxe-column field="comment" title="备注" :edit-render="{ name: 'input', attrs: { type: 'text' } }"></vxe-column>
-
-        <vxe-column title="操作" width="150">
-          <template #default="{ row }">
-            <div class="operation-cell">
-              <el-link type="success" v-if="!checking && row.isNew" @click="saveData(row)">保存</el-link>
-              <el-popover placement="top" width="180" v-model="row.visible">
-                <p>确定要删除这一行({{ row.id }})吗？</p>
-                <div style="text-align: right; margin: 0">
-                  <el-button size="mini" type="text" @click="row.visible = false">取消</el-button>
-                  <el-button type="primary" size="mini" @click="deleteButtonEvent([row]);row.visible = false;">确定</el-button>
-                </div>
-                <el-link slot="reference" type="danger" v-if="!checking">删除</el-link>
-              </el-popover>
-            </div>
-          </template>
-        </vxe-column>
-        <vxe-column field="value" title="当前值">
-          <template #default="{ row }">
-            <span v-html="row.value" :style="{'font-weight': checking ?'bold':'normal'}">{row.value}</span>
+            <span v-html="row.uvalue" :style="{'font-weight': checking ?'bold':'normal'}">{row.uvalue}</span>
           </template>
         </vxe-column>
       </vxe-table>
@@ -109,9 +56,9 @@
 // import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
 import {
-  findCmdByName,
+  findHCPByName,
   // setCmd,
-  delCmds,
+  delHCPs,
 } from '@/api/request';
 
 export default {
@@ -124,6 +71,7 @@ export default {
       tableData: [],
       requestParamsObj: {
         name: '',
+        hcmdId: this.row.id,
         orderBy: {
           fieldName: 'id',
           fieldOrderType: 'asc',
@@ -154,7 +102,9 @@ export default {
     TableOperationButtons,
   },
   mounted() {
-    this.getData();
+    if (this.row.id) {
+      this.getData();
+    }
   },
   methods: {
     getData(isChecking) {
@@ -167,7 +117,7 @@ export default {
       if (!isChecking) {
         this.loading = true;
       }
-      findCmdByName(requestParamsObj)
+      findHCPByName(requestParamsObj)
         .then((res) => {
           if (res.status === 200) {
             this.requestParamsObj.page = {
@@ -263,13 +213,13 @@ export default {
       await $table.setActiveCell(newRow, 'id');
     },
     // 删除表格数据
-    deleteButtonEvent(rows) {
-      const list = rows || this.multipleSelection;
-      const remoteData = list.filter((item) => item.id).map((item) => item.id);
-      // this.$refs.xTable.removeCheckboxRow();
-      if (remoteData.length) {
+    deleteButtonEvent() {
+      if (this.multipleSelection.length) {
         this.loading = true;
-        delCmds(remoteData)
+        delHCPs(
+          this.row.id,
+          this.multipleSelection.map((item) => item.name),
+        )
           .then((res) => {
             if (res.status === 200) {
               this.$message({
