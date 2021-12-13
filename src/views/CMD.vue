@@ -11,7 +11,7 @@
 
       <TableOperationButtons :loading="loading" :newButton="newButton" :deleteButton="deleteButton" :testButton="testButton" improtUrl="/svid/importCSV" exportUrl="/svid/exportCSV" improtUrlDisabled exportUrlDisabled></TableOperationButtons>
 
-      <el-alert :title="alertTitle" type="info" show-icon v-show="alertTitle">
+      <el-alert :title="alertTitle" type="info" show-icon v-if="alertTitle">
       </el-alert>
 
       <vxe-table :height="tableHeight" keep-source border resizable show-overflow ref="xTable" class="vxe-table" empty-text="没有更多数据了！" :scroll-y="{ enabled: false }" :loading="loading" :data="tableData" :sort-config="{trigger: 'cell',showIcon: true, defaultSort: {field: 'id', order: 'asc'},orders: [ 'asc', 'desc','']}" @toggle-row-expand="toggleExpandChangeEvent" @edit-closed="editClosedEvent" @header-cell-click="headerCellClickEvent" @edit-disabled="editDisabledEvent" :edit-config="{
@@ -175,13 +175,16 @@ export default {
     };
   },
   methods: {
-    resize() {
+    resize(alertTitleHeight) {
       const heightArray = Object.values(this.$store.state.height);
       let heights = 0;
       heightArray.forEach((item) => {
         heights += item;
       });
-      this.tableHeight = document.documentElement.clientHeight - heights - 112;
+      this.tableHeight = document.documentElement.clientHeight
+        - heights
+        - 112
+        - (alertTitleHeight || 0);
     },
     getData(isChecking) {
       this.alertTitle = null;
@@ -293,13 +296,19 @@ export default {
     selectAllEvent({ records }) {
       this.multipleSelection = records;
       this.deleteButton.length = records.length;
-      this.alertTitle = `已经选择 ${records.length} 了项`;
+      this.alertTitle = records.length
+        ? `已经选择 ${records.length} 了项`
+        : null;
+      this.resize(records.length ? 55 : 0);
     },
     // 勾选事件
     selectChangeEvent({ records }) {
       this.multipleSelection = records;
       this.deleteButton.length = records.length;
-      this.alertTitle = `已经选择 ${records.length} 了项`;
+      this.alertTitle = records.length
+        ? `已经选择 ${records.length} 了项`
+        : null;
+      this.resize(records.length ? 55 : 0);
     },
     // 分页参数改变
     handlePageChange(page) {
@@ -393,6 +402,9 @@ export default {
   }
   /deep/ .vxe-body--expanded-column {
     background-color: #e6f7ff;
+  }
+  .el-alert {
+    margin-bottom: 1rem;
   }
 }
 </style>

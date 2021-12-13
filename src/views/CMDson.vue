@@ -164,21 +164,8 @@ export default {
   },
   mounted() {
     this.getData();
-    this.resize();
-    const that = this;
-    window.onresize = () => {
-      that.resize();
-    };
   },
   methods: {
-    resize() {
-      const heightArray = Object.values(this.$store.state.height);
-      let heights = 0;
-      heightArray.forEach((item) => {
-        heights += item;
-      });
-      this.tableHeight = document.documentElement.clientHeight - heights - 112;
-    },
     getData(isChecking) {
       this.alertTitle = null;
       this.$refs.xTable.clearCheckboxRow();
