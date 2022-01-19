@@ -298,7 +298,7 @@ export default {
       const record = {
         isNew: true,
         comments: '',
-        id: '',
+        hcmdId: this.row.id,
         qplcAddr: 'A00',
         qplcDataType: 'int',
         qvalue: '',
