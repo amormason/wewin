@@ -32,7 +32,7 @@
           <el-input type="text" v-model="hsms.temp_plcTimeAddr2" class="vxe-default-input" @change="hsms.plcTimeAddr = hsms.temp_plcTimeAddr1 +hsms.temp_plcTimeAddr2" />
         </el-col>
         <el-col :span="6">
-          <el-select v-model="hsms.plcTimeValue">
+          <el-select v-model="hsms.plcTimeType">
             <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></el-option>
           </el-select>
         </el-col>
@@ -49,7 +49,7 @@
           <el-input type="text" v-model="hsms.temp_plcTidAddr2" class="vxe-default-input" @change="hsms.plcTidAddr = hsms.temp_plcTidAddr1 +hsms.temp_plcTidAddr2" />
         </el-col>
         <el-col :span="6">
-          <el-select v-model="hsms.plcTidValue">
+          <el-select v-model="hsms.plcTidType">
             <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></el-option>
           </el-select>
         </el-col>
@@ -66,7 +66,7 @@
           <el-input type="text" v-model="hsms.temp_plcTextAddr2" class="vxe-default-input" @change="hsms.plcTextAddr = hsms.temp_plcTextAddr1 +hsms.temp_plcTextAddr2" />
         </el-col>
         <el-col :span="6">
-          <el-select v-model="hsms.plcTextValue">
+          <el-select v-model="hsms.plcTextType">
             <el-option v-for="(value, name) in plcTypeOptions" :key="value" :value="name" :label="value"></el-option>
           </el-select>
         </el-col>
