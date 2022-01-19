@@ -20,7 +20,7 @@
         icon: 'el-icon-s-tools',
       }"  @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent">
         <vxe-column type="checkbox" width="40" :disabled="true"></vxe-column>
-        <vxe-column field="hcmdId" title="CMD" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        <vxe-column field="hcmdId" title="CMD">
         </vxe-column>
         <vxe-column field="name" sortable title="CPNAME" :edit-render="{ name: 'input', attrs: { type: 'text' } }" width="120">
         </vxe-column>
