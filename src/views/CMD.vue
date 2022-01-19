@@ -26,7 +26,7 @@
             <CMDson :row="row" :rowIndex="rowIndex" v-if="row.id"></CMDson>
           </template>
         </vxe-column>
-        <vxe-column field="id" sortable title="CMD" :edit-render="{ name: 'input', attrs: { type: 'text' } }">
+        <vxe-column field="id" sortable title="CMD">
         </vxe-column>
         <vxe-column field="rplcDataType" title="rPLC_TYPE" :edit-render="{}" width="180">
           <template #default="{ row }">
