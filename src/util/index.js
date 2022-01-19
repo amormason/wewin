@@ -20,9 +20,14 @@ export default {
   },
   getPlcAddrOptions() {
     const list = 'DECBAMXYLZ';
-    return list.split('').map((item) => ({
+    const listArray = list.split('').map((item) => ({
       label: item,
       value: item,
     }));
+    listArray.push({
+      label: '<空>',
+      value: '',
+    });
+    return listArray;
   },
 };

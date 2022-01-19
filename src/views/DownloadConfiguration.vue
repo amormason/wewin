@@ -205,7 +205,6 @@ export default {
             data[key] = hsms[key];
           }
         });
-        console.log(data);
         setPlcConf(data)
           .then((res) => {
             if (res.status === 200) {
