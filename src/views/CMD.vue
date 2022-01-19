@@ -23,16 +23,14 @@
         <vxe-column type="checkbox" width="40" :disabled="true"></vxe-column>
         <vxe-column type="expand" width="40">
           <template #content="{ row, rowIndex }">
-            <CMDson :row="row" :rowIndex="rowIndex" v-if="!row.id"></CMDson>
+            <CMDson :row="row" :rowIndex="rowIndex" v-if="row.id"></CMDson>
           </template>
         </vxe-column>
-
         <vxe-column field="id" sortable title="CMD" :edit-render="{}">
           <template #edit="{ row }">
             <vxe-input type="text" v-model="row.id" :disabled="!row.isNew"></vxe-input>
           </template>
         </vxe-column>
-
         <vxe-column field="rplcDataType" title="rPLC_TYPE" :edit-render="{}" width="180">
           <template #default="{ row }">
             <span>{{ plcTypeOptions[row.rplcDataType] || '未定义的数据类型' }}</span>
