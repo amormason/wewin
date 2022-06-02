@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import Header from './common/Header.vue';
 import { findDidByName, setDid } from '@/api/request';
+import Header from './common/Header.vue';
 
 export default {
   name: 'ModuleNetworkConfiguration',

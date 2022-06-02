@@ -59,9 +59,9 @@
 </template>
 
 <script>
+import { findRptidByName, setRptid, delRptids } from '@/api/request';
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
-import { findRptidByName, setRptid, delRptids } from '@/api/request';
 
 export default {
   name: 'RPTID',

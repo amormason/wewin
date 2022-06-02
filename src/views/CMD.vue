@@ -126,10 +126,10 @@
 </template>
 
 <script>
+import { findHCmdByName, setHCmd, delHCmds } from '@/api/request';
 import Header from './common/Header.vue';
 import CMDson from './CMDson.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
-import { findHCmdByName, setHCmd, delHCmds } from '@/api/request';
 
 export default {
   name: 'CMD',

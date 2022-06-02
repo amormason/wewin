@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import Header from './common/Header.vue';
 import { exportCSV, setLogInfo, getLogInfo } from '@/api/request';
+import Header from './common/Header.vue';
 
 export default {
   name: 'Login',
