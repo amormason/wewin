@@ -349,8 +349,8 @@
 </template>
 
 <script>
-import { getHsmsInfo, setHsmsInfo } from '@/api/request';
 import Header from './common/Header.vue';
+import { getHsmsInfo, setHsmsInfo } from '@/api/request';
 
 export default {
   name: 'UploadConfiguration',

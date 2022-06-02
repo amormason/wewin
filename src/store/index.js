@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import storage from './storage';
 import {
   getFormatOptions,
   getPlcTypeOptions,
   getDeviceStatus,
   getHsmsInfo,
 } from '@/api/request';
-import storage from './storage';
 
 Vue.use(Vuex);
 const getDefaultState = () => ({

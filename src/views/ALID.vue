@@ -99,9 +99,9 @@
 </template>
 
 <script>
-import { findAlarmByName, setAlarm, delAlarm } from '@/api/request';
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
+import { findAlarmByName, setAlarm, delAlarm } from '@/api/request';
 
 export default {
   name: 'ALID',

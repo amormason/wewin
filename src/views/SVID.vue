@@ -107,9 +107,9 @@
 </template>
 
 <script>
-import { findSvidByName, setSvid, delSvids } from '@/api/request';
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
+import { findSvidByName, setSvid, delSvids } from '@/api/request';
 
 export default {
   name: 'SVID',

@@ -93,9 +93,9 @@
 </template>
 
 <script>
-import { findCeidByName, setCeid, delCeids } from '@/api/request';
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
+import { findCeidByName, setCeid, delCeids } from '@/api/request';
 
 export default {
   name: 'CEID',

@@ -89,8 +89,8 @@
 </template>
 
 <script>
-import { getPlcConf, setPlcConf, testPLC } from '@/api/request';
 import Header from './common/Header.vue';
+import { getPlcConf, setPlcConf, testPLC } from '@/api/request';
 
 export default {
   name: 'DownloadConfiguration',

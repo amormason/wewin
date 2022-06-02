@@ -114,9 +114,9 @@
 </template>
 
 <script>
-import { findEcidByName, setEcid, delEcids } from '@/api/request';
 import Header from './common/Header.vue';
 import TableOperationButtons from './common/TableOperationButtons.vue';
+import { findEcidByName, setEcid, delEcids } from '@/api/request';
 
 export default {
   name: 'ECID',

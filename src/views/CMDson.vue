@@ -119,8 +119,8 @@
 </template>
 
 <script>
-import { findHCPByName, setHCP, delHCPs } from '@/api/request';
 import TableOperationButtons from './common/TableOperationButtons.vue';
+import { findHCPByName, setHCP, delHCPs } from '@/api/request';
 
 export default {
   name: 'CMDson',
